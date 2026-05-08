@@ -6,7 +6,11 @@ def check_and_rollback(current_error_rate, baseline_error_rate):
     threshold = baseline_error_rate * 1.2 # 20% degradation allowed
     
     if current_error_rate > threshold:
-        print(f"🚨 ALERT: Performance degradation detected! (Current: {current_error_rate:.2f} > Threshold: {threshold:.2f})")
+        msg = (
+            f"🚨 ALERT: Performance degradation detected! (Current: "
+            f"{current_error_rate:.2f} > Threshold: {threshold:.2f})"
+        )
+        print(msg)
         print("🔄 INITIATING AUTOMATED ROLLBACK...")
         
         # In a real scenario:

@@ -13,7 +13,9 @@ def run_ensemble_vote(predictions):
     confidence = np.mean(votes) if final_decision == 1 else 1 - np.mean(votes)
     
     print(f"  🏁 Ensemble Results: {votes}")
-    print(f"  ✅ Final Decision: {'CHURN' if final_decision == 1 else 'STAY'} (Confidence: {confidence*100:.1f}%)")
+    res_label = 'CHURN' if final_decision == 1 else 'STAY'
+    msg = f"  ✅ Final Decision: {res_label} (Confidence: {confidence*100:.1f}%)"
+    print(msg)
     
     return final_decision
 

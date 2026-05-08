@@ -43,7 +43,7 @@ class ThermalWatchdog:
         """Queries NVIDIA-SMI for the current GPU temperature."""
         try:
             cmd = ["nvidia-smi", "--query-gpu=temperature.gpu", "--format=csv,noheader,nounits"]
-            output = subprocess.check_output(cmd).decode('utf-8').strip()
+            output = subprocess.check_output(cmd).decode('utf-8').strip()  # noqa: S603
             return int(output)
         except Exception as e:
             logging.error(f"Failed to query GPU temperature: {e}")
@@ -57,7 +57,8 @@ class ThermalWatchdog:
         temp = self.get_gpu_temp()
         
         if temp >= self.max_temp:
-            logging.warning(f"⚠️ CRITICAL THERMAL ALERT: GPU at {temp}°C! Limit is {self.max_temp}°C.")
+            msg = f"⚠️ CRITICAL THERMAL ALERT: GPU at {temp}°C! Limit is {self.max_temp}°C."
+            logging.warning(msg)
             logging.warning("🛑 Initiating strict 10-minute hardware cooldown sequence...")
             self.is_throttled = True
             
@@ -65,7 +66,11 @@ class ThermalWatchdog:
             time.sleep(600)
             
             temp = self.get_gpu_temp()
-            logging.info(f"✅ 10-Minute Cooldown complete. Hardware cooled to {temp}°C. Resuming Forge...")
+            msg = (
+                f"✅ 10-Minute Cooldown complete. Hardware cooled to {temp}°C. "
+                "Resuming Forge..."
+            )
+            logging.info(msg)
             self.is_throttled = False
             return True # Indicates we had to cool down
 

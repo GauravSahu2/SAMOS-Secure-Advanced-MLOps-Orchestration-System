@@ -37,11 +37,19 @@ class MABGateway:
         """Samples from Beta distribution to decide route."""
         print("🎰 Phase 23: MAB Gateway calculating optimal traffic route...")
         
-        stable_sample = np.random.beta(self.stats["stable"]["success"], self.stats["stable"]["fail"])
-        candidate_sample = np.random.beta(self.stats["candidate"]["success"], self.stats["candidate"]["fail"])
+        stable_sample = np.random.beta(
+            self.stats["stable"]["success"], self.stats["stable"]["fail"]
+        )
+        candidate_sample = np.random.beta(
+            self.stats["candidate"]["success"], self.stats["candidate"]["fail"]
+        )
         
         route = "stable" if stable_sample > candidate_sample else "candidate"
-        print(f"  🚀 Route Selected: {route.upper()} (Stable Score: {stable_sample:.2f}, Candidate Score: {candidate_sample:.2f})")
+        msg = (
+            f"  🚀 Route Selected: {route.upper()} (Stable Score: "
+            f"{stable_sample:.2f}, Candidate Score: {candidate_sample:.2f})"
+        )
+        print(msg)
         return route
 
     def update_stats(self, route, was_correct):
@@ -55,6 +63,6 @@ class MABGateway:
 if __name__ == "__main__":
     gateway = MABGateway()
     # Simulate 5 requests
-    for i in range(5):
+    for _i in range(5):
         route = gateway.get_route()
         gateway.update_stats(route, was_correct=np.random.choice([True, False]))

@@ -12,7 +12,11 @@ def create_personalized_adapter(user_id, user_history):
         "last_updated": "2026-05-04"
     }
     
-    print(f"  ✨ ADAPTER CREATED: Adjusted baseline bias by {bias_shift:.4f} for unique user patterns.")
+    msg = (
+        f"  ✨ ADAPTER CREATED: Adjusted baseline bias by {bias_shift:.4f} "
+        "for unique user patterns."
+    )
+    print(msg)
     return adapter
 
 if __name__ == "__main__":

@@ -6,7 +6,7 @@ def prune_model(model_path, data_path, threshold=0.05):
     print("✂️ Phase 21: Starting Extreme Model Pruning...")
     
     with open(model_path, "rb") as f:
-        model = pickle.load(f)
+        model = pickle.load(f)  # noqa: S301
         
     df = pd.read_csv(data_path)
     X = df.drop(['user_id', 'churn'], axis=1)

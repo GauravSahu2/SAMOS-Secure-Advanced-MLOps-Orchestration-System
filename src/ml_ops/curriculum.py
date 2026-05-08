@@ -5,13 +5,18 @@ def run_curriculum_training(data_indices, iterations=3):
     print(f"🎓 Phase 9: Initializing Curriculum Training ({iterations} stages)...")
     
     # Simulating difficulty scores for each sample
-    difficulties = np.random.uniform(0, 1, size=len(data_indices))
+    rng = np.random.default_rng()
+    difficulties = rng.uniform(0, 1, size=len(data_indices))
     
     for stage in range(1, iterations + 1):
         threshold = stage / iterations
         active_samples = [idx for i, idx in enumerate(data_indices) if difficulties[i] <= threshold]
         
-        print(f"  📖 Stage {stage}: Training on samples with difficulty <= {threshold:.2f} ({len(active_samples)} samples)")
+        msg = (
+            f"  📖 Stage {stage}: Training on samples with "
+            f"difficulty <= {threshold:.2f} ({len(active_samples)} samples)"
+        )
+        print(msg)
         # Simulated Training Step
         accuracy = 0.70 + (stage * 0.05)
         print(f"  📈 Convergence Reached: {accuracy*100:.1f}%")

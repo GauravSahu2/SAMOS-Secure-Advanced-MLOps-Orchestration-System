@@ -10,7 +10,11 @@ def process_deployment_command(command):
         print("  📝 Updating configs/deployment.yaml to promote latest candidate...")
         
         # Simulated File Update
-        print(f"  ✅ GIT-PUSH: Commit 'MLOps: Promoting new candidate to {target}' sent to GitOps repository.")
+        msg = (
+            f"  ✅ GIT-PUSH: Commit 'MLOps: Promoting new candidate to {target}' "
+            "sent to GitOps repository."
+        )
+        print(msg)
         print(f"  🔔 ARGO-CD: Sync triggered for {target} cluster.")
     else:
         print("  ⚠️ No deployment intent found in command.")

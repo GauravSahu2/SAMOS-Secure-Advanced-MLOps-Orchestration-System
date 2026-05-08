@@ -23,7 +23,11 @@ def predict_drift_event(drift_history):
     # Forecast days until threshold
     steps_remaining = (threshold - current_drift) / avg_velocity
     
-    print(f"  🚨 FORECAST: At current velocity ({avg_velocity:.4f}/day), we will breach drift threshold in {steps_remaining:.1f} days.")
+    msg = (
+        f"  🚨 FORECAST: At current velocity ({avg_velocity:.4f}/day), "
+        f"we will breach drift threshold in {steps_remaining:.1f} days."
+    )
+    print(msg)
     
     if steps_remaining < 3:
         print("  🔔 CRITICAL: Pre-emptive Retraining Triggered (3-day safety window).")

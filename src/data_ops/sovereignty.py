@@ -13,7 +13,11 @@ def check_data_sovereignty(data_path, current_region="US"):
     violations = df[df['region'] != current_region]
     
     if len(violations) > 0:
-        print(f"❌ SOVEREIGNTY BREACH: Found {len(violations)} records from restricted region: {violations['region'].unique()}")
+        msg = (
+            f"❌ SOVEREIGNTY BREACH: Found {len(violations)} records from "
+            f"restricted region: {violations['region'].unique()}"
+        )
+        print(msg)
         print("🚫 ABORTING OPERATION: Data Residency Policy (V1.2) violated.")
         return False
     else:

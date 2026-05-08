@@ -30,7 +30,12 @@ def run_vulnerability_scan():
     scan_results = {
         "image": "ml-pipeline:latest",
         "vulnerabilities": [
-            {"id": "CVE-2023-1234", "severity": "LOW", "package": "openssl", "fix": "Update to 3.0.1"},
+            {
+                "id": "CVE-2023-1234",
+                "severity": "LOW",
+                "package": "openssl",
+                "fix": "Update to 3.0.1"
+            },
         ],
         "summary": "1 Low vulnerability found. Image Signed: True"
     }

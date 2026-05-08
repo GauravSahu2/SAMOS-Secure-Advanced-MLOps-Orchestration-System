@@ -32,4 +32,7 @@ def record_genealogy(model_version, parent_version, change_reason):
 if __name__ == "__main__":
     import os
     os.makedirs("artifacts", exist_ok=True)
-    record_genealogy("V2.1.0-STAGING", "V2.0.0-PROD", "Retrained due to Income Drift (Proactive Forecast)")
+    record_genealogy(
+        "V2.1.0-STAGING", "V2.0.0-PROD",
+        "Retrained due to Income Drift (Proactive Forecast)"
+    )

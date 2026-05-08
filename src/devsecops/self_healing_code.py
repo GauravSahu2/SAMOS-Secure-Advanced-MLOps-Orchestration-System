@@ -23,7 +23,6 @@ CONNECTION ORDER:
 """
 
 import os
-import re
 
 def auto_fix_code_vulnerabilities(file_path):
     """Phase 18: Self-Healing Code (Auto-Hardening)."""
@@ -38,7 +37,7 @@ def auto_fix_code_vulnerabilities(file_path):
     # 1. Simple Security Fix: Replacing insecure 'eval' with 'json.loads' (Simulated)
     if "eval(" in content:
         print("  🚨 Detected 'eval()' usage. Patching with 'json.loads'...")
-        content = re.sub(r"eval\(", "json.loads(", content)
+        content = content.replace("eval(", "json.loads(")
         
     # 2. Linting Fix: Removing trailing whitespace
     content = "\n".join([line.rstrip() for line in content.split("\n")])
@@ -48,8 +47,11 @@ def auto_fix_code_vulnerabilities(file_path):
         
     print(f"✅ Code Hardened: {file_path}")
 
+TEMP_FILE = "temp_vuln.py"
+
 if __name__ == "__main__":
     # Self-test on a dummy file
-    with open("temp_vuln.py", "w") as f: f.write("data = eval(input())\n    ")
-    auto_fix_code_vulnerabilities("temp_vuln.py")
-    os.remove("temp_vuln.py")
+    with open(TEMP_FILE, "w") as f:
+        f.write("data = eval(input())\n    ")
+    auto_fix_code_vulnerabilities(TEMP_FILE)
+    os.remove(TEMP_FILE)

@@ -6,10 +6,13 @@ def run_quantum_feature_scorer(data):
     
     # Simulating a Quantum Kernel (using complex number space)
     # This identifies "Entangled" relationships between age, income, and churn
-    q_weights = np.random.uniform(0, 1, size=data.shape[1])
+    rng = np.random.default_rng()
+    q_weights = rng.uniform(0, 1, size=data.shape[1])
     q_entanglement = np.dot(data.T, data) / np.linalg.norm(data)
     
-    print("  🧬 Quantum Entanglement Matrix Calculated.")
+    entanglement_norm = np.linalg.norm(q_entanglement)
+    msg = f"  🧬 Quantum Entanglement Matrix Calculated (Norm: {entanglement_norm:.4f})."
+    print(msg)
     print("  ✨ High-Dimensional Insights: Age and Income have a 'Non-Classical' correlation.")
     
     # Top Quantum Feature
@@ -19,5 +22,6 @@ def run_quantum_feature_scorer(data):
     return q_weights
 
 if __name__ == "__main__":
-    dummy_data = np.random.rand(100, 5)
+    rng = np.random.default_rng()
+    dummy_data = rng.random((100, 5))
     run_quantum_feature_scorer(dummy_data)

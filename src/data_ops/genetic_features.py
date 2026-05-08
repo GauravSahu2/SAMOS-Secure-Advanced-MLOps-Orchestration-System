@@ -41,7 +41,11 @@ def run_genetic_feature_synthesis(df):
     signal_strength = np.random.uniform(0.7, 0.9) # High signal simulated
     
     if signal_strength > 0.75:
-        print(f"  ✨ SUCCESS: New Feature 'Income_Credit_Efficiency' evolved (Signal: {signal_strength:.2f})")
+        msg = (
+            f"  ✨ SUCCESS: New Feature 'Income_Credit_Efficiency' evolved "
+            f"(Signal: {signal_strength:.2f})"
+        )
+        print(msg)
         df['inc_cred_eff'] = new_feature
         return df
     else:

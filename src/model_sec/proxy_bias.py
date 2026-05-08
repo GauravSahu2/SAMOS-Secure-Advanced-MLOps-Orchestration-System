@@ -14,7 +14,11 @@ def detect_proxy_bias(data_path, sensitive_attr="age", threshold=0.8):
     proxies = proxies.drop(sensitive_attr, errors='ignore') # Drop the self-correlation
     
     if len(proxies) > 0:
-        print(f"❌ PROXY ALERT: High correlation detected between '{sensitive_attr}' and: {list(proxies.index)}")
+        msg = (
+            f"❌ PROXY ALERT: High correlation detected between "
+            f"'{sensitive_attr}' and: {list(proxies.index)}"
+        )
+        print(msg)
         print(f"⚠️ These features may be acting as 'Proxy Discriminators' (Corr > {threshold}).")
         return False
     else:

@@ -8,7 +8,10 @@ def run_meta_critic_audit(pipeline_logs):
     critique = {
         "observation": "NAS search (Ph 10) reached local optima too quickly.",
         "root_cause": "Mutation rate was likely too low for the current feature complexity.",
-        "extreme_strategy": "Increase Mutation Variance by 40% and enable 'Quantum-Jitter' (Ph 10) in next run."
+        "extreme_strategy": (
+            "Increase Mutation Variance by 40% and enable "
+            "'Quantum-Jitter' (Ph 10) in next run."
+        )
     }
     
     print(f"  📝 CRITIQUE: '{critique['observation']}'")

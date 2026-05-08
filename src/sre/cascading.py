@@ -22,6 +22,11 @@ if __name__ == "__main__":
     import pickle
     import pandas as pd
     # Simulating the models
-    with open("models/churn_model.pkl", "rb") as f: student = pickle.load(f)
-    user = pd.DataFrame({'age': [35], 'income': [50000], 'credit_score': [600], 'income_per_age': [1428], 'high_credit': [0]})
+    with open("models/churn_model.pkl", "rb") as f:
+        student = pickle.load(f)  # noqa: S301
+    user_dict = {
+        'age': [35], 'income': [50000], 'credit_score': [600],
+        'income_per_age': [1428], 'high_credit': [0]
+    }
+    user = pd.DataFrame(user_dict)
     route_request_cascading(user, student, None)

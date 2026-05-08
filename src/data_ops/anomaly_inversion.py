@@ -8,7 +8,11 @@ def invert_anomaly(anomaly_record, neighbor_mean_record):
     
     for key in fixed_record:
         if fixed_record[key] < 0:
-            print(f"  ⚠️ Logic Breach in '{key}': Value is {fixed_record[key]}. Inverting to neighbor mean...")
+            msg = (
+                f"  ⚠️ Logic Breach in '{key}': Value is {fixed_record[key]}. "
+                "Inverting to neighbor mean..."
+            )
+            print(msg)
             fixed_record[key] = neighbor_mean_record[key]
             
     print(f"  ✅ INVERSION COMPLETE: Record corrected to {fixed_record}.")

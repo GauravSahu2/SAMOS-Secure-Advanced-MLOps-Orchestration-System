@@ -16,7 +16,7 @@ def simulate_rlhf_reward_training():
     # 3. Update Policy (Reward Weighting)
     reward_weights = np.array([0.05, 0.95]) # Softmax of human preference
     
-    print("  📈 Updating Model Policy based on Human Reward Model...")
+    print(f"  📈 Updating Model Policy based on Human Reward Model (Weights: {reward_weights})...")
     print(f"  ✅ Policy Aligned. Future bias shifted toward: {option_b}")
 
 if __name__ == "__main__":

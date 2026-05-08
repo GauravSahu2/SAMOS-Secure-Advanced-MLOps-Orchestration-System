@@ -72,5 +72,5 @@ if __name__ == "__main__":
     # High-Assurance Binding: Use 0.0.0.0 only in Cloud/Container environments
     # Default to 127.0.0.1 for local security.
     # nosemgrep: python.fastapi.security.uvicorn-run-bind-all-interfaces
-    host = "0.0.0.0" if os.environ.get("PORT") or os.environ.get("SPACE_ID") else "127.0.0.1"
+    host = "0.0.0.0" if os.environ.get("PORT") or os.environ.get("SPACE_ID") else "127.0.0.1"  # noqa: S104
     uvicorn.run(app, host=host, port=PORT)

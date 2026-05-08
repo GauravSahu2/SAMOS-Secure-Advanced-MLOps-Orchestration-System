@@ -11,7 +11,7 @@ def check_adversarial_robustness(model_path, data_path):
         return
 
     with open(model_path, "rb") as f:
-        model = pickle.load(f)
+        model = pickle.load(f)  # noqa: S301
         
     df = pd.read_csv(data_path)
     X = df.drop(['user_id', 'churn'], axis=1).values

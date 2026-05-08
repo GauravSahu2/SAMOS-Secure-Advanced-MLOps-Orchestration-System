@@ -6,16 +6,18 @@ def explain_prediction_with_llm(prediction, shap_values, user_profile):
     # In a real scenario, this would be a prompt to Qwen/Llama
     # Here we simulate the LLM's natural language output
     
-    explanation = f"""
-    The model predicts that this user is { 'LIKELY' if prediction == 1 else 'UNLIKELY' } to churn.
-    
-    Reasoning:
-    - The primary driver is 'Income' (SHAP: {shap_values.get('income', 0.8)}), which is below the cohort average.
-    - 'Age' ({user_profile['age']}) provides some stability, but not enough to offset the financial risk.
-    
-    Strategic Recommendation:
-    - Offer a 'Loyalty Retention' package with a 15% discount to mitigate the income-related churn risk.
-    """
+    explanation = (
+        f"The model predicts that this user is "
+        f"{'LIKELY' if prediction == 1 else 'UNLIKELY'} to churn.\n\n"
+        "Reasoning:\n"
+        f"- The primary driver is 'Income' (SHAP: {shap_values.get('income', 0.8)}), "
+        "which is below the cohort average.\n"
+        f"- 'Age' ({user_profile['age']}) provides some stability, but not enough "
+        "to offset the financial risk.\n\n"
+        "Strategic Recommendation:\n"
+        "- Offer a 'Loyalty Retention' package with a 15% discount to mitigate "
+        "the income-related churn risk.\n"
+    )
     
     print(f"🤖 LLM Narrative:\n{explanation}")
     return explanation

@@ -35,7 +35,11 @@ def process_features(input_path, feature_path):
     df['high_credit'] = (df['credit_score'] > 700).astype(int)
     
     # Selecting core features
-    features_df = df[['user_id', 'age', 'income', 'credit_score', 'income_per_age', 'high_credit', 'churn']]
+    cols = [
+        'user_id', 'age', 'income', 'credit_score',
+        'income_per_age', 'high_credit', 'churn'
+    ]
+    features_df = df[cols]
     
     os.makedirs(os.path.dirname(feature_path), exist_ok=True)
     features_df.to_csv(feature_path, index=False)

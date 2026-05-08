@@ -5,7 +5,8 @@ def generate_model_card(metrics, params, data_version):
     """Phase 16: Automated Model Card Generation (Documentation-as-Code)."""
     print("🚀 Phase 16: Generating Automated Model Card...")
     
-    card_content = f"""# 📝 Model Card: ChurnPrediction-V{datetime.datetime.now().strftime('%Y%m%d')}
+    now_str = datetime.datetime.now().strftime('%Y%m%d')
+    card_content = f"""# 📝 Model Card: ChurnPrediction-V{now_str}
 
 ## 📊 Overview
 - **Type**: Random Forest Classifier

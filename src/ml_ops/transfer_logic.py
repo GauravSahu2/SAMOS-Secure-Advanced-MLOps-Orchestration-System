@@ -9,7 +9,11 @@ def run_cross_domain_transfer(source_model_weights, target_task_shape):
     transfer_size = len(source_model_weights) // 2
     transferred_weights = source_model_weights[:transfer_size]
     
-    print(f"  🧠 Transferring {transfer_size} weight-patterns from [FINANCE-DOMAIN] to [CHURN-DOMAIN]...")
+    msg = (
+        f"  🧠 Transferring {transfer_size} weight-patterns from "
+        "[FINANCE-DOMAIN] to [CHURN-DOMAIN]..."
+    )
+    print(msg)
     print("  🚀 JUMPSTART COMPLETE: Target model initialized with Institutional Wisdom.")
     
     return transferred_weights

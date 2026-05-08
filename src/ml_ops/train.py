@@ -23,8 +23,8 @@ def get_hardware_telemetry():
             temps = psutil.sensors_temperatures()
             if 'coretemp' in temps:
                 telemetry["temp"] = temps['coretemp'][0].current
-    except Exception:
-        # psutil might fail on some platforms
+    except Exception:  # noqa: S110
+        # psutil might fail on some platforms; fallback to default
         pass
     return telemetry
 
@@ -85,7 +85,10 @@ def intel_device_worker(device_name, counter, index, target_load=1.00):
 
 def handle_lock(lock_file):
     if os.path.exists(lock_file):
-        msg = "  ⚠️ Detected existing forge lock. If no other forge is running, delete models/forge.lock manually."
+        msg = (
+            "  ⚠️ Detected existing forge lock. If no other forge is running, "
+            "delete models/forge.lock manually."
+        )
         print(msg)
     with open(lock_file, "w") as f:
         f.write(str(os.getpid()))
@@ -123,8 +126,8 @@ def discover_devices():
                     device_map[d] = "Intel NPU"
                 else:
                     device_map[d] = full_name
-    except Exception:
-        # OpenVINO might not be available or device query might fail
+    except Exception:  # noqa: S110
+        # OpenVINO might not be available or device query might fail; silent skip
         pass
         
     return has_nvidia, nvidia_name, intel_devices, device_map
@@ -228,8 +231,8 @@ def get_current_saved_step(checkpoint_file):
         with open(checkpoint_file, "r") as f:
             try:
                 return json.load(f).get("last_step", 0)
-            except Exception:
-                # Corrupt checkpoint or IO error
+            except Exception:  # noqa: S110
+                # Corrupt checkpoint or IO error; fallback to step 0
                 pass
     return 0
 
@@ -240,7 +243,10 @@ def handle_forge_checkpointing(
     if step >= current_saved:
         current_time = time.time()
         steps_elapsed = step - last_checkpoint_step
-        time_per_step = (current_time - last_checkpoint_time) / steps_elapsed if steps_elapsed > 0 else 0
+        time_per_step = (
+            (current_time - last_checkpoint_time) / steps_elapsed
+            if steps_elapsed > 0 else 0
+        )
         milestone_etas = generate_milestone_etas(step, time_per_step)
         save_checkpoint(checkpoint_file, step, current_time, tokens_per_step, milestone_etas)
         return current_time, step
@@ -251,8 +257,14 @@ def handle_forge_progress(
     device_map, checkpoint_file, last_checkpoint_time, last_checkpoint_step, tokens_per_step
 ):
     progress = (step / total_steps) * 100
-    contrib_str = calculate_contributions(has_nvidia, intel_devices, shared_counters, device_map)
-    print(f"  🔥 [GEMMA-4-SLAYER] Step {step}: {progress:.4f}% | GPU: {gpu_temp}°C | CPU: {telemetry['temp']}°C")
+    contrib_str = calculate_contributions(
+        has_nvidia, intel_devices, shared_counters, device_map
+    )
+    msg = (
+        f"  🔥 [GEMMA-4-SLAYER] Step {step}: {progress:.4f}% | "
+        f"GPU: {gpu_temp}°C | CPU: {telemetry['temp']}°C"
+    )
+    print(msg)
     print(f"  📊 SWARM CONTRIBUTION: {contrib_str}")
     import sys
     sys.stdout.flush()

@@ -11,7 +11,11 @@ def check_semantic_integrity(data, column_name, expected_mean):
     print(f"  📊 Semantic Shift Factor: {shift_factor:.2f}x")
     
     if shift_factor > 10 or shift_factor < 0.1:
-        print(f"❌ SEMANTIC CORRUPTION: Detected extreme shift in '{column_name}'. Logic/Units have likely changed.")
+        msg = (
+            f"❌ SEMANTIC CORRUPTION: Detected extreme shift in '{column_name}'. "
+            "Logic/Units have likely changed."
+        )
+        print(msg)
         print("🚫 CRITICAL BLOCK: Ingestion aborted to prevent model poisoning.")
         return False
     else:

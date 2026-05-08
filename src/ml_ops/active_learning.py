@@ -7,7 +7,7 @@ def identify_uncertain_samples(model_path, data_path, threshold=0.1):
     print("🔍 Phase 11: Starting Active Learning Uncertainty Check...")
     
     with open(model_path, "rb") as f:
-        model = pickle.load(f)  # nosec S301
+        model = pickle.load(f)  # noqa: S301
         
     df = pd.read_csv(data_path)
     X = df.drop(['user_id', 'churn'], axis=1)
@@ -26,8 +26,9 @@ def identify_uncertain_samples(model_path, data_path, threshold=0.1):
     if len(uncertain_indices) > 0:
         uncertain_data = df.iloc[uncertain_indices]
         os.makedirs("artifacts/active_learning", exist_ok=True)
-        uncertain_data.to_csv("artifacts/active_learning/labeling_queue.csv", index=False)
-        msg = "🚀 Flagged uncertain samples for review at: artifacts/active_learning/labeling_queue.csv"
+        out_path = "artifacts/active_learning/labeling_queue.csv"
+        uncertain_data.to_csv(out_path, index=False)
+        msg = f"🚀 Flagged uncertain samples for review at: {out_path}"
         print(msg)
     
 if __name__ == "__main__":

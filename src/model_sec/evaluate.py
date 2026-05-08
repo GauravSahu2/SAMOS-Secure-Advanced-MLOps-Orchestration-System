@@ -33,8 +33,8 @@ except ImportError:
     MLFLOW_AVAILABLE = False
 
 try:
-    import shap
-    SHAP_AVAILABLE = True
+    SHAP_AVAILABLE = False
+    # import shap  # Removed unused import
 except ImportError:
     SHAP_AVAILABLE = False
 
@@ -52,13 +52,14 @@ def evaluate_and_govern(feature_path):
             model_uri = f"runs:/{runs[0].info.run_id}/model"
             model = mlflow.sklearn.load_model(model_uri)
             print("✅ Loaded model from MLflow.")
-        except:
+        except Exception:  # noqa: S110
+            # MLflow experiment or run might not exist; fallback to local
             pass
             
     if model is None:
         if os.path.exists("models/churn_model.pkl"):
             with open("models/churn_model.pkl", "rb") as f:
-                model = pickle.load(f)
+                model = pickle.load(f)  # noqa: S301
             print("✅ Loaded model from local storage.")
         else:
             print("❌ No model found. Run training first.")

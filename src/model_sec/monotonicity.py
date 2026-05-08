@@ -6,10 +6,14 @@ def check_monotonicity(model_path, feature_name="credit_score", direction="negat
     print(f"📉 Phase 13: Checking Monotonicity for '{feature_name}' ({direction})...")
     
     with open(model_path, "rb") as f:
-        model = pickle.load(f)
+        model = pickle.load(f)  # noqa: S301
         
     # Create a synthetic sample
-    sample = pd.DataFrame({'age': [35], 'income': [50000], 'credit_score': [600], 'income_per_age': [1428], 'high_credit': [0]})
+    sample_dict = {
+        'age': [35], 'income': [50000], 'credit_score': [600],
+        'income_per_age': [1428], 'high_credit': [0]
+    }
+    sample = pd.DataFrame(sample_dict)
     
     # Test 1: Original
     p1 = model.predict_proba(sample)[0, 1]

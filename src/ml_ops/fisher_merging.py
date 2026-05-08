@@ -6,12 +6,15 @@ def run_fisher_merging(model_a_weights, model_b_weights):
     
     # Simulating Fisher Information (Importance) for each weight
     # 1.0 = Critical, 0.1 = Flexible
-    fisher_info_a = np.random.uniform(0.1, 1.0, size=len(model_a_weights))
-    fisher_info_b = np.random.uniform(0.1, 1.0, size=len(model_b_weights))
+    rng = np.random.default_rng()
+    fisher_info_a = rng.uniform(0.1, 1.0, size=len(model_a_weights))
+    fisher_info_b = rng.uniform(0.1, 1.0, size=len(model_b_weights))
     
     # Weighted Average based on Fisher Information
     # critical weights from 'a' are preserved, as are critical weights from 'b'
-    merged_weights = (model_a_weights * fisher_info_a + model_b_weights * fisher_info_b) / (fisher_info_a + fisher_info_b)
+    num = model_a_weights * fisher_info_a + model_b_weights * fisher_info_b
+    den = fisher_info_a + fisher_info_b
+    merged_weights = num / den
     
     print("  ✨ Information-Theoretic Consensus reached.")
     print("  ✅ Fisher Merging Complete: Critical knowledge preserved.")

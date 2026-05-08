@@ -9,7 +9,10 @@ def generate_dataset_summary_card(feature_path="data/features.csv"):
     summary = {
         "total_records": len(df),
         "feature_count": len(df.columns),
-        "target_balance": df['churn'].value_counts(normalize=True).to_dict() if 'churn' in df.columns else "N/A",
+        "target_balance": (
+            df['churn'].value_counts(normalize=True).to_dict()
+            if 'churn' in df.columns else "N/A"
+        ),
         "top_features": ["income", "age", "credit_score"] # Simulated
     }
     

@@ -54,18 +54,30 @@ def run_nas_evolution(generations=3):
         
         try:
             # ACTUAL COMPUTE: Train a fast, free local neural network
-            model = MLPClassifier(hidden_layer_sizes=hidden_layer_sizes, max_iter=50, random_state=42)
+            model = MLPClassifier(
+                hidden_layer_sizes=hidden_layer_sizes,
+                max_iter=50,
+                random_state=42
+            )
             model.fit(X, y)
             fitness = accuracy_score(y, model.predict(X))
             
             if fitness > best_fitness:
                 best_fitness = fitness
                 best_arch = candidate
-                print(f"    ✨ NEW ALPHA FOUND: {candidate[0]} Layers, {candidate[1]} Neurons, Real Accuracy={best_fitness:.4f}")
+                msg = (
+                    f"    ✨ NEW ALPHA FOUND: {candidate[0]} Layers, "
+                    f"{candidate[1]} Neurons, Real Accuracy={best_fitness:.4f}"
+                )
+                print(msg)
         except Exception as e:
             print(f"    ⚠️ Architecture failed to compile: {e}")
             
-    print(f"\n🥇 ACTUAL NAS COMPLETE: Optimal Architecture Designed (Real Fitness: {best_fitness:.4f})")
+    msg = (
+        f"\n🥇 ACTUAL NAS COMPLETE: Optimal Architecture Designed "
+        f"(Real Fitness: {best_fitness:.4f})"
+    )
+    print(msg)
     return best_arch
 
 if __name__ == "__main__":

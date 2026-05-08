@@ -41,7 +41,8 @@ def generate_zk_data_proof(dataset_name, data_content):
     # Simulating a tamper attempt
     tampered_data = data_content.copy()
     tampered_data['user_1'] = 'malicious_code'
-    tampered_hash = hashlib.sha256(json.dumps(tampered_data, sort_keys=True).encode('utf-8')).hexdigest()
+    encoded_tampered = json.dumps(tampered_data, sort_keys=True).encode('utf-8')
+    tampered_hash = hashlib.sha256(encoded_tampered).hexdigest()
     
     print("  ⚠️ Verifying Integrity...")
     if data_hash == tampered_hash:

@@ -10,7 +10,8 @@ PURPOSE:
     vulnerabilities in third-party libraries (e.g., NumPy, Pandas, Transformers).
 
 ALGORITHM:
-    1. VULNERABILITY SCAN: Checks 'requirements.txt' against CVE databases (e.g., OSV, GitHub Advisory).
+    1. VULNERABILITY SCAN: Checks 'requirements.txt' against CVE databases 
+       (e.g., OSV, GitHub Advisory).
     2. RESOLUTION: Identifies the minimum version upgrade required to fix the vulnerability.
     3. COMPATIBILITY TEST: Simulates the upgrade and runs the 'MLOps' test suite.
     4. PATCHING: Updates 'requirements.txt' and triggers a fresh `pip install`.

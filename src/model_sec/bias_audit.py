@@ -31,7 +31,7 @@ def run_bias_audit(model_path, data_path):
     print("⚖️ Phase 13: Starting Ethical Bias Audit...")
     
     with open(model_path, "rb") as f:
-        model = pickle.load(f)
+        model = pickle.load(f)  # noqa: S301
         
     df = pd.read_csv(data_path)
     
@@ -45,7 +45,8 @@ def run_bias_audit(model_path, data_path):
     
     disparities = {}
     for name, cohort_df in cohorts.items():
-        if len(cohort_df) == 0: continue
+        if len(cohort_df) == 0:
+            continue
         X = cohort_df.drop(['user_id', 'churn'], axis=1)
         y = cohort_df['churn']
         acc = accuracy_score(y, model.predict(X))

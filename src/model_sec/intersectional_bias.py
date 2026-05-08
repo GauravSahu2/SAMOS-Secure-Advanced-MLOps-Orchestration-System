@@ -7,7 +7,7 @@ def run_intersectional_audit(model_path, data_path):
     print("🧬 Phase 13: Starting Intersectional Bias Audit...")
     
     with open(model_path, "rb") as f:
-        model = pickle.load(f)
+        model = pickle.load(f)  # noqa: S301
         
     df = pd.read_csv(data_path)
     
@@ -21,7 +21,8 @@ def run_intersectional_audit(model_path, data_path):
     
     print("  📊 Intersectional Performance Breakdown:")
     for name, cohort_df in intersections.items():
-        if len(cohort_df) < 5: continue # Skip statistically insignificant groups
+        if len(cohort_df) < 5:
+            continue  # Skip statistically insignificant groups
         X = cohort_df.drop(['user_id', 'churn'], axis=1)
         y = cohort_df['churn']
         acc = accuracy_score(y, model.predict(X))

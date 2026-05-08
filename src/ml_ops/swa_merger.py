@@ -2,7 +2,11 @@ import numpy as np
 
 def perform_swa_merger(weight_snapshots):
     """Phase 9: Model Stability - Stochastic Weight Averaging (SWA)."""
-    print(f"⚖️ Phase 9: Performing Stochastic Weight Averaging across {len(weight_snapshots)} snapshots...")
+    msg = (
+        f"⚖️ Phase 9: Performing Stochastic Weight Averaging across "
+        f"{len(weight_snapshots)} snapshots..."
+    )
+    print(msg)
     
     # Simulating weight averaging
     # In reality, this would be an element-wise mean of tensors
