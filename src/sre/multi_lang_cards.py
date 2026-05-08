@@ -9,7 +9,7 @@ def generate_multi_lang_cards(model_card_path):
         # Simulated File Writing
         # with open(f"models/model_card_{lang}.md", "w") as f: ...
         
-    print(f"✅ SUCCESS: Multi-Language documentation pack generated in models/")
+    print("✅ SUCCESS: Multi-Language documentation pack generated in models/")
 
 if __name__ == "__main__":
     generate_multi_lang_cards("models/churn_model_v2.md")

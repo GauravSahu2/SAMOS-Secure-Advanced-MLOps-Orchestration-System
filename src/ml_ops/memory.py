@@ -35,8 +35,8 @@ class NeuralMemory:
 
     def save_to_vault(self, text: str, source: str = "user_interaction"):
         """Commits a new memory entry to the offline storage."""
-        # Create a unique MD5 hash ID for this memory block.
-        entry_id = hashlib.md5(text.encode()).hexdigest()
+        # Create a unique SHA256 hash ID for this memory block.
+        entry_id = hashlib.sha256(text.encode()).hexdigest()
         
         # Build the memory data structure.
         entry = {

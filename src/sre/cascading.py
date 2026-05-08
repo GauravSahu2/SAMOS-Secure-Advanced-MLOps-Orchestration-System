@@ -1,4 +1,3 @@
-import numpy as np
 
 def route_request_cascading(user_data, student_model, teacher_model):
     """Phase 24: Economic Efficiency - Model Cascading Router."""

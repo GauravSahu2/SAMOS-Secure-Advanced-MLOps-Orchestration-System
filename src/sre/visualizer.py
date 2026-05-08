@@ -1,4 +1,3 @@
-import os
 
 def render_pipeline_status():
     """Phase 25: Terminal Command Center Visualizer."""

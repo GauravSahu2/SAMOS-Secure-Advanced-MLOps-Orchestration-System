@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 
 def detect_proxy_bias(data_path, sensitive_attr="age", threshold=0.8):
     """Phase 13: Advanced Ethics - Proxy Bias Correlation Analysis."""

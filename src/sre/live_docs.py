@@ -12,7 +12,7 @@ def update_live_documentation(code_base_path):
     }
     
     print(f"  ✨ NEW LOGIC DISCOVERED: {new_entry['module']}")
-    print(f"  📝 [LLM]: Writing technical summary to TECHNICAL_REFERENCE.md...")
+    print("  📝 [LLM]: Writing technical summary to TECHNICAL_REFERENCE.md...")
     
     # Simulated Append to Docs
     # with open("TECHNICAL_REFERENCE.md", "a") as f: ...

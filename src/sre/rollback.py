@@ -1,4 +1,3 @@
-import os
 
 def check_and_rollback(current_error_rate, baseline_error_rate):
     """Phase 25: Automated Model Rollback Logic."""

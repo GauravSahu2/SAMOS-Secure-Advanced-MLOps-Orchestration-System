@@ -1,5 +1,4 @@
 import hashlib
-import time
 
 def generate_inference_proof(model_version, user_input_hash, result):
     """Phase 3: Cryptographic Privacy - Zero-Knowledge Proof Simulation."""

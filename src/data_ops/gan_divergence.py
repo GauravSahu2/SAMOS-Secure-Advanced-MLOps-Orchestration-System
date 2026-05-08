@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 
 def check_gan_divergence(real_data_path, synthetic_data_path):

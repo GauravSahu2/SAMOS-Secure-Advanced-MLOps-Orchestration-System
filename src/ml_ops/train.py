@@ -21,8 +21,10 @@ def get_hardware_telemetry():
     try:
         if hasattr(psutil, 'sensors_temperatures'):
             temps = psutil.sensors_temperatures()
-            if 'coretemp' in temps: telemetry["temp"] = temps['coretemp'][0].current
+            if 'coretemp' in temps:
+                telemetry["temp"] = temps['coretemp'][0].current
     except Exception:
+        # psutil might fail on some platforms
         pass
     return telemetry
 
@@ -58,7 +60,8 @@ def intel_device_worker(device_name, counter, index, target_load=1.00):
 
         rng = np.random.default_rng(42)
         param = ov.runtime.opset10.parameter([1, matrix_size], ov.Type.f32)
-        weights = ov.runtime.opset10.constant(rng.random((matrix_size, matrix_size)).astype(np.float32))
+        weights_data = rng.random((matrix_size, matrix_size)).astype(np.float32)
+        weights = ov.runtime.opset10.constant(weights_data)
         op = ov.runtime.opset10.matmul(param, weights, False, False)
         model = ov.Model([op], [param])
         
@@ -82,7 +85,8 @@ def intel_device_worker(device_name, counter, index, target_load=1.00):
 
 def handle_lock(lock_file):
     if os.path.exists(lock_file):
-        print("  ⚠️ Detected existing forge lock. If no other forge is running, delete models/forge.lock manually.")
+        msg = "  ⚠️ Detected existing forge lock. If no other forge is running, delete models/forge.lock manually."
+        print(msg)
     with open(lock_file, "w") as f:
         f.write(str(os.getpid()))
 
@@ -111,11 +115,16 @@ def discover_devices():
             # ONLY target Intel GPU/NPU silicon to avoid contention with CPU/NVIDIA
             if ("Intel" in full_name or "NPU" in d) and "Core" not in full_name:
                 intel_devices.append(d)
-                if "Arc" in full_name: device_map[d] = "Intel Arc"
-                elif "Graphics" in full_name: device_map[d] = "Intel iGPU"
-                elif "AI Boost" in full_name or "NPU" in d: device_map[d] = "Intel NPU"
-                else: device_map[d] = full_name
+                if "Arc" in full_name:
+                    device_map[d] = "Intel Arc"
+                elif "Graphics" in full_name:
+                    device_map[d] = "Intel iGPU"
+                elif "AI Boost" in full_name or "NPU" in d:
+                    device_map[d] = "Intel NPU"
+                else:
+                    device_map[d] = full_name
     except Exception:
+        # OpenVINO might not be available or device query might fail
         pass
         
     return has_nvidia, nvidia_name, intel_devices, device_map
@@ -130,7 +139,11 @@ def spawn_workers(has_nvidia, intel_devices, shared_counters):
         idx += 1
     
     for device in intel_devices:
-        p_intel = mp.Process(target=intel_device_worker, args=(device, shared_counters, idx), daemon=True)
+        p_intel = mp.Process(
+            target=intel_device_worker,
+            args=(device, shared_counters, idx),
+            daemon=True
+        )
         p_intel.start()
         processes.append(p_intel)
         idx += 1
@@ -138,17 +151,34 @@ def spawn_workers(has_nvidia, intel_devices, shared_counters):
 
 def generate_milestone_etas(step, time_per_step):
     milestone_etas = {}
-    targets = [(1000000, "SAMOS_1B"), (2000000, "SAMOS_2B"), (3000000, "SAMOS_3B"), (4000000, "SAMOS_4B")]
+    targets = [
+        (1000000, "SAMOS_1B"),
+        (2000000, "SAMOS_2B"),
+        (3000000, "SAMOS_3B"),
+        (4000000, "SAMOS_4B")
+    ]
     for target_step, name in targets:
         if step >= target_step:
-            milestone_etas[name] = {"target_step": target_step, "status": "COMPLETED", "eta_hours": 0.0}
+            milestone_etas[name] = {
+                "target_step": target_step,
+                "status": "COMPLETED",
+                "eta_hours": 0.0
+            }
         else:
             if time_per_step > 0:
                 steps_left = target_step - step
                 m_eta_hours = round((steps_left * time_per_step) / 3600, 2)
-                milestone_etas[name] = {"target_step": target_step, "status": "FORGING", "eta_hours": m_eta_hours}
+                milestone_etas[name] = {
+                    "target_step": target_step,
+                    "status": "FORGING",
+                    "eta_hours": m_eta_hours
+                }
             else:
-                milestone_etas[name] = {"target_step": target_step, "status": "CALCULATING...", "eta_hours": 0.0}
+                milestone_etas[name] = {
+                    "target_step": target_step,
+                    "status": "CALCULATING...",
+                    "eta_hours": 0.0
+                }
     return milestone_etas
 
 def save_checkpoint(checkpoint_file, step, current_time, tokens_per_step, milestone_etas):
@@ -167,8 +197,10 @@ def calculate_contributions(has_nvidia, intel_devices, shared_counters, device_m
     if has_nvidia:
         weights.append(10000**3) 
     for d in intel_devices:
-        if "NPU" in d: weights.append(2048**3)
-        else: weights.append(4096**3)
+        if "NPU" in d:
+            weights.append(2048**3)
+        else:
+            weights.append(4096**3)
     
     weighted_ops = [shared_counters[i] * weights[i] for i in range(len(weights))]
     total_weighted = sum(weighted_ops)
@@ -196,10 +228,14 @@ def get_current_saved_step(checkpoint_file):
         with open(checkpoint_file, "r") as f:
             try:
                 return json.load(f).get("last_step", 0)
-            except Exception: pass
+            except Exception:
+                # Corrupt checkpoint or IO error
+                pass
     return 0
 
-def handle_forge_checkpointing(step, checkpoint_file, last_checkpoint_time, last_checkpoint_step, tokens_per_step):
+def handle_forge_checkpointing(
+    step, checkpoint_file, last_checkpoint_time, last_checkpoint_step, tokens_per_step
+):
     current_saved = get_current_saved_step(checkpoint_file)
     if step >= current_saved:
         current_time = time.time()
@@ -210,16 +246,24 @@ def handle_forge_checkpointing(step, checkpoint_file, last_checkpoint_time, last
         return current_time, step
     return last_checkpoint_time, last_checkpoint_step
 
-def handle_forge_progress(step, total_steps, gpu_temp, telemetry, has_nvidia, intel_devices, shared_counters, device_map, checkpoint_file, last_checkpoint_time, last_checkpoint_step, tokens_per_step):
+def handle_forge_progress(
+    step, total_steps, gpu_temp, telemetry, has_nvidia, intel_devices, shared_counters,
+    device_map, checkpoint_file, last_checkpoint_time, last_checkpoint_step, tokens_per_step
+):
     progress = (step / total_steps) * 100
     contrib_str = calculate_contributions(has_nvidia, intel_devices, shared_counters, device_map)
     print(f"  🔥 [GEMMA-4-SLAYER] Step {step}: {progress:.4f}% | GPU: {gpu_temp}°C | CPU: {telemetry['temp']}°C")
     print(f"  📊 SWARM CONTRIBUTION: {contrib_str}")
     import sys
     sys.stdout.flush()
-    return handle_forge_checkpointing(step, checkpoint_file, last_checkpoint_time, last_checkpoint_step, tokens_per_step)
+    return handle_forge_checkpointing(
+        step, checkpoint_file, last_checkpoint_time, last_checkpoint_step, tokens_per_step
+    )
 
-def execute_forge_loop(start_step, total_steps, watchdog, has_nvidia, intel_devices, device_map, shared_counters, milestones, checkpoint_file):
+def execute_forge_loop(
+    start_step, total_steps, watchdog, has_nvidia, intel_devices, device_map,
+    shared_counters, milestones, checkpoint_file
+):
     last_checkpoint_time = time.time()
     last_checkpoint_step = start_step
     tokens_per_step = 4000000 
@@ -262,7 +306,8 @@ def run_samos_forge():
     has_nvidia, nvidia_name, intel_devices, device_map = discover_devices()
 
     print("  🏗️ Architecture: 4B-Class Sentient Intelligence")
-    print(f"  💻 Orchestrating Silicon: [NVIDIA: {nvidia_name}] [Intel: {', '.join([device_map[d] for d in intel_devices])}]")
+    intel_names = ", ".join([device_map[d] for d in intel_devices])
+    print(f"  💻 Orchestrating Silicon: [NVIDIA: {nvidia_name}] [Intel: {intel_names}]")
     print("  🔒 Target Load: MAXIMUM CAPACITY (100% Saturation)")
 
     worker_count = (1 if has_nvidia else 0) + len(intel_devices)
@@ -271,21 +316,27 @@ def run_samos_forge():
 
     total_steps = 4000000 
     milestones = {
-        1000000: "PHASE 1 COMPLETE: SAMOS 1B. Duplicating weights & expanding architecture to 2B...",
-        2000000: "PHASE 2 COMPLETE: SAMOS 2B. Duplicating weights & expanding architecture to 3B...",
-        3000000: "PHASE 3 COMPLETE: SAMOS 3B. Duplicating weights & expanding architecture to 4B...",
+        1000000: "PHASE 1 COMPLETE: SAMOS 1B. Duplicating weights & expanding to 2B...",
+        2000000: "PHASE 2 COMPLETE: SAMOS 2B. Duplicating weights & expanding to 3B...",
+        3000000: "PHASE 3 COMPLETE: SAMOS 3B. Duplicating weights & expanding to 4B...",
         4000000: "PHASE 4 COMPLETE: SAMOS 4B. The Intelligence Core Finalized!"
     }
 
     try:
-        execute_forge_loop(start_step, total_steps, watchdog, has_nvidia, intel_devices, device_map, shared_counters, milestones, checkpoint_file)
+        execute_forge_loop(
+            start_step, total_steps, watchdog, has_nvidia, intel_devices,
+            device_map, shared_counters, milestones, checkpoint_file
+        )
     except KeyboardInterrupt:
         print("\n  ⏸️ FORGE PAUSED. Releasing Silicon...")
-        for p in processes: p.terminate()
-        if os.path.exists(lock_file): os.remove(lock_file)
+        for p in processes:
+            p.terminate()
+        if os.path.exists(lock_file):
+            os.remove(lock_file)
         return
     finally:
-        if os.path.exists(lock_file): os.remove(lock_file)
+        if os.path.exists(lock_file):
+            os.remove(lock_file)
 
 if __name__ == "__main__":
     mp.freeze_support()

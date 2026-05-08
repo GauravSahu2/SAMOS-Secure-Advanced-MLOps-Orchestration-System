@@ -1,6 +1,5 @@
 import pandas as pd
 import pickle
-import numpy as np
 
 def check_monotonicity(model_path, feature_name="credit_score", direction="negative"):
     """Phase 13: Business Logic Guardrail - Monotonicity Test."""

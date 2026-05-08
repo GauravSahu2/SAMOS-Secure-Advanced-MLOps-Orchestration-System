@@ -1,4 +1,3 @@
-import numpy as np
 
 def calibrate_model_uncertainty(prob):
     """Phase 12: Model Self-Awareness - Uncertainty Calibration."""

@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 
 def check_for_data_poisoning(current_features, new_batch):

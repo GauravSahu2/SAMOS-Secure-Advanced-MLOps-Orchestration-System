@@ -18,7 +18,7 @@ library_name: transformers
 **SAMOS 4B** is a high-density language model engineered through **336B-Class Multi-Teacher Distillation**. It is designed to deliver elite-level reasoning and knowledge density within a 4-billion parameter footprint, optimized for real-time inference on consumer-grade silicon (NVIDIA Blackwell & Intel NPU).
 
 ## 🔒 LEGAL STATUS: PROPRIETARY
-**This model is NOT open-source.** 
+**This model is NOT open-source.**
 © 2026 Forge Master. All rights reserved.
 Unauthorized distribution, reverse-engineering, or commercial use of these weights is strictly prohibited. This repository serves as a private benchmark anchor.
 
@@ -34,8 +34,8 @@ Unauthorized distribution, reverse-engineering, or commercial use of these weigh
 - **Throughput**: 128+ tokens/sec on Intel NPU/GPU hybrid.
 
 ## 🏆 Development Trace
-SAMOS 4B was forged in a **Locked Parallel Silicon Environment**, utilizing 100% of available CPU, NPU, and multi-GPU resources to reach 100,000 alignment steps. 
+SAMOS 4B was forged in a **Locked Parallel Silicon Environment**, utilizing 100% of available CPU, NPU, and multi-GPU resources to reach 100,000 alignment steps.
 
 ---
-**Status**: `SENTIENT_PHASE_COMPLETE`  
+**Status**: `SENTIENT_PHASE_COMPLETE`
 **Forge Master**: [Your Name/ID]

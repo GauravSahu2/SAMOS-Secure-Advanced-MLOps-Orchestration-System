@@ -41,5 +41,5 @@ Unauthorized distribution, reverse-engineering, or commercial use of these weigh
 SAMOS 4B was forged in a **Locked Parallel Silicon Environment**, utilizing 100% of available CPU, NPU, and multi-GPU resources to reach 100,000 alignment steps.
 
 ---
-**Status**: `SENTIENT_PHASE_COMPLETE`  
+**Status**: `SENTIENT_PHASE_COMPLETE`
 **Forge Master**: [Your Name/ID]

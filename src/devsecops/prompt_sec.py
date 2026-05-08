@@ -2,7 +2,7 @@ import re
 
 def scan_prompt_for_injection(prompt):
     """Phase 20: GenAI Security - Prompt Injection Guard."""
-    print(f"🛡️ Phase 20: Scanning Prompt for Adversarial Patterns...")
+    print("🛡️ Phase 20: Scanning Prompt for Adversarial Patterns...")
     
     # Malicious patterns
     jailbreaks = [

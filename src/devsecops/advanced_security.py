@@ -1,12 +1,11 @@
 import requests
-import time
 
 def run_dast_scan(url="http://localhost:8000"):
     """Phase 18: Dynamic Analysis Security Testing (DAST)."""
     print(f"🚀 Phase 18: Running DAST on {url}...")
     try:
         # Check security headers
-        response = requests.get(url)
+        response = requests.get(url, timeout=10)
         headers = response.headers
         
         security_headers = ["Content-Security-Policy", "X-Frame-Options", "X-Content-Type-Options"]
@@ -16,11 +15,11 @@ def run_dast_scan(url="http://localhost:8000"):
         
         # Simple SQLi/XSS check simulation
         attack_url = f"{url}/predict?data=' OR 1=1"
-        res = requests.get(attack_url)
+        res = requests.get(attack_url, timeout=10)
         if res.status_code == 200:
              print("✅ DAST: API handles basic injection attempts correctly.")
              
-    except Exception as e:
+    except Exception:
         print(f"⚠️ DAST: Server not reachable at {url}. Skipping live scan.")
 
 def run_vulnerability_scan():

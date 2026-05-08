@@ -9,7 +9,7 @@ def run_autoscaler_loop():
     
     # Simulating a traffic wave
     for i in range(1, 6):
-        request_volume = random.randint(10, 500)
+        request_volume = random.randint(10, 500)  # nosec S311
         print(f"  🕒 Step {i}: Request Volume = {request_volume} req/sec")
         
         # Scaling Logic

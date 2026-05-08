@@ -10,7 +10,7 @@ def evolve_pipeline_configuration(population_size=10):
     # Create initial population
     population = [random.sample(modules, len(modules)) for _ in range(population_size)]
     
-    print(f"  🧪 Generations 1-50: Optimizing for Global Purity...")
+    print("  🧪 Generations 1-50: Optimizing for Global Purity...")
     
     # Selection/Mutation
     best_config = population[0] # Simulating the winner

@@ -1,4 +1,3 @@
-import numpy as np
 
 def invert_anomaly(anomaly_record, neighbor_mean_record):
     """Phase 2: DataOps - Anomaly Inversion Guardrail."""

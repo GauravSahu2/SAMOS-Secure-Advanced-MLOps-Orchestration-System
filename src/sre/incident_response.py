@@ -24,7 +24,6 @@ CONNECTION ORDER:
 ====================================================================================================
 """
 
-import time
 
 def run_incident_monitor():
     """Phase 25: Self-SRE - Autonomous Incident Response."""

@@ -7,16 +7,14 @@ TRIGGER: Triggered by Hugging Face Spaces on Port 7860
 """
 
 import os
-import json
 import time
-from fastapi import FastAPI, Request
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, FileResponse
 from pydantic import BaseModel
 
 # 🛡️ HUGGING FACE COMPLIANCE: Use Port 7860
-PORT = int(os.environ.get("PORT", 7860)) 
-
-from contextlib import asynccontextmanager
+PORT = int(os.environ.get("PORT", 7860))
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -46,7 +44,11 @@ async def get_dashboard():
 async def chat(query: Query):
     # Simulated Inference for Cloud Demo (matches your forged logic)
     start_time = time.time()
-    response = f"### 🏹 SAMOS CLOUD RESPONSE\n\nI am processing '{query.text}' through my distilled 336B logic layers. In this cloud demo, I am running on High-Performance CPU simulation."
+    response = (
+        f"### 🏹 SAMOS CLOUD RESPONSE\n\nI am processing '{query.text}' through my "
+        "distilled 336B logic layers. In this cloud demo, I am running on "
+        "High-Performance CPU simulation."
+    )
     
     latency = (time.time() - start_time) * 1000
     return {
@@ -69,5 +71,6 @@ if __name__ == "__main__":
     import uvicorn
     # High-Assurance Binding: Use 0.0.0.0 only in Cloud/Container environments
     # Default to 127.0.0.1 for local security.
+    # nosemgrep: python.fastapi.security.uvicorn-run-bind-all-interfaces
     host = "0.0.0.0" if os.environ.get("PORT") or os.environ.get("SPACE_ID") else "127.0.0.1"
     uvicorn.run(app, host=host, port=PORT)

@@ -1,6 +1,5 @@
 import pandas as pd
 import pickle
-import numpy as np
 
 def prune_model(model_path, data_path, threshold=0.05):
     """Phase 21: Extreme Model Pruning (Feature-Level)."""

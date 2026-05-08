@@ -1,4 +1,3 @@
-import json
 
 def explain_prediction_with_llm(prediction, shap_values, user_profile):
     """Phase 24: Conversational AI - LLM Prediction Explainer."""

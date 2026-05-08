@@ -18,7 +18,7 @@ def generate_dataset_summary_card(feature_path="data/features.csv"):
     print(f"  📝 TOP SIGNALS: {summary['top_features']}")
     
     with open("artifacts/DATASET_CARD.md", "w") as f:
-        f.write(f"# 📊 Dataset Summary Card\n\n")
+        f.write("# 📊 Dataset Summary Card\n\n")
         f.write(f"- **Volume**: {summary['total_records']} rows\n")
         f.write(f"- **Balance**: {summary['target_balance']}\n")
         f.write(f"- **Key Signals**: {', '.join(summary['top_features'])}\n")

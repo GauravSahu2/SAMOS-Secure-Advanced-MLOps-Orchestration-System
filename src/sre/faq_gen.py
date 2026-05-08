@@ -1,4 +1,3 @@
-import os
 
 def generate_ai_faq():
     """Phase 25: Knowledge Management - AI-Powered FAQ Generator."""

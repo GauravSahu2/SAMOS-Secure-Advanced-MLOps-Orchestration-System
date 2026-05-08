@@ -43,7 +43,7 @@ def generate_zk_data_proof(dataset_name, data_content):
     tampered_data['user_1'] = 'malicious_code'
     tampered_hash = hashlib.sha256(json.dumps(tampered_data, sort_keys=True).encode('utf-8')).hexdigest()
     
-    print(f"  ⚠️ Verifying Integrity...")
+    print("  ⚠️ Verifying Integrity...")
     if data_hash == tampered_hash:
         print("  ❌ SECURITY BREACH: Hash collision detected!")
         return False

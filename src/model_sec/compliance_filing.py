@@ -22,7 +22,7 @@ def generate_regulatory_filing(model_version, audit_results):
     with open("artifacts/regulatory_filing.json", "w") as f:
         json.dump(filing, f, indent=4)
         
-    print(f"✅ Regulatory Filing generated: artifacts/regulatory_filing.json")
+    print("✅ Regulatory Filing generated: artifacts/regulatory_filing.json")
     print("🚀 Auto-Filing logic ready for Regulatory Portal integration.")
 
 if __name__ == "__main__":

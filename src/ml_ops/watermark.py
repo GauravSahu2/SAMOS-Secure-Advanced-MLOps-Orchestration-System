@@ -1,5 +1,4 @@
 import numpy as np
-import pickle
 
 def embed_watermark(model_path):
     """Phase 11: IP Protection - Model Watermarking."""

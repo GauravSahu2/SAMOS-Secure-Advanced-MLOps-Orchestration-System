@@ -1,5 +1,3 @@
-import time
-import json
 
 def track_carbon_footprint(duration_seconds, hardware="CPU"):
     """Phase 11: Green AI - Sustainability Tracking."""
