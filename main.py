@@ -43,8 +43,12 @@ def run_phase(script_path, description):
     print(f"{'='*20}")
     try:
         # Pass current environment to subprocess to maintain session context
+        # Ensure the project root is in PYTHONPATH for cross-module imports
+        env = os.environ.copy()
+        env["PYTHONPATH"] = os.getcwd() + os.pathsep + env.get("PYTHONPATH", "")
+        
         command_args = [sys.executable] + script_path.split()
-        result = subprocess.run(command_args, check=True, capture_output=True, text=True)
+        result = subprocess.run(command_args, check=True, capture_output=True, text=True, env=env)
         print(result.stdout)
     except subprocess.CalledProcessError as e:
         print(f"❌ Error in {description}:")

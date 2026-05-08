@@ -1,0 +1,13 @@
+{
+    "filing_id": "REG-202605090022",
+    "timestamp": "2026-05-09T00:22:19.740087",
+    "model_artifact": "V2.1.0-STAGING",
+    "compliance_status": "COMPLIANT",
+    "audits": {
+        "bias_audit": "PASSED",
+        "security_scan": "CLEAN",
+        "ip_watermark": "VERIFIED",
+        "sovereignty": "VERIFIED"
+    },
+    "regulatory_standard": "EU-AI-ACT-V1"
+}

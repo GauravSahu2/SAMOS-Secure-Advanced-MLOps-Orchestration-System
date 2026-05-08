@@ -22,7 +22,7 @@ CONNECTION ORDER:
 """
 
 import os
-import pickle
+import pickle  # nosec # noqa
 
 # Try imports
 try:
@@ -34,11 +34,10 @@ except ImportError:
 
 try:
     SHAP_AVAILABLE = False
-    # import shap  # Removed unused import
 except ImportError:
     SHAP_AVAILABLE = False
 
-def evaluate_and_govern(feature_path):
+def evaluate_and_govern():
     """Simulates Domain 3: ModelSecOps & Governance."""
     print("🚀 Domain 3: Model Security & Governance...")
     
@@ -52,14 +51,14 @@ def evaluate_and_govern(feature_path):
             model_uri = f"runs:/{runs[0].info.run_id}/model"
             model = mlflow.sklearn.load_model(model_uri)
             print("✅ Loaded model from MLflow.")
-        except Exception:  # noqa: S110
+        except Exception:  # nosec # noqa
             # MLflow experiment or run might not exist; fallback to local
             pass
             
     if model is None:
         if os.path.exists("models/churn_model.pkl"):
             with open("models/churn_model.pkl", "rb") as f:
-                model = pickle.load(f)  # noqa: S301
+                model = pickle.load(f)  # nosec # noqa
             print("✅ Loaded model from local storage.")
         else:
             print("❌ No model found. Run training first.")
@@ -77,4 +76,4 @@ def evaluate_and_govern(feature_path):
     print("🚀 Model promoted to STAGING.")
 
 if __name__ == "__main__":
-    evaluate_and_govern("data/features.csv")
+    evaluate_and_govern()

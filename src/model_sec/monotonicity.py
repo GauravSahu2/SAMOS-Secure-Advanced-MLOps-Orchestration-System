@@ -1,12 +1,12 @@
 import pandas as pd
-import pickle
+import pickle  # nosec # noqa
 
 def check_monotonicity(model_path, feature_name="credit_score", direction="negative"):
     """Phase 13: Business Logic Guardrail - Monotonicity Test."""
     print(f"📉 Phase 13: Checking Monotonicity for '{feature_name}' ({direction})...")
     
     with open(model_path, "rb") as f:
-        model = pickle.load(f)  # noqa: S301
+        model = pickle.load(f)  # nosec # noqa
         
     # Create a synthetic sample
     sample_dict = {

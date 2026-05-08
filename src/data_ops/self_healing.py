@@ -23,4 +23,4 @@ def heal_data(input_path, output_path):
     print(f"✅ Data Healed and Saved to {output_path}")
 
 if __name__ == "__main__":
-    heal_data("data/features_chaos.csv", "data/features_healed.csv")
+    heal_data("data/bronze_data.csv", "data/features_healed.csv")

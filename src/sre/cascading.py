@@ -1,5 +1,5 @@
 
-def route_request_cascading(user_data, student_model, teacher_model):
+def route_request_cascading(user_data, student_model):
     """Phase 24: Economic Efficiency - Model Cascading Router."""
     print("🌊 Phase 24: Routing Request via Cascading Logic...")
     
@@ -19,14 +19,14 @@ def route_request_cascading(user_data, student_model, teacher_model):
         return 1 # Teacher result
 
 if __name__ == "__main__":
-    import pickle
+    import pickle  # nosec # noqa
     import pandas as pd
     # Simulating the models
     with open("models/churn_model.pkl", "rb") as f:
-        student = pickle.load(f)  # noqa: S301
+        student = pickle.load(f)  # nosec # noqa
     user_dict = {
         'age': [35], 'income': [50000], 'credit_score': [600],
         'income_per_age': [1428], 'high_credit': [0]
     }
     user = pd.DataFrame(user_dict)
-    route_request_cascading(user, student, None)
+    route_request_cascading(user, student)

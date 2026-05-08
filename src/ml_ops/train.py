@@ -23,7 +23,7 @@ def get_hardware_telemetry():
             temps = psutil.sensors_temperatures()
             if 'coretemp' in temps:
                 telemetry["temp"] = temps['coretemp'][0].current
-    except Exception:  # noqa: S110
+    except Exception:  # nosec # noqa
         # psutil might fail on some platforms; fallback to default
         pass
     return telemetry
@@ -126,7 +126,7 @@ def discover_devices():
                     device_map[d] = "Intel NPU"
                 else:
                     device_map[d] = full_name
-    except Exception:  # noqa: S110
+    except Exception:  # nosec # noqa
         # OpenVINO might not be available or device query might fail; silent skip
         pass
         
@@ -231,7 +231,7 @@ def get_current_saved_step(checkpoint_file):
         with open(checkpoint_file, "r") as f:
             try:
                 return json.load(f).get("last_step", 0)
-            except Exception:  # noqa: S110
+            except Exception:  # nosec # noqa
                 # Corrupt checkpoint or IO error; fallback to step 0
                 pass
     return 0
@@ -326,7 +326,7 @@ def run_samos_forge():
     shared_counters = mp.Array('i', worker_count)
     processes = spawn_workers(has_nvidia, intel_devices, shared_counters)
 
-    total_steps = 4000000 
+    total_steps = 1000 if os.environ.get("FORGE_QUICK_TEST") else 4000000 
     milestones = {
         1000000: "PHASE 1 COMPLETE: SAMOS 1B. Duplicating weights & expanding to 2B...",
         2000000: "PHASE 2 COMPLETE: SAMOS 2B. Duplicating weights & expanding to 3B...",

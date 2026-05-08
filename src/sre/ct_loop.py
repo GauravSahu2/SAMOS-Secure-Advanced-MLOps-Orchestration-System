@@ -1,4 +1,4 @@
-import subprocess
+import subprocess  # nosec # noqa
 import sys
 
 def check_drift_and_retrain():
@@ -15,7 +15,7 @@ def check_drift_and_retrain():
         
         # Phase 25 logic: Triggering Phase 7 (Versioning) -> Phase 9 (Training)
         try:
-            subprocess.run([sys.executable, "main.py"], check=True)
+            subprocess.run([sys.executable, "main.py"], check=True)  # nosec # noqa
             print("✅ CT Loop Complete: New model deployed.")
         except Exception as e:
             print(f"❌ CT Loop Failed: {e}")

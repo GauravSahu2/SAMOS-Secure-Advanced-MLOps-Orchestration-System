@@ -13,10 +13,15 @@ venv/
 models/*.bin
 models/*.pt
 models/*.onnx
-hgf/*.bin
-**/*.bin
+models/*.json
 memory/neural_vault.json
 forge.lock
+
+# Data & Logs
+data/*.csv
+data/*.parquet
+*.log
+artifacts/*.log
 
 # IDE & OS
 .vscode/

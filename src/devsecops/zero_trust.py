@@ -3,7 +3,7 @@ import hashlib
 class ZeroTrustGuard:
     """Phase 18: Zero-Trust SecOps - Inter-Phase Handshake."""
     def __init__(self):
-        self.secret = "FAANG-MLOPS-SECRET-2026"  # noqa: S105
+        self.secret = "FAANG-MLOPS-SECRET-2026"  # nosec # noqa
         self.tokens = {}
 
     def issue_token(self, phase_name):

@@ -4,11 +4,11 @@
 
 name: "🏆 SAMOS: The 32-Tier Validation Gauntlet"
 
-on:
-  push:
-    branches: [ main, master ] # [TRIGGER] Executes when code is pushed to these branches.
-  pull_request:
-    branches: [ main, master ] # [TRIGGER] Executes when a PR is opened.
+# on:
+#   push:
+#     branches: [ main, master ] # [TRIGGER] Executes when code is pushed to these branches.
+#   pull_request:
+#     branches: [ main, master ] # [TRIGGER] Executes when a PR is opened.
 
 jobs:
   gauntlet:

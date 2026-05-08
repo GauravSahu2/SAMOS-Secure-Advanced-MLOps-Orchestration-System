@@ -2,6 +2,9 @@
 
 A high-assurance, end-to-end MLOps & DevSecOps factory for mission-critical AI workloads. Designed for both **Structured Data** and **SAMOS (LLM)** fine-tuning with 25 specialized phases of automated excellence.
 
+> [!TIP]
+> **New to SAMOS?** Check out the [SETUP_GUIDE.md](./SETUP_GUIDE.md) for detailed local run and deployment instructions.
+
 ✨ Features
 
 - **DataOps Foundation**: Automated sourcing, validation (Great Expectations), PII masking (Presidio), and feature evolution.

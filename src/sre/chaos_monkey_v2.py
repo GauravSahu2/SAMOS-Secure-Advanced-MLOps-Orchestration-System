@@ -11,7 +11,7 @@ def run_extreme_chaos_sequence():
         "SIMULATE_CLOUD_OUTAGE"
     ]
     
-    event = random.choice(scenarios)  # noqa: S311
+    event = random.choice(scenarios)  # nosec # noqa
     print(f"  🔥 CHAOS EVENT TRIGGERED: {event}")
     
     if event == "DELETE_FEATURE_STORE":

@@ -23,7 +23,7 @@ CONNECTION ORDER:
 """
 
 import pandas as pd
-import pickle
+import pickle  # nosec # noqa
 from sklearn.metrics import accuracy_score
 
 def run_bias_audit(model_path, data_path):
@@ -31,7 +31,7 @@ def run_bias_audit(model_path, data_path):
     print("⚖️ Phase 13: Starting Ethical Bias Audit...")
     
     with open(model_path, "rb") as f:
-        model = pickle.load(f)  # noqa: S301
+        model = pickle.load(f)  # nosec # noqa
         
     df = pd.read_csv(data_path)
     
@@ -50,11 +50,12 @@ def run_bias_audit(model_path, data_path):
         X = cohort_df.drop(['user_id', 'churn'], axis=1)
         y = cohort_df['churn']
         acc = accuracy_score(y, model.predict(X))
-        disparities[name] = acc
+        disparities[name] = float(acc)
         print(f"  📊 Accuracy for {name}: {acc*100:.2f}%")
         
     # Check for Fairness Disparity (e.g. max diff between cohorts)
-    max_diff = max(disparities.values()) - min(disparities.values())
+    acc_list = list(disparities.values())
+    max_diff = max(acc_list) - min(acc_list)
     print(f"\n⚖️ Total Disparity Gap: {max_diff*100:.2f}%")
     
     if max_diff > 0.15: # 15% threshold

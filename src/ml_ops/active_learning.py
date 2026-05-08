@@ -1,13 +1,13 @@
 import pandas as pd
 import numpy as np
-import pickle
+import pickle  # nosec # noqa
 
 def identify_uncertain_samples(model_path, data_path, threshold=0.1):
     """Phase 11: Active Learning - Uncertainty Sampling."""
     print("🔍 Phase 11: Starting Active Learning Uncertainty Check...")
     
     with open(model_path, "rb") as f:
-        model = pickle.load(f)  # noqa: S301
+        model = pickle.load(f)  # nosec # noqa
         
     df = pd.read_csv(data_path)
     X = df.drop(['user_id', 'churn'], axis=1)

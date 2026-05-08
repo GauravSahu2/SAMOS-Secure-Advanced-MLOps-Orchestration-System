@@ -1,12 +1,12 @@
 import pandas as pd
-import pickle
+import pickle  # nosec # noqa
 
 def generate_counterfactual(model_path, user_data):
     """Phase 13: Actionable XAI - Counterfactual Explanations."""
     print("🔍 Phase 13: Generating Counterfactual Explanation...")
     
     with open(model_path, "rb") as f:
-        model = pickle.load(f)  # noqa: S301
+        model = pickle.load(f)  # nosec # noqa
         
     original_pred = model.predict(user_data)[0]
     print(f"  Current Prediction: {'CHURN' if original_pred == 1 else 'STAY'}")

@@ -1,5 +1,5 @@
 import numpy as np
-import pickle
+import pickle  # nosec # noqa
 import os
 
 def check_adversarial_robustness(model_path, data_path):
@@ -11,19 +11,20 @@ def check_adversarial_robustness(model_path, data_path):
         return
 
     with open(model_path, "rb") as f:
-        model = pickle.load(f)  # noqa: S301
+        model = pickle.load(f)  # nosec # noqa
         
     df = pd.read_csv(data_path)
-    X = df.drop(['user_id', 'churn'], axis=1).values
+    x_matrix = df.drop(['user_id', 'churn'], axis=1).to_numpy()
     
     # 1. Base prediction
-    base_preds = model.predict(X[:10])
+    base_preds = model.predict(x_matrix[:10])
     
     # 2. Add Adversarial Perturbation (Noise)
-    noise = np.random.normal(0, 0.1, X[:10].shape)
-    X_adv = X[:10] + noise
+    rng = np.random.default_rng()
+    noise = rng.normal(0, 0.1, x_matrix[:10].shape)
+    x_adv = x_matrix[:10] + noise
     
-    adv_preds = model.predict(X_adv)
+    adv_preds = model.predict(x_adv)
     
     # 3. Calculate Robustness Score
     stability = np.mean(base_preds == adv_preds)

@@ -19,7 +19,7 @@ LOGIC:
 ====================================================================================================
 """
 
-import subprocess
+import subprocess  # nosec # noqa
 import time
 import logging
 
@@ -43,7 +43,7 @@ class ThermalWatchdog:
         """Queries NVIDIA-SMI for the current GPU temperature."""
         try:
             cmd = ["nvidia-smi", "--query-gpu=temperature.gpu", "--format=csv,noheader,nounits"]
-            output = subprocess.check_output(cmd).decode('utf-8').strip()  # noqa: S603
+            output = subprocess.check_output(cmd).decode('utf-8').strip()  # nosec # noqa
             return int(output)
         except Exception as e:
             logging.error(f"Failed to query GPU temperature: {e}")

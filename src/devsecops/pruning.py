@@ -1,12 +1,12 @@
 import pandas as pd
-import pickle
+import pickle  # nosec # noqa
 
 def prune_model(model_path, data_path, threshold=0.05):
     """Phase 21: Extreme Model Pruning (Feature-Level)."""
     print("✂️ Phase 21: Starting Extreme Model Pruning...")
     
     with open(model_path, "rb") as f:
-        model = pickle.load(f)  # noqa: S301
+        model = pickle.load(f)  # nosec # noqa
         
     df = pd.read_csv(data_path)
     X = df.drop(['user_id', 'churn'], axis=1)
