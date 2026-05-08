@@ -1,0 +1,37 @@
+# Phase 22: GitOps (ArgoCD Application Spec)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ml-pipeline-prod
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/user/ml-pipeline.git'
+    targetRevision: HEAD
+    path: k8s/prod
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: ml-prod
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+---
+# Phase 23: Advanced Deployment (Canary)
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: churn-prediction-service
+spec:
+  hosts:
+  - churn-api.example.com
+  http:
+  - route:
+    - destination:
+        host: churn-api-stable
+      weight: 90
+    - destination:
+        host: churn-api-canary
+      weight: 10

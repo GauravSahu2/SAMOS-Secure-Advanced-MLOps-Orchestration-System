@@ -1,0 +1,17 @@
+# 🛡️ OWASP ZAP Automation Framework
+env:
+  contexts:
+    - name: samos-api
+      urls:
+        - http://127.0.0.1:8000
+      includePaths:
+        - http://127.0.0.1:8000/.*
+jobs:
+  - type: passiveScan-config
+  - type: spider
+  - type: activeScan
+    policy: "Default Policy"
+  - type: report
+    parameters:
+      template: "modern"
+      reportTitle: "SAMOS: DAST Security Report"

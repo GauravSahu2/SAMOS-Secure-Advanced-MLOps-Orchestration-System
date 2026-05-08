@@ -1,0 +1,65 @@
+# 🎡 SAMOS: Kubernetes Deployment
+# High-Assurance Orchestration Manifest
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: samos-sentient
+  labels:
+    app: samos
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: samos
+  template:
+    metadata:
+      labels:
+        app: samos
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: samos-engine
+        image: samos:1.0.0
+        ports:
+        - containerPort: 8000
+        
+        # 📈 Resource Hardening (Phase 24)
+        resources:
+          limits:
+            cpu: "2"
+            memory: "4Gi"
+            ephemeral-storage: "1Gi"
+          requests:
+            cpu: "1"
+            memory: "2Gi"
+            ephemeral-storage: "512Mi"
+        
+        # 💓 SRE Health Checks (Phase 25)
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        
+        # 🛡️ Environment Hardening
+        env:
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        - name: PYTHONPATH
+          value: "."
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: samos-service
+spec:
+  selector:
+    app: samos
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: LoadBalancer

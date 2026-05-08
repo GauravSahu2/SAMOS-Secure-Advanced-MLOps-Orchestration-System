@@ -1,0 +1,19 @@
+[tool.mutmut]
+paths_to_mutate = "src/sre/serve.py"
+backup = false
+runner = "python -m pytest"
+tests_dir = "tests/"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+select = ["E", "F", "B", "S"] # Security, Bugbear, Error, Flake
+
+[tool.mypy]
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+addopts = "--cov=src --cov-report=html"

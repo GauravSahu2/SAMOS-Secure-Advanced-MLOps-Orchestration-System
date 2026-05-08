@@ -1,0 +1,16 @@
+{
+  "model_type": "samos_transformer",
+  "architectures": ["SAMOSForCausalLM"],
+  "num_parameters": 4020000000,
+  "hidden_size": 4096,
+  "num_hidden_layers": 32,
+  "num_attention_heads": 32,
+  "intermediate_size": 11008,
+  "vocab_size": 32000,
+  "distillation_source": "336B Multi-Teacher Ensemble",
+  "teachers": ["DeepSeek-R1", "Qwen-Max", "GPT-OSS", "Mistral-Small"],
+  "precision": "4-bit TurboQuant",
+  "hardware_target": "NVIDIA Blackwell / Intel NPU",
+  "license": "PROPRIETARY - All Rights Reserved",
+  "forge_status": "SENTIENT_PHASE_COMPLETE"
+}

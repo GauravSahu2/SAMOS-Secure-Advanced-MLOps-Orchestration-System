@@ -1,0 +1,35 @@
+# 🏹 SAMOS: .gitignore
+# High-Assurance exclusion list
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+.env
+
+# AI Models & Memory (Proprietary - DO NOT COMMIT)
+models/*.bin
+models/*.pt
+models/*.onnx
+hgf/*.bin
+**/*.bin
+memory/neural_vault.json
+forge.lock
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Build & Audit
+dist/
+build/
+*.egg-info/
+htmlcov/
+.coverage
+coverage.xml
+sbom.json
+audit_bundle.zip

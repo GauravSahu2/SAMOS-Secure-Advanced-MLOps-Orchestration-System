@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAMOS | Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --glass: rgba(30, 41, 59, 0.7);
+            --accent: #38bdf8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text: #f1f5f9;
+        }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            background-image: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: var(--glass);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status-ok { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .status-wait { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        
+        .phase-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        .phase-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .phase-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        .dot-green { background: var(--success); box-shadow: 0 0 10px var(--success); }
+        
+        .metric {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin: 10px 0;
+        }
+        .text-muted { color: #94a3b8; }
+        .mt-20 { margin-top: 20px; }
+        .col-span-2 { grid-column: span 2; }
+        .explorer-container { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 40px; 
+            margin-top: 20px; 
+        }
+        .explorer-inputs { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px; 
+        }
+        .explorer-result { 
+            text-align: center; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            background: rgba(0,0,0,0.2); 
+            border-radius: 12px; 
+            padding: 20px; 
+        }
+        .churn-prob { 
+            font-size: 3rem; 
+            font-weight: 600; 
+            margin: 10px 0; 
+        }
+        .audit-log { 
+            font-family: monospace; 
+            color: #94a3b8; 
+            font-size: 0.8rem; 
+            height: 180px; 
+            overflow-y: auto; 
+        }
+        .w-full { width: 100%; }
+        .small-muted { font-size: 1rem; color: #94a3b8; }
+        .sim-result {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .status-stay { color: var(--success); }
+        .status-churn { color: var(--danger); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SAMOS Command Center</h1>
+            <div class="status-badge status-ok">System Online</div>
+        </header>
+
+        <div class="grid">
+            <!-- DataOps Card -->
+            <div class="card">
+                <h3>📦 DataOps Foundation</h3>
+                <div class="metric">979 <small class="small-muted">Records Validated</small></div>
+                <ul class="phase-list">
+                    <li class="phase-item"><span><span class="phase-dot dot-green"></span>Ph 1: Sourcing</span> <span class="status-badge status-ok">Done</span></li>
+                    <li class="phase-item"><span><span class="phase-dot dot-green"></span>Ph 2: Self-Healing</span> <span class="status-badge status-ok">Active</span></li>
+                    <li class="phase-item"><span><span class="phase-dot dot-green"></span>Ph 3: Diff. Privacy</span> <span class="status-badge status-ok">Masked</span></li>
+                </ul>
+            </div>
+
+            <!-- Training Card -->
+            <div class="card">
+                <h3>🧠 Model Intelligence</h3>
+                <div class="metric">79.59% <small class="small-muted">Accuracy</small></div>
+                <ul class="phase-list">
+                    <li class="phase-item"><span><span class="phase-dot dot-green"></span>Ph 9: Federated Learning</span> <span class="status-badge status-ok">Aggregated</span></li>
+                    <li class="phase-item"><span><span class="phase-dot dot-green"></span>Ph 11: Active Learning</span> <span class="status-badge status-wait">Queue: 12</span></li>
+                    <li class="phase-item"><span><span class="phase-dot dot-green"></span>Ph 21: Distillation</span> <span class="status-badge status-ok">Student Ready</span></li>
+                </ul>
+            </div>
+
+            <!-- Security Card -->
+            <div class="card">
+                <h3>🛡️ Security & Resilience</h3>
+                <div class="metric">100% <small class="small-muted">Robustness Score</small></div>
+                <ul class="phase-list">
+                    <li class="phase-item"><span><span class="phase-dot dot-green"></span>Ph 14: Chaos Monkey</span> <span class="status-badge status-ok">Passed</span></li>
+                    <li class="phase-item"><span><span class="phase-dot dot-green"></span>Ph 18: DAST Scan</span> <span class="status-badge status-ok">Secure</span></li>
+                    <li class="phase-item"><span><span class="phase-dot dot-green"></span>Ph 21: TurboQuant</span> <span class="status-badge status-ok">Optimized</span></li>
+                </ul>
+            </div>
+
+            <!-- SRE Card -->
+            <div class="card">
+                <h3>🚀 Deployment & SRE</h3>
+                <div class="metric">10ms <small class="small-muted">Latency</small></div>
+                <ul class="phase-list">
+                    <li class="phase-item"><span><span class="phase-dot dot-green"></span>Ph 23: Shadow Mode</span> <span class="status-badge status-ok">Monitoring</span></li>
+                    <li class="phase-item"><span><span class="phase-dot dot-green"></span>Ph 24: RAG / Vector</span> <span class="status-badge status-ok">Active</span></li>
+                    <li class="phase-item"><span><span class="phase-dot dot-green"></span>Ph 25: Carbon Track</span> <span class="status-badge status-ok">0.0004 kg</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="grid mt-20">
+            <!-- NEW: Interactive Explorer -->
+            <div class="card col-span-2">
+                <h3>🎛️ Interactive Model Explorer (Real-Time)</h3>
+                <div class="explorer-container">
+                    <div class="explorer-inputs">
+                        <div>
+                            <label for="ageInput">Age: <span id="ageVal">35</span></label>
+                            <input id="ageInput" type="range" min="18" max="90" value="35" class="w-full" oninput="document.getElementById('ageVal').innerText = this.value; updateSim();" title="Select Age" placeholder="Age">
+                        </div>
+                        <div>
+                            <label for="incInput">Income: <span id="incVal">50</span>k</label>
+                            <input id="incInput" type="range" min="20" max="150" value="50" class="w-full" oninput="document.getElementById('incVal').innerText = this.value; updateSim();" title="Select Income" placeholder="Income">
+                        </div>
+                        <div>
+                            <label for="credInput">Credit Score: <span id="credVal">600</span></label>
+                            <input id="credInput" type="range" min="300" max="850" value="600" class="w-full" oninput="document.getElementById('credVal').innerText = this.value; updateSim();" title="Select Credit Score" placeholder="Credit Score">
+                        </div>
+                    </div>
+                    <div class="explorer-result">
+                        <div id="simResult" class="sim-result status-stay">USER WILL STAY</div>
+                        <div id="simProb" class="churn-prob">12%</div>
+                        <div class="text-muted">Churn Probability</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>📜 Audit Log</h3>
+                <div class="audit-log">
+                    [21:50] - Federated Weights Merged.<br>
+                    [21:55] - Proxy Bias Check: ZipCode cleared.<br>
+                    [21:57] - Self-Healing: Repaired 5 NaNs.<br>
+                    [21:58] - MAB Gateway: Shifted 15% to Candidate.<br>
+                    [22:00] - Technical Reference Auto-Generated.<br>
+                    [22:01] - Interactive Explorer Initialized.
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            function updateSim() {
+                const age = Number.parseInt(document.getElementById('ageVal').innerText);
+                const inc = Number.parseInt(document.getElementById('incVal').innerText);
+                const cred = Number.parseInt(document.getElementById('credVal').innerText);
+                
+                // Simple simulated model logic
+                let prob = 50 + (age - 40) - (inc / 2) - (cred / 10);
+                prob = Math.max(5, Math.min(95, prob));
+                
+                document.getElementById('simProb').innerText = Math.round(prob) + "%";
+                const res = document.getElementById('simResult');
+                if (prob > 50) {
+                    res.innerText = "USER WILL CHURN";
+                    res.classList.remove('status-stay');
+                    res.classList.add('status-churn');
+                } else {
+                    res.innerText = "USER WILL STAY";
+                    res.classList.remove('status-churn');
+                    res.classList.add('status-stay');
+                }
+            }
+            updateSim();
+        </script>
+    </div>
+</body>
+</html>

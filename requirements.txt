@@ -1,0 +1,29 @@
+# 🛡️ SAMOS 4B: High-Assurance Tooling Suite
+# Ported from the high-assurance-api project
+
+# Core AI & Web
+fastapi==0.115.0
+uvicorn==0.30.0
+torch
+openvino
+numpy
+psutil
+pydantic
+pyseto # For PASETO v4 Auth
+
+# Quality & Mutation Testing
+pytest==9.0.3
+pytest-cov==7.1.0
+mutmut==3.2.1
+hypothesis==6.112.0 # Property-based fuzzing
+
+# Static Analysis & Security
+bandit==1.9.4
+ruff==0.15.12
+mypy==1.20.2
+detect-secrets==1.5.0
+pip-audit==2.10.0
+
+# Compliance & DAST
+cyclonedx-bom==7.3.0 # SBOM Generation
+schemathesis==4.17.0 # Contract Testing

@@ -1,0 +1,18 @@
+# 🛡️ Pinaka 4B: .gitleaks.toml
+# Secret Scanning Configuration (High-Assurance)
+
+[allowlist]
+description = "Allowlist for non-sensitive public hashes"
+regexes = [
+    'ef9386625abc8feb45ba298ab6e02c05d02418bd38e5e7437f4904b6ce82c7f2' # Model Integrity Hash
+]
+
+[[rules]]
+description = "Generic Secret"
+regex = '''(?i)secret|password|token|key|api_key|private_key'''
+severity = "critical"
+
+[[rules]]
+description = "High-Assurance PASETO Key"
+regex = '''v4\.public\.[A-Za-z0-9_-]+'''
+severity = "critical"
