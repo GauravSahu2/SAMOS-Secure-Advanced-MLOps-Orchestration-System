@@ -7,6 +7,7 @@ Phase: 9 (Locked Parallel Forge)
 """
 
 import os
+import gc
 import json
 import time
 import psutil
@@ -14,22 +15,48 @@ import numpy as np
 import multiprocessing as mp
 from src.sre.thermal_watchdog import ThermalWatchdog
 
+# ── RAM Guard ─────────────────────────────────────────────────────────────────
+_TOTAL_RAM_GB = psutil.virtual_memory().total / (1024 ** 3)
+_RAM_RESERVED_GB = 8.0   # Leave 8 GB free for the OS / user
+_RAM_BUDGET_GB = _TOTAL_RAM_GB - _RAM_RESERVED_GB
+
+def check_ram_guard():
+    """Blocks if RAM exceeds budget (Total - 8 GB)."""
+    ram_used_gb = psutil.virtual_memory().used / (1024 ** 3)
+    if ram_used_gb > _RAM_BUDGET_GB:
+        print(
+            f"  ⚠️ RAM GUARD: {ram_used_gb:.1f} GB used > "
+            f"{_RAM_BUDGET_GB:.1f} GB budget. Pausing to free memory..."
+        )
+        gc.collect()
+        try:
+            import torch
+            torch.cuda.empty_cache()
+        except Exception:
+            pass
+        time.sleep(5)
+        return True
+    return False
+
 
 def get_hardware_telemetry():
-    """Monitors temperatures and utilization."""
-    telemetry = {"cpu_usage": psutil.cpu_percent(), "temp": 45.0}
+    """Monitors temperatures and utilization across the heterogeneous swarm."""
+    telemetry = {
+        "cpu": psutil.cpu_percent(),
+        "ram": psutil.virtual_memory().percent,
+        "temp": 45.0
+    }
     try:
         if hasattr(psutil, 'sensors_temperatures'):
             temps = psutil.sensors_temperatures()
             if 'coretemp' in temps:
                 telemetry["temp"] = temps['coretemp'][0].current
-    except Exception:  # nosec # noqa
-        # psutil might fail on some platforms; fallback to default
+    except Exception:
         pass
     return telemetry
 
 def nvidia_worker(counter, index, target_load=1.00):
-    """Steady-State Worker for NVIDIA RTX 5070 (Blackwell)."""
+    """Steady-State Worker for the primary NVIDIA CUDA GPU (auto-detected)."""
     import torch
     os.environ["TORCHDYNAMO_DISABLE"] = "1"
     device = torch.device("cuda:0")
@@ -212,7 +239,7 @@ def calculate_contributions(has_nvidia, intel_devices, shared_counters, device_m
     if total_weighted > 0:
         c_idx = 0
         if has_nvidia:
-            name = "NVIDIA 5070"
+            name = "NVIDIA GPU"
             contributions.append(f"{name}: {int((weighted_ops[c_idx]/total_weighted)*100)}%")
             c_idx += 1
         for d in intel_devices:
@@ -288,6 +315,10 @@ def execute_forge_loop(
         if current_loop_time - last_telemetry_time > 5.0:
             telemetry, gpu_temp = process_telemetry(watchdog)
             last_telemetry_time = current_loop_time
+
+        # RAM guard: check every 100 steps to avoid excessive overhead
+        if step % 100 == 0:
+            check_ram_guard()
             
         if step % 100 == 0:
             last_checkpoint_time, last_checkpoint_step = handle_forge_progress(
@@ -320,7 +351,8 @@ def run_samos_forge():
     print("  🏗️ Architecture: 4B-Class Sentient Intelligence")
     intel_names = ", ".join([device_map[d] for d in intel_devices])
     print(f"  💻 Orchestrating Silicon: [NVIDIA: {nvidia_name}] [Intel: {intel_names}]")
-    print("  🔒 Target Load: MAXIMUM CAPACITY (100% Saturation)")
+    print("  🔒 Target Load: OPTIMIZED CAPACITY (80% Saturation)")
+    print(f"  🧠 RAM Guard: {_RAM_BUDGET_GB:.1f} GB budget ({_RAM_RESERVED_GB} GB reserved for system)")
 
     worker_count = (1 if has_nvidia else 0) + len(intel_devices)
     shared_counters = mp.Array('i', worker_count)

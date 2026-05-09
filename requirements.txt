@@ -10,6 +10,10 @@ numpy
 psutil
 pydantic
 pyseto # For PASETO v4 Auth
+transformers
+datasets
+accelerate
+peft
 
 # Quality & Mutation Testing
 pytest==9.0.3
@@ -27,3 +31,91 @@ pip-audit==2.10.0
 # Compliance & DAST
 cyclonedx-bom==7.3.0 # SBOM Generation
 schemathesis==4.18.0 # Contract Testing
+
+# Next-Level Orchestration & Ingestion
+nipyapi # NiFi Python API
+apache-airflow # Workflow Orchestration
+mlflow # Experiment Tracking
+optuna # Hyperparameter Tuning
+dvc # Data Version Control
+great_expectations # Data Quality
+confluent-kafka # Kafka Client
+pyspark # Apache Spark
+dbt-core # SQL Transformation
+apache-iceberg # Table Format
+apache-flink # Stream Processing
+trino # SQL Query Engine
+delta-spark # Delta Lake
+datahub-rest # Metadata Discovery
+openlineage-python # Data Lineage
+duckdb # Fast OLAP
+clickhouse-connect # ClickHouse Client
+apache-beam # Unified Processing
+apache-superset # BI & Exploration
+
+# MLOps Evolution
+kubeflow-pipelines # ML Workflows
+feast # Feature Store
+ray[default] # Distributed Computing
+bentoml # Model Serving
+evidently # ML Monitoring
+argo-workflows # Pipeline Execution
+tritonclient[all] # Inference Serving
+onnx # Interoperability
+label-studio # Data Labeling
+metaflow # Human-friendly ML
+zenml # Portable Pipelines
+
+# ModelSecOps & Ethics
+garak # LLM Vulnerability Scanner
+fairlearn # Fairness Assessment
+nemo-guardrails # LLM Safety Rails
+guardrails-ai # Output Validation
+modelscan # Model Threat Scanning
+counterfit # AI Red-Teaming
+alibi # Model Explanations
+textattack # NLP Adversarial Attacks
+rebuff # Prompt Injection Defense
+shap # Explainability
+presidio-analyzer # PII Detection
+presidio-anonymizer # PII Masking
+adversarial-robustness-toolbox # ART
+
+# SRE & Observability
+prometheus-client # Metrics
+opentelemetry-api # Tracing
+opentelemetry-sdk # Tracing
+jaeger-client # Distributed Tracing
+python-logging-loki # Log Aggregation
+locust # Performance Testing (k6 alternative in Python)
+chaos-mesh-python # Chaos Engineering (via API)
+keda # Event-driven scaling (via API)
+
+# DevSecOps & Security
+trivy # Vulnerability Scanning (via CLI)
+semgrep # Static Analysis
+pyfalco # Runtime Security
+opa-python-client # Policy Engine
+cosign # Image Signing (via CLI)
+defectdojo-api # Vulnerability Management
+checkov # IaC Static Analysis
+kubescape # K8s Security
+hvac # HashiCorp Vault Client
+sonar-tools # SonarQube Integration
+cyclonedx-python-lib # SBOM tracking
+pip-audit # Dependency Security
+detect-secrets # Secret Detection
+gitleaks # Secret Detection (via CLI)
+
+# Monitoring & Scalability
+redis # Distributed Caching
+requests # API Interaction
+vllm # High-throughput Inference
+aiohttp # Async Networking
+
+# Multi-Modal & Document Processing
+openpyxl # Excel Processing
+PyPDF2 # PDF Text Extraction
+python-docx # Word Document Processing
+beautifulsoup4 # HTML Parsing
+markdown # Markdown Parsing

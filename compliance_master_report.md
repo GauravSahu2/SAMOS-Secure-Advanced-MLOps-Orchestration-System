@@ -26,7 +26,7 @@ This report certifies that the **SAMOS** intelligence model has been forged and 
 
 ### 🚀 Pillar 5: SRE (Phases 21-25)
 - **Hardening**: Implemented **Phase 22: Circuit Breakers**.
-- **Verification**: The system automatically rejects requests with a 503 error if hardware load exceeds the 95% safety threshold, protecting the longevity of your RTX 5070 and NPU.
+- **Verification**: The system automatically rejects requests with a 503 error if hardware load exceeds the 95% safety threshold. Additionally, the **8GB RAM-reservation guard** (Phase 28) ensures system responsiveness by pausing non-critical training if memory headroom is compromised.
 
 ---
 

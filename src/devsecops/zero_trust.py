@@ -1,9 +1,12 @@
 import hashlib
+import os
 
 class ZeroTrustGuard:
     """Phase 18: Zero-Trust SecOps - Inter-Phase Handshake."""
     def __init__(self):
-        self.secret = "FAANG-MLOPS-SECRET-2026"  # nosec # noqa
+        # SECRET: Must be set via environment variable or injected by HashiCorp Vault.
+        # Never hardcode secrets in source code.
+        self.secret = os.environ.get("SAMOS_ZT_SECRET", "CHANGE-ME-IN-PRODUCTION")  # nosec # noqa
         self.tokens = {}
 
     def issue_token(self, phase_name):

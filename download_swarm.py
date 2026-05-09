@@ -19,22 +19,25 @@ except ImportError:
 # 📂 TARGET DIRECTORY
 MODEL_DIR = "models" # [TRIGGER] Files will be saved here.
 
-# 👥 THE CS COMMITTEE SPECIALISTS (GGUF Quantized for speed)
+# 👥 THE 4B TEACHER COMMITTEE (Knowledge Sources for Pinaka 1B)
 SWARM_MODELS = [
     {
-        "name": "Qwen-Coder (Syntax Master)",
-        "repo": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
-        "file": "qwen2.5-coder-1.5b-instruct-q4_k_m.gguf"
+        "name": "Phi-3-Mini (Reasoning Teacher)",
+        "repo": "microsoft/Phi-3-mini-4k-instruct"
     },
     {
-        "name": "DeepSeek-Coder (Logic Engine)",
-        "repo": "deepseek-ai/deepseek-coder-1.3b-instruct",
-        "file": "pytorch_model.bin" # Using small-footprint torch weights.
+        "name": "Qwen1.5-4B (Balance Teacher)",
+        "repo": "Qwen/Qwen1.5-4B"
+    },
+    {
+        "name": "StableLM-3B (Diversity Teacher)",
+        "repo": "stabilityai/stablelm-3b-4e1t"
     }
 ]
 
 def initiate_download():
     """Iterates through the swarm and downloads the necessary intelligence binaries."""
+    from huggingface_hub import snapshot_download
     
     # [TRIGGER] Ensures the 'models' directory exists.
     if not os.path.exists(MODEL_DIR):
@@ -47,14 +50,10 @@ def initiate_download():
     for model in SWARM_MODELS:
         print(f"\n📡 Requesting: {model['name']}...")
         try:
-            # [TRIGGER] Downloads the specific file from Hugging Face.
-            # Rationale: We download specific quantized files to ensure 
-            # they fit in your laptop's RAM alongside SAMOS 4B.
-            path = hf_hub_download(
+            # [TRIGGER] Downloads the full model from Hugging Face.
+            path = snapshot_download(
                 repo_id=model["repo"],
-                filename=model["file"],
-                local_dir=MODEL_DIR,
-                local_dir_use_symlinks=False
+                local_dir=os.path.join(MODEL_DIR, model["repo"].split("/")[-1])
             )
             print(f"✅ SUCCESS: Saved to {path}")
         except Exception as e:
@@ -66,6 +65,4 @@ def initiate_download():
     print("="*40)
 
 if __name__ == "__main__":
-    # [TRIGGER] The user has requested to only generate this file.
-    # To run the download, the user will execute: python download_swarm.py
-    print("🛡️ SCRIPT GENERATED: Run 'python download_swarm.py' when you are ready to download.")
+    initiate_download()

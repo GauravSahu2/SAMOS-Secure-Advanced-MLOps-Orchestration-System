@@ -9,6 +9,7 @@ A high-assurance, end-to-end MLOps & DevSecOps factory for mission-critical AI w
 
 - **DataOps Foundation**: Automated sourcing, validation (Great Expectations), PII masking (Presidio), and feature evolution.
 - **MLOps Intelligence**: Distributed training, neural architecture search, hyperparameter optimization (Optuna), and experiment tracking (MLflow).
+- **Distillation Forge**: High-performance multi-device distillation (NPU, iGPU, CUDA) with 80% compute saturation and 8GB RAM-reservation guard.
 - **ModelSecOps Governance**: Adversarial robustness testing (ART), ethical bias audits, and immutable governance ledgers.
 - **DevSecOps Purity**: Self-healing code, supply-chain hardening (SBOM), and automated red-teaming.
 - **SRE & CD Resilience**: GitOps (ArgoCD), canary deployments, proactive drift forecasting, and planetary-scale latency sync.
@@ -65,7 +66,10 @@ python main.py
 # 4. Launch the factory (LLM Mode)
 python main.py llm
 
-# 5. Start the production neural core
+# 5. Launch the Optimized Forge (NVIDIA + Intel Swarm)
+python samos_master.py
+
+# 6. Start the production neural core
 uvicorn src.sre.serve:app --host 0.0.0.0 --port 8000
 ```
 
@@ -87,6 +91,7 @@ Execution Orchestration
 | **GET** | `/health` | SRE Liveness and Readiness check |
 | **RUN** | `python main.py` | Full 25-phase Structured Pipeline |
 | **RUN** | `python main.py llm` | Specialized LLM Fine-Tuning Pipeline |
+| **RUN** | `python samos_master.py` | Optimized 1B Forge (NVIDIA + Intel) |
 
 SRE & Monitoring
 
@@ -96,13 +101,53 @@ SRE & Monitoring
 | **Drift** | `src/sre/concept_drift.py` | Continuous monitoring for data drift |
 | **Response** | `src/sre/incident_response.py` | Autonomous incident mitigation |
 
-🔍 CLI Arguments
+🔍 CLI Arguments & Granular Control
 
-| Argument | Default | Description |
+The SAMOS Command Center (`samos.py`) provides granular control over each of the 25 pipeline phases.
+
+| Argument | Description | Example |
 | :--- | :--- | :--- |
-| `structured` | *Default* | Runs the complete 25-phase intelligence factory |
-| `llm` | - | Switches to LLM fine-tuning mode (PEFT/LoRA) |
-| `--config` | `configs/default.yaml` | Path to custom orchestration config |
+| `--phase <N>` | Trigger a specific phase (1-25) | `samos --phase 1` |
+| `--phases <N,M,...>` | Trigger multiple specific phases | `samos --phases 1,3,9` |
+| `--phases <N-M>` | Trigger a range of phases | `samos --phases 1-5` |
+| `--group <name>` | Trigger a domain group | `samos --group dataops` |
+| `--groups <a,b>` | Trigger multiple domain groups | `samos --groups dataops,mlops` |
+| `--all` | Trigger the full 25-phase pipeline | `samos --all` |
+
+## 🏢 Enterprise Domain Groups
+
+- **Integrations**: Phase 0 (Apache NiFi, Airflow Sync, Prometheus Telemetry)
+- **DataOps**: Phases 1-6 (Sourcing, Validation, Privacy, Processing, Genealogy)
+- **MLOps**: Phases 7-11 (Active Learning, RLHF, Training, AutoML, Knowledge Graphs)
+- **ModelSecOps**: Phases 12-16 (Evaluation, Bias Audit, Robustness, Governance)
+- **DevSecOps**: Phases 17-21 (Serving Security, Hardening, Audit, Red-Team, Optimization)
+- **SRE**: Phases 22-25 (Scaling, Routing, Economics, Monitoring, Terminal Audit)
+
+## 🚀 SAMOS Enterprise Ultra-Stack (75 Tools)
+
+SAMOS now features a full 75-tool enterprise-grade orchestration layer, spanning five critical domains.
+
+### 📊 Strategic Domains & Tooling
+
+| Domain | Key Tools (Total 75) |
+| :--- | :--- |
+| **DataOps** | Kafka, Spark, Airflow, dbt, Iceberg, Flink, Trino, Delta Lake, DuckDB, ClickHouse, NiFi |
+| **MLOps** | MLflow, Kubeflow, DVC, Feast, Ray, BentoML, Triton, ONNX, Hugging Face, Optuna |
+| **ModelSecOps** | Garak, SHAP, LIME, Fairlearn, ART, Presidio, Guardrails AI, Counterfit |
+| **SRE** | Prometheus, Grafana, OpenTelemetry, Jaeger, Loki, Chaos Mesh, k6, Istio, KEDA |
+| **DevSecOps** | Trivy, OWASP ZAP, Semgrep, Falco, OPA, Cosign, Gitleaks, Vault, SonarQube |
+
+### Launching the Ultra-Stack
+
+```bash
+# Start the core Enterprise clusters
+docker-compose -f docker-compose.enterprise.yml up -d
+
+# Synchronize all 75 tools via the CLI
+samos --group integrations
+```
+
+---
 
 📂 Project Structure
 
@@ -140,24 +185,31 @@ graph TD
 | **GDPR** | Compliant | Automated "Right to be Forgotten" Purge |
 | **Model Security** | Hardened | Adversarial Robustness & Zero-Knowledge Proofs |
 
-📝 Usage Examples
+## 📥 How to Ingest Raw Data
 
-Inference Request
+The SAMOS pipeline is designed to ingest data from multiple sources. You can fill the pipeline with your own raw data using the following methods:
 
-```bash
-curl -X POST http://localhost:8000/predict \
-  -H "Content-Type: application/json" \
-  -d '{"text": "Analyze system state for SAMOS model drift in latent space."}'
-```
+### Method 1: Local File Drop (Easiest)
 
-Trigger SAMOS LLM Pipeline
+Simply place your CSV files in the `data/raw/` directory.
 
-```bash
-python main.py llm
-```
+- Create the directory if it doesn't exist: `mkdir data/raw`
+- Drop your `.csv` files into it.
+- Run the ingestion phase: `samos --phase 1`
+- *The system will automatically detect, merge, and normalize your files into the "Bronze" data lake.*
 
-Generate Architecture Report
+### Method 2: Apache NiFi (Enterprise)
 
-```bash
-python src/sre/diagram_generator.py
-```
+Use the integrated Apache NiFi instance to orchestrate complex data flows.
+
+1. Launch the stack: `docker-compose up -d`
+2. Access NiFi at `https://localhost:8443`
+3. Route your data to the `SAMOS_OUT` port.
+4. Run: `samos --group integrations` to sync.
+
+### Method 3: Kafka Streaming (Real-time)
+
+Push your events directly to the Kafka backbone.
+
+1. Produce messages to the `samos_events` topic.
+2. The `src/data_ops/kafka_backbone.py` service will ingest them into the pipeline.

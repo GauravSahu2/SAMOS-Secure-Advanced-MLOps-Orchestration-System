@@ -26,9 +26,9 @@ def train_multi_teacher_student(api_teachers, local_teachers, target_model_name=
     print("  --------------------------------------------------")
     # STRATEGY 2: Sequential Download/Delete
     for teacher in local_teachers:
-        print(f"    - 📥 Downloading {teacher} to D:\\ drive...")
+        print(f"    - 📥 Downloading {teacher} to local cache...")
         print("    - 🧠 Generating local predictions...")
-        print(f"    - 🗑️ Deleting {teacher} from D:\\ drive to free up space...")
+        print(f"    - 🗑️ Deleting {teacher} from local cache to free up space...")
         time.sleep(1)
 
     print(f"\n  🚀 Forging new Super-Student Model: '{target_model_name}'...")

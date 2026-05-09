@@ -10,17 +10,14 @@ venv/
 .env
 
 # AI Models & Memory (Proprietary - DO NOT COMMIT)
-models/*.bin
-models/*.pt
-models/*.onnx
-models/*.json
+models/
 hgf/
 memory/neural_vault.json
 forge.lock
+*.lock
 
 # Data & Logs
-data/*.csv
-data/*.parquet
+data/
 *.log
 artifacts/*.log
 

@@ -6,7 +6,7 @@ Phase: 28 (Thermal Watchdog & Silicon Safety)
 ====================================================================================================
 
 PURPOSE:
-    Protects high-end hardware (NVIDIA RTX 5070) during multi-day "Deep Forge" 
+    Protects GPU hardware during multi-day "Deep Forge" 
     sessions. Monitors real-time thermal telemetry and enforces hardware throttling 
     to prevent silicon degradation.
 
@@ -59,15 +59,14 @@ class ThermalWatchdog:
         if temp >= self.max_temp:
             msg = f"⚠️ CRITICAL THERMAL ALERT: GPU at {temp}°C! Limit is {self.max_temp}°C."
             logging.warning(msg)
-            logging.warning("🛑 Initiating strict 10-minute hardware cooldown sequence...")
-            self.is_throttled = True
+            # Dynamic cooldown: Sleep in 10s increments until recovery temp is reached
+            while temp > self.recovery_temp:
+                logging.info(f"  🌡️ Cooling in progress... Current: {temp}°C | Target: {self.recovery_temp}°C")
+                time.sleep(10)
+                temp = self.get_gpu_temp()
             
-            # Strict 10-minute sleep (600 seconds) as requested
-            time.sleep(600)
-            
-            temp = self.get_gpu_temp()
             msg = (
-                f"✅ 10-Minute Cooldown complete. Hardware cooled to {temp}°C. "
+                f"✅ Cooldown complete. Hardware cooled to {temp}°C. "
                 "Resuming Forge..."
             )
             logging.info(msg)

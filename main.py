@@ -114,6 +114,7 @@ def main():
         run_phase("src/ml_ops/expert_router.py", "Phase 9: Neural Expert Routing")
         run_phase("src/ml_ops/curriculum.py", "Phase 9: Curriculum-Based Training")
         run_phase("src/ml_ops/train.py", "Phase 9: Training Champion Architecture")
+        run_phase("src/ml_ops/pinaka_forge_v2.py", "Phase 9: Pinaka 1B Real Distillation Forge")
         run_phase("src/ml_ops/transfer_logic.py", "Phase 9: Cross-Domain Knowledge Transfer")
         run_phase("src/ml_ops/swa_merger.py", "Phase 9: Stochastic Weight Averaging")
         run_phase("src/ml_ops/fisher_merging.py", "Phase 9: Fisher-Information Merging")
