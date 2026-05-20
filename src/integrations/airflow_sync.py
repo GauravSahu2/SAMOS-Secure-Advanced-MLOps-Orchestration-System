@@ -14,6 +14,7 @@ FIX APPLIED (Gap #8):
 import logging
 import os
 import shutil
+from typing import Any
 
 logger = logging.getLogger("samos.airflow_sync")
 
@@ -49,7 +50,7 @@ def deploy_dag(target_dir: str = "") -> str:
     return dest
 
 
-def trigger_dag() -> dict:
+def trigger_dag() -> dict[str, Any]:
     """
     Triggers the SAMOS pipeline DAG via the Airflow REST API.
 
@@ -81,13 +82,13 @@ def trigger_dag() -> dict:
         resp.raise_for_status()
         result = resp.json()
         logger.info("✅ DAG triggered — run_id: %s", result.get("dag_run_id"))
-        return result
+        return dict(result)
     except Exception as exc:
         logger.warning("DAG trigger failed: %s", exc)
         return {"error": str(exc)}
 
 
-def list_dag_runs(limit: int = 5) -> list:
+def list_dag_runs(limit: int = 5) -> list[dict[str, Any]]:
     """Lists recent DAG runs via the Airflow REST API."""
     try:
         import requests
@@ -103,7 +104,7 @@ def list_dag_runs(limit: int = 5) -> list:
         resp = requests.get(
             url,
             auth=(username, auth_pass),
-            params={"limit": limit, "order_by": "-start_date"},
+            params={"limit": str(limit), "order_by": "-start_date"},
             timeout=10,
         )
         resp.raise_for_status()
@@ -113,7 +114,7 @@ def list_dag_runs(limit: int = 5) -> list:
                 "  📋 Run %s — state: %s — start: %s",
                 run.get("dag_run_id"), run.get("state"), run.get("start_date"),
             )
-        return runs
+        return list(runs)
     except Exception as exc:
         logger.warning("Failed to list DAG runs: %s", exc)
         return []
