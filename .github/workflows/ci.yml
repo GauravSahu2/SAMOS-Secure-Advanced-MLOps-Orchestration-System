@@ -104,9 +104,9 @@ jobs:
         if: env.CODECOV_TOKEN != ''
         uses: codecov/codecov-action@v4
         with:
-          files: coverage.xml
-          fail_ci_if_error: false
-          token: ${{ env.CODECOV_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          fail_ci_if_error: true
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
@@ -118,7 +118,7 @@ jobs:
     if: github.event_name == 'push'  # Only on push, not on PRs (saves quota)
     env:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL || 'https://sonarcloud.io' }}
     steps:
       - name: "📥 Checkout"
         uses: actions/checkout@v4
@@ -126,11 +126,11 @@ jobs:
           fetch-depth: 0
 
       - name: "🔭 SonarQube Scan"
-        if: env.SONAR_TOKEN != '' && env.SONAR_HOST_URL != ''
-        uses: SonarSource/sonarqube-scan-action@master
+        if: env.SONAR_TOKEN != ''
+        uses: SonarSource/sonarcloud-github-action@master
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
   # ── TIER 5: Docker Build Validation ──────────────────────────────────────────
   docker-build:
@@ -147,6 +147,7 @@ jobs:
       - name: "🔍 Trivy: Container Vulnerability Scan"
         uses: aquasecurity/trivy-action@master
         with:
+          scan-type: 'image'
           image-ref: samos:ci-${{ github.sha }}
           format: "sarif"
           output: "trivy-results.sarif"

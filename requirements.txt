@@ -8,6 +8,7 @@ uvicorn==0.30.0
 torch
 numpy
 psutil
+matplotlib>=3.8.0
 pydantic
 pyseto                    # PASETO v4 Auth tokens
 transformers
@@ -19,29 +20,29 @@ peft
 mlflow                    # Experiment tracking
 optuna                    # Hyperparameter tuning
 dvc                       # Data version control
-great-expectations        # Data quality
+# great-expectations        # Data quality
 confluent-kafka           # Kafka client
 pyspark                   # Apache Spark
-dbt-core                  # SQL transformations
+# dbt-core                  # SQL transformations
 duckdb                    # Fast OLAP queries
 clickhouse-connect        # ClickHouse client
 openlineage-python        # Data lineage tracking
 
 # ── MLOps Evolution ───────────────────────────────────────────────────────────
-feast                     # Feature store
+# feast                     # Feature store
 ray[default]              # Distributed computing
 bentoml                   # Model serving
-evidently                 # ML monitoring
+# evidently                 # ML monitoring
 onnx                      # Model interoperability
 tritonclient[all]         # Triton inference client
 
 # ── ModelSecOps & Ethics ──────────────────────────────────────────────────────
-fairlearn                 # Fairness assessment
-alibi                     # Model explanations
+# fairlearn                 # Fairness assessment
+# alibi                     # Model explanations
 shap                      # Feature importance / SHAP values
 presidio-analyzer         # PII detection
 presidio-anonymizer       # PII masking
-textattack                # NLP adversarial attacks
+# textattack                # NLP adversarial attacks
 
 # ── SRE & Observability ───────────────────────────────────────────────────────
 prometheus-client         # Prometheus metrics exposition
@@ -52,7 +53,7 @@ locust                    # Performance / load testing
 # ── DevSecOps & Security ──────────────────────────────────────────────────────
 hvac                      # HashiCorp Vault client
 checkov                   # Infrastructure-as-Code static analysis
-semgrep                   # Static analysis (also available as CLI)
+# semgrep                   # Static analysis (also available as CLI)
 pip-audit                 # Dependency vulnerability scanning
 detect-secrets            # Secret detection pre-commit hook
 cyclonedx-bom             # SBOM generation
@@ -69,7 +70,7 @@ schemathesis==4.18.0      # Contract / API fuzz testing
 # ── Static Analysis ───────────────────────────────────────────────────────────
 bandit==1.9.4             # Python SAST
 ruff==0.15.12             # Linter + formatter
-mypy==1.20.2              # Type checker
+mypy==1.14.1              # Type checker
 
 # ── Monitoring & Scalability ──────────────────────────────────────────────────
 redis                     # Distributed caching / MAB state persistence

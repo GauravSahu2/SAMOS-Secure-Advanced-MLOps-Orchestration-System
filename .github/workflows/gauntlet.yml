@@ -14,9 +14,9 @@ jobs:
     name: "🏆 Full Gauntlet"
     runs-on: ubuntu-latest
     env:
-      CODECOV_TOKEN: ${{ secrets['CODECOV_TOKEN'] }}
-      SONAR_TOKEN: ${{ secrets['SONAR_TOKEN'] }}
-      SONAR_HOST_URL: ${{ secrets['SONAR_HOST_URL'] }}
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL || 'https://sonarcloud.io' }}
 
     steps:
       - name: "📥 Checkout"
@@ -62,13 +62,16 @@ jobs:
         if: env.CODECOV_TOKEN != ''
         uses: codecov/codecov-action@v4
         with:
-          files: coverage.xml
-          fail_ci_if_error: false
-          token: ${{ secrets['CODECOV_TOKEN'] }}
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          fail_ci_if_error: true
 
       - name: "🔭 Tier 07: SonarQube Analysis"
-        if: env.SONAR_TOKEN != '' && env.SONAR_HOST_URL != ''
-        uses: SonarSource/sonarqube-scan-action@master
+        if: env.SONAR_TOKEN != ''
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: "🐳 Tier 08: Docker Build"
         run: docker build -t samos:gauntlet-${{ github.sha }} .
@@ -76,6 +79,7 @@ jobs:
       - name: "🔍 Tier 09: Trivy Container Scan"
         uses: aquasecurity/trivy-action@master
         with:
+          scan-type: 'image'
           image-ref: samos:gauntlet-${{ github.sha }}
           format: "sarif"
           output: "trivy-results.sarif"

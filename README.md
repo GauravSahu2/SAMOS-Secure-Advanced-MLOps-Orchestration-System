@@ -1,7 +1,7 @@
 # 📝 SAMOS: Secure Advanced MLOps & Orchestration System
 
-[![CI](https://github.com/your-org/samos/actions/workflows/ci.yml/badge.svg)](https://github.com/your-org/samos/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/your-org/samos/branch/main/graph/badge.svg)](https://codecov.io/gh/your-org/samos)
+[![CI](https://github.com/GauravSahu2/SAMOS-Secure-Advanced-MLOps-Orchestration-System/actions/workflows/ci.yml/badge.svg)](https://github.com/GauravSahu2/SAMOS-Secure-Advanced-MLOps-Orchestration-System/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/GauravSahu2/SAMOS-Secure-Advanced-MLOps-Orchestration-System/branch/main/graph/badge.svg)](https://codecov.io/gh/GauravSahu2/SAMOS-Secure-Advanced-MLOps-Orchestration-System)
 [![Security: Bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 [![Code style: Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 

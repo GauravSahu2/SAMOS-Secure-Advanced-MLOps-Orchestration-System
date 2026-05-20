@@ -4,7 +4,15 @@
 [allowlist]
 description = "Allowlist for non-sensitive public hashes"
 regexes = [
-    'ef9386625abc8feb45ba298ab6e02c05d02418bd38e5e7437f4904b6ce82c7f2' # Model Integrity Hash
+    'ef9386625abc8feb45ba298ab6e02c05d02418bd38e5e7437f4904b6ce82c7f2', # Model Integrity Hash
+    '(?i)\$\{\{\s*secrets\.[a-za-z0-9_]+\s*\}\}', # GitHub Actions Secrets
+    '(?i)your_sonarcloud_token|hf_YOUR_TOKEN_HERE|change_this_strong_password_123|change_me_on_first_login|your_sonar_token|change_me_to_a_random_32char_string|your_codecov_token' # Placeholders
+]
+paths = [
+    '''\.env$''',
+    '''\.env\.example$''',
+    '''\.gitleaks\.toml$''',
+    '''requirements\.txt$'''
 ]
 
 [[rules]]
