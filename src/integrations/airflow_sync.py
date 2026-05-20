@@ -68,7 +68,7 @@ def trigger_dag() -> dict:
 
     # Basic auth from env
     username = os.environ.get("AIRFLOW_USERNAME", "admin")
-    auth_pass = os.environ.get("AIRFLOW_PASSWORD", "admin")  # nosec B105
+    auth_pass = os.environ.get("AIRFLOW_PASSWORD", "admin")
 
     try:
         resp = requests.post(
@@ -97,7 +97,7 @@ def list_dag_runs(limit: int = 5) -> list:
 
     url = f"{AIRFLOW_API_BASE}/dags/{AIRFLOW_DAG_ID}/dagRuns"
     username = os.environ.get("AIRFLOW_USERNAME", "admin")
-    auth_pass = os.environ.get("AIRFLOW_PASSWORD", "admin")  # nosec B105
+    auth_pass = os.environ.get("AIRFLOW_PASSWORD", "admin")
 
     try:
         resp = requests.get(

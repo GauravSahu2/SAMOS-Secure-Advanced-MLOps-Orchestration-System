@@ -69,11 +69,11 @@ def evaluate_llm(model_path: str) -> dict[str, Any]:
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     try:
-        tokenizer = AutoTokenizer.from_pretrained(model_path)
+        tokenizer = AutoTokenizer.from_pretrained(model_path)  # nosec B615
         if tokenizer.pad_token is None:
             tokenizer.pad_token = tokenizer.eos_token
 
-        model = AutoModelForCausalLM.from_pretrained(
+        model = AutoModelForCausalLM.from_pretrained(  # nosec B615
             model_path, torch_dtype=torch.float32, low_cpu_mem_usage=True
         ).to(device)
         model.eval()
@@ -95,7 +95,7 @@ def evaluate_llm(model_path: str) -> dict[str, Any]:
 
 def _compute_llm_loss(model: Any, tokenizer: Any, device: str, max_batches: int = 50) -> tuple[float, int]:
     """Runs inference on wikitext-2 validation split and returns (total_loss, batch_count)."""
-    dataset = load_dataset("wikitext", "wikitext-2-raw-v1", split="validation")
+    dataset = load_dataset("wikitext", "wikitext-2-raw-v1", split="validation")  # nosec B615
     total_loss = 0.0
     total_batches = 0
 

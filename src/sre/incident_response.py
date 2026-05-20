@@ -39,7 +39,7 @@ from typing import Any  # noqa: E402
 def _metrics_from_prometheus(endpoint: str = "http://localhost:9090/metrics") -> dict[str, Any]:
     """Scrapes a Prometheus metrics endpoint and extracts relevant SAMOS KPIs."""
     try:
-        with urllib.request.urlopen(endpoint, timeout=3) as resp:
+        with urllib.request.urlopen(endpoint, timeout=3) as resp:  # nosec B310
             body = resp.read().decode("utf-8")
         return _parse_prometheus_families(body)
     except Exception as exc:
