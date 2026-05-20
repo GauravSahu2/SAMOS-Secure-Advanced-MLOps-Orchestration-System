@@ -1,5 +1,7 @@
 
-def invert_anomaly(anomaly_record, neighbor_mean_record):
+from typing import Any
+
+def invert_anomaly(anomaly_record: dict[str, Any], neighbor_mean_record: dict[str, Any]) -> dict[str, Any]:
     """Phase 2: DataOps - Anomaly Inversion Guardrail."""
     print("🔄 Phase 2: Inverting Anomaly via Neighbor Logic...")
     

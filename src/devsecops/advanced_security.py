@@ -1,6 +1,6 @@
 import requests
 
-def run_dast_scan(url="http://localhost:8000"):
+def run_dast_scan(url: str = "http://localhost:8000") -> None:
     """Phase 18: Dynamic Analysis Security Testing (DAST)."""
     print(f"🚀 Phase 18: Running DAST on {url}...")
     try:
@@ -22,7 +22,7 @@ def run_dast_scan(url="http://localhost:8000"):
     except Exception:
         print(f"⚠️ DAST: Server not reachable at {url}. Skipping live scan.")
 
-def run_vulnerability_scan():
+def run_vulnerability_scan() -> None:
     """Phase 20: Container Vulnerability Scan (Trivy Simulation)."""
     print("🚀 Phase 20: Running Container Vulnerability Scan...")
     

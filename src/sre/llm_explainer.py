@@ -1,5 +1,7 @@
 
-def explain_prediction_with_llm(prediction, shap_values, user_profile):
+from typing import Any
+
+def explain_prediction_with_llm(prediction: int, shap_values: dict[str, float], user_profile: dict[str, Any]) -> str:
     """Phase 24: Conversational AI - LLM Prediction Explainer."""
     print("💬 Phase 24: Generating LLM Narrative Explanation...")
     

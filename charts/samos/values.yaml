@@ -1,0 +1,30 @@
+replicaCount: 2
+
+image:
+  repository: samos
+  pullPolicy: IfNotPresent
+  tag: "1.1.0"
+
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 7860
+
+resources:
+  limits:
+    cpu: "2"
+    memory: "4Gi"
+  requests:
+    cpu: "1"
+    memory: "2Gi"
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+
+env:
+  PORT: "7860"
+  LOG_LEVEL: "INFO"
+  LOG_FORMAT: "json"

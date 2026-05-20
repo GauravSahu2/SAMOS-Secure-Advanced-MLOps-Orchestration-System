@@ -5,7 +5,7 @@ def run_curriculum_training(data_indices, iterations=3):
     print(f"🎓 Phase 9: Initializing Curriculum Training ({iterations} stages)...")
     
     # Simulating difficulty scores for each sample
-    rng = np.random.default_rng()
+    rng = np.random.default_rng(42)
     difficulties = rng.uniform(0, 1, size=len(data_indices))
     
     for stage in range(1, iterations + 1):

@@ -1,0 +1,88 @@
+# ================================================================================
+# SAMOS CD: Hugging Face Spaces — Primary Free Deploy
+# TRIGGER: Every push to main that touches the serving layer
+#          OR manually via GitHub Actions UI
+# PURPOSE: Keep the live HF Space always up-to-date. Zero cost.
+# ================================================================================
+
+name: "🤗 SAMOS: CD → Hugging Face Spaces (Free)"
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "src/sre/serve.py"
+      - "src/sre/thermal_watchdog.py"
+      - "src/ml_ops/memory.py"
+      - "samos_dashboard.html"
+      - "Dockerfile"
+      - "requirements.txt"
+  workflow_dispatch:   # Also allows manual trigger from GitHub UI
+  workflow_call:
+    secrets:
+      HF_TOKEN:
+        required: true
+      HF_SPACE_ID:
+        required: true
+
+jobs:
+  deploy:
+    name: "🚀 Sync to Hugging Face Spaces"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "📥 Checkout SAMOS"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: "🐍 Setup Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: "📦 Install HF Hub CLI"
+        run: pip install huggingface_hub
+
+      # ── Sync files to the Hugging Face Space via the API ──────────────────────
+      - name: "🤗 Upload to HF Space"
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_SPACE_ID: ${{ secrets.HF_SPACE_ID }}
+        run: |
+          python - <<'PYEOF'
+          import os
+          from huggingface_hub import HfApi
+
+          api = HfApi(token=os.environ["HF_TOKEN"])
+          space_id = os.environ["HF_SPACE_ID"]
+          github_sha = os.environ.get("GITHUB_SHA", "unknown")[:7]
+
+          # Files the HF Space actually needs to run (not the full training stack)
+          files_to_upload = [
+              ("src/sre/serve.py",                 "src/sre/serve.py"),
+              ("src/sre/thermal_watchdog.py",       "src/sre/thermal_watchdog.py"),
+              ("src/ml_ops/memory.py",              "src/ml_ops/memory.py"),
+              ("samos_dashboard.html",              "samos_dashboard.html"),
+              ("requirements.txt",                  "requirements.txt"),
+          ]
+
+          # Upload logo if it exists
+          import glob
+          for logo in glob.glob("samos_logo_ai*.png"):
+              files_to_upload.append((logo, logo))
+
+          for local_path, repo_path in files_to_upload:
+              if os.path.exists(local_path):
+                  api.upload_file(
+                      path_or_fileobj=local_path,
+                      path_in_repo=repo_path,
+                      repo_id=space_id,
+                      repo_type="space",
+                      commit_message=f"🚀 Auto-deploy: {repo_path} ({github_sha})",
+                  )
+                  print(f"✅ Uploaded: {repo_path}")
+              else:
+                  print(f"⚠️  Skipped (not found): {local_path}")
+
+          print(f"\n🎯 Deploy complete → https://huggingface.co/spaces/{space_id}")
+          PYEOF

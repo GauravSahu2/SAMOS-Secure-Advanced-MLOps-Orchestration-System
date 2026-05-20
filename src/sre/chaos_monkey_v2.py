@@ -1,6 +1,6 @@
 import random
 
-def run_extreme_chaos_sequence():
+def run_extreme_chaos_sequence() -> None:
     """Phase 14: SRE - Extreme Chaos Monkey V2."""
     print("🐒 Phase 14: Releasing Extreme Chaos Monkey V2 into the cluster...")
     

@@ -1,0 +1,75 @@
+# SAMOS: .github/workflows/pipeline.yml
+# ROLE: Full MLOps Pipeline — triggered on main pushes after CI passes
+# Runs the 25-phase SAMOS pipeline end-to-end in a controlled environment.
+
+name: "🏹 SAMOS: MLOps Pipeline (Post-CI)"
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  pipeline:
+    name: "🏭 25-Phase Intelligence Factory"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "📥 Checkout"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Set up Python 3.12"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: "📦 Install Pipeline Dependencies"
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas numpy scikit-learn mlflow psutil fastapi uvicorn
+          pip install prometheus-client requests
+
+      - name: "🏗️ Phase 01-05: DataOps — Ingest, Validate, Heal, Mask, Privacy"
+        run: python samos.py --phase data_ops
+        env:
+          PYTHONPATH: "."
+          MLFLOW_TRACKING_URI: "sqlite:///pipeline_mlflow.db"
+        continue-on-error: true  # Data phases may skip on missing fixtures
+
+      - name: "⚙️ Phase 06-10: MLOps — NAS, AutoML, Train, Distill, Watermark"
+        run: python samos.py --phase ml_ops
+        env:
+          PYTHONPATH: "."
+          MLFLOW_TRACKING_URI: "sqlite:///pipeline_mlflow.db"
+        continue-on-error: true  # Training requires GPU — degraded mode in CI
+
+      - name: "🔒 Phase 11-15: ModelSecOps — Bias Audit, ZKP, Governance, Evaluate"
+        run: python samos.py --phase model_sec
+        env:
+          PYTHONPATH: "."
+          MLFLOW_TRACKING_URI: "sqlite:///pipeline_mlflow.db"
+        continue-on-error: true
+
+      - name: "🚀 Phase 16-20: SRE — Serve, MAB, Incident Response, Drift"
+        run: python samos.py --phase sre
+        env:
+          PYTHONPATH: "."
+        continue-on-error: true
+
+      - name: "🛡️ Phase 21-25: DevSecOps — Supply Chain, Vault, Red Team, Chaos"
+        run: python samos.py --phase devsecops
+        env:
+          PYTHONPATH: "."
+        continue-on-error: true
+
+      - name: "📦 Upload Pipeline Artifacts"
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: samos-pipeline-artifacts-${{ github.sha }}
+          retention-days: 30
+          path: |
+            artifacts/
+            models/samos_forge_state.json
+            pipeline_mlflow.db

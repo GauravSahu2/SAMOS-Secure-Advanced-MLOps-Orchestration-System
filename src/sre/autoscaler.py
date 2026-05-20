@@ -1,7 +1,7 @@
 import time
 import random
 
-def run_autoscaler_loop():
+def run_autoscaler_loop() -> None:
     """Phase 24: Elastic Infrastructure - KEDA Auto-scaler Simulation."""
     print("📈 Phase 24: Initializing Infrastructure Auto-scaler...")
     

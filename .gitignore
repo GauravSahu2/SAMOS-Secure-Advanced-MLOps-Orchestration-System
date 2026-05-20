@@ -10,19 +10,29 @@ venv/
 .env
 
 # AI Models & Memory (Proprietary - DO NOT COMMIT)
-models/*.bin
-models/*.pt
-models/*.onnx
-models/*.json
+models/
 hgf/
 memory/neural_vault.json
 forge.lock
+*.lock
 
 # Data & Logs
-data/*.csv
-data/*.parquet
+data/
 *.log
+pinaka_forge.log
+pinaka_forge_live.log
+samos_master.log
 artifacts/*.log
+
+# Test artifacts
+test_email.csv
+test_val.csv
+test_email_masked.csv
+test_clean.csv
+test_dlq.csv
+.pytest_cache/
+.ruff_cache/
+.hypothesis/
 
 # IDE & OS
 .vscode/
@@ -39,3 +49,8 @@ htmlcov/
 coverage.xml
 sbom.json
 audit_bundle.zip
+
+Pinaka/
+*.safetensors
+*.bin
+*.pkl

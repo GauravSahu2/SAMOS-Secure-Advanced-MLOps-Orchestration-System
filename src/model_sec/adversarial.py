@@ -2,7 +2,7 @@ import numpy as np
 import pickle  # nosec # noqa
 import os
 
-def check_adversarial_robustness(model_path, data_path):
+def check_adversarial_robustness(model_path: str, data_path: str) -> None:
     """Phase 14: Adversarial Robustness (Simplified ART logic)."""
     print("🚀 Phase 14: Running Adversarial Robustness Tests...")
     
@@ -20,7 +20,7 @@ def check_adversarial_robustness(model_path, data_path):
     base_preds = model.predict(x_matrix[:10])
     
     # 2. Add Adversarial Perturbation (Noise)
-    rng = np.random.default_rng()
+    rng = np.random.default_rng(42)
     noise = rng.normal(0, 0.1, x_matrix[:10].shape)
     x_adv = x_matrix[:10] + noise
     

@@ -1,6 +1,6 @@
 import numpy as np
 
-def run_cross_domain_transfer(source_model_weights, target_task_shape):
+def run_cross_domain_transfer(source_model_weights):
     """Phase 9: Universal Intelligence - Cross-Domain Transfer Bridge."""
     print("🌐 Phase 9: Initiating Cross-Domain Knowledge Transfer...")
     
@@ -20,5 +20,6 @@ def run_cross_domain_transfer(source_model_weights, target_task_shape):
 
 if __name__ == "__main__":
     # Source weights from a 'Financial Risk' model
-    source = np.random.normal(0, 1, 100)
-    run_cross_domain_transfer(source, 100)
+    rng = np.random.default_rng(42)
+    source = rng.normal(0, 1, 100)
+    run_cross_domain_transfer(source)

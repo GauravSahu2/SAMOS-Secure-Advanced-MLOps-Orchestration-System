@@ -27,7 +27,9 @@ CONNECTION ORDER:
 import hashlib
 import json
 
-def generate_zk_data_proof(dataset_name, data_content):
+from typing import Any
+
+def generate_zk_data_proof(dataset_name: str, data_content: dict[str, Any]) -> str | bool:
     """Phase 3: DataOps - Cryptographic Data Integrity Proof."""
     print(f"🔐 Phase 3: Generating Actual Cryptographic Proof for '{dataset_name}'...")
     

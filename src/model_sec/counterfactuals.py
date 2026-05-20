@@ -1,7 +1,7 @@
 import pandas as pd
 import pickle  # nosec # noqa
 
-def generate_counterfactual(model_path, user_data):
+def generate_counterfactual(model_path: str, user_data: pd.DataFrame) -> None:
     """Phase 13: Actionable XAI - Counterfactual Explanations."""
     print("🔍 Phase 13: Generating Counterfactual Explanation...")
     

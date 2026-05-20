@@ -1,6 +1,8 @@
 import numpy as np
 
-def check_semantic_integrity(data, column_name, expected_mean):
+from typing import Any
+
+def check_semantic_integrity(data: list[float] | list[int], column_name: str, expected_mean: float) -> bool:
     """Phase 2: DataOps - Semantic Integrity Guardrail."""
     print(f"🧠 Phase 2: Checking Semantic Integrity for '{column_name}'...")
     

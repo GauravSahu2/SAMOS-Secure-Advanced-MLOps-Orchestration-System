@@ -6,7 +6,7 @@ def run_fisher_merging(model_a_weights, model_b_weights):
     
     # Simulating Fisher Information (Importance) for each weight
     # 1.0 = Critical, 0.1 = Flexible
-    rng = np.random.default_rng()
+    rng = np.random.default_rng(42)
     fisher_info_a = rng.uniform(0.1, 1.0, size=len(model_a_weights))
     fisher_info_b = rng.uniform(0.1, 1.0, size=len(model_b_weights))
     

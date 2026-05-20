@@ -1,7 +1,7 @@
 import pandas as pd
 import pickle  # nosec # noqa
 
-def check_monotonicity(model_path, feature_name="credit_score", direction="negative"):
+def check_monotonicity(model_path: str, feature_name: str = "credit_score", direction: str = "negative") -> bool:
     """Phase 13: Business Logic Guardrail - Monotonicity Test."""
     print(f"📉 Phase 13: Checking Monotonicity for '{feature_name}' ({direction})...")
     

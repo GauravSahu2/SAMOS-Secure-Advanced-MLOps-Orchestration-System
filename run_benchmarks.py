@@ -36,7 +36,13 @@ def execute_benchmarks():
     ]
 
     print("\n🚀 [BENCHMARK] Executing Sanity-Check (Limit: 10)...")
-    print(f"📡 Device: NVIDIA RTX 5070")
+    # Auto-detect GPU name at runtime for portability
+    try:
+        import torch
+        gpu_name = torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU"
+    except Exception:
+        gpu_name = "Unknown"
+    print(f"📡 Device: {gpu_name}")
     print(f"📡 Mode: Pipeline Validation (ETA: ~2 Minutes)")
     print("="*50)
 

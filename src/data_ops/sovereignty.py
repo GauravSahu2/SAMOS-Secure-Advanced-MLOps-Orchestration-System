@@ -1,6 +1,6 @@
 import pandas as pd
 
-def check_data_sovereignty(data_path, current_region="US"):
+def check_data_sovereignty(data_path: str, current_region: str = "US") -> bool:
     """Phase 3: DataSecOps - Sovereignty & Residency Guardrail."""
     print(f"🗺️ Phase 3: Checking Data Sovereignty (Current Region: {current_region})...")
     

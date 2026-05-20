@@ -1,6 +1,8 @@
 import numpy as np
 
-def route_to_expert(_user_data, experts):
+from typing import Any
+
+def route_to_expert(_user_data: Any, experts: list[str]) -> str:
     """Phase 9: Neural Orchestration - Attention-Based Expert Routing."""
     print("🧠 Phase 9: Calculating Attention Weights for Expert Routing...")
 

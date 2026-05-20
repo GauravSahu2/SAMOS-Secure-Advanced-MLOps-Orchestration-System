@@ -1,6 +1,6 @@
 import hashlib
 
-def generate_social_trust_proof(satisfaction_score=0.999):
+def generate_social_trust_proof(satisfaction_score: float = 0.999) -> str:
     """Phase 16: Governance - Zero-Knowledge Social Proof."""
     print("🔐 Phase 16: Compiling Zero-Knowledge Social Proof (ZKSP)...")
     

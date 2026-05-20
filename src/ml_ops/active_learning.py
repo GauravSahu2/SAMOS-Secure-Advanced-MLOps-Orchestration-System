@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import pickle  # nosec # noqa
 
-def identify_uncertain_samples(model_path, data_path, threshold=0.1):
+def identify_uncertain_samples(model_path: str, data_path: str, threshold: float = 0.1) -> None:
     """Phase 11: Active Learning - Uncertainty Sampling."""
     print("🔍 Phase 11: Starting Active Learning Uncertainty Check...")
     

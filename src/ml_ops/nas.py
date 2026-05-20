@@ -28,14 +28,14 @@ from sklearn.metrics import accuracy_score
 import warnings
 warnings.filterwarnings("ignore")
 
-def run_nas_evolution(generations=3):
+def run_nas_evolution(generations: int = 3) -> list[int]:
     """Phase 10: Model Evolution - Neural Architecture Search (NAS)."""
     print(f"🧬 Phase 10: Starting ACTUAL Neural Architecture Search ({generations} generations)...")
     
     # Generate some free local dummy data to train on
-    np.random.seed(42)
-    X = np.random.rand(100, 10)
-    y = np.random.randint(0, 2, 100)
+    rng = np.random.default_rng(42)
+    X = rng.random((100, 10))
+    y = rng.integers(0, 2, 100)
     
     # [Layers, Neurons per Layer]
     best_arch = [1, 10] 
@@ -46,8 +46,8 @@ def run_nas_evolution(generations=3):
         
         # Mutation: Randomly tweak the architecture
         candidate = [
-            max(1, best_arch[0] + np.random.randint(-1, 2)),  # Number of hidden layers
-            max(5, best_arch[1] + np.random.randint(-5, 10))  # Neurons per layer
+            max(1, best_arch[0] + int(rng.integers(-1, 2))),  # Number of hidden layers
+            max(5, best_arch[1] + int(rng.integers(-5, 10)))  # Neurons per layer
         ]
         
         hidden_layer_sizes = tuple([candidate[1]] * candidate[0])
@@ -59,8 +59,8 @@ def run_nas_evolution(generations=3):
                 max_iter=50,
                 random_state=42
             )
-            model.fit(X, y)
-            fitness = accuracy_score(y, model.predict(X))
+            model.fit(X.tolist(), y.tolist())
+            fitness = float(accuracy_score(y, model.predict(X)))
             
             if fitness > best_fitness:
                 best_fitness = fitness

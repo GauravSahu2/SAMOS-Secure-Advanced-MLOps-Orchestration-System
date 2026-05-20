@@ -1,0 +1,374 @@
+# 🏹 SAMOS: Complete Deep-Dive Analysis
+## Secure Advanced MLOps & Orchestration System
+
+---
+
+## Part 1: What Is SAMOS?
+
+SAMOS is a **25-phase autonomous AI factory** built in Python. Its goal is to take raw data and produce a production-ready, ethically-audited, hardware-optimized AI model — automatically. It has two operating modes:
+
+| Mode | Entry | Purpose |
+|---|---|---|
+| **Structured** | `python main.py` | Full 25-phase pipeline for tabular/structured data |
+| **LLM** | `python main.py llm` | Streamlined fine-tuning pipeline for language models |
+| **Forge** | `python samos_master.py` | Real distillation training of the "Pinaka 1B" LLM |
+| **Granular CLI** | `python samos.py --phase N` | Run any single phase or group on demand |
+
+---
+
+## Part 2: The Architecture — 5 Pillars
+
+The entire codebase is organized under `src/` into **5 domain pillars**, each with a clear role:
+
+```
+src/
+├── data_ops/      (23 files) — THE SOURCE
+├── ml_ops/        (35 files) — THE SOUL
+├── model_sec/     (18 files) — THE JUDGE
+├── devsecops/     (15 files) — THE PURITY
+├── sre/           (36 files) — THE GUARDIAN
+└── integrations/  ( 3 files) — THE BRIDGE
+```
+
+---
+
+## Part 3: Every File Explained — How It Connects
+
+### 🔧 Orchestration Layer (Root Level)
+
+| File | Role | Connects To |
+|---|---|---|
+| `main.py` | **Master Orchestrator.** Runs all 25 phases in sequence via `subprocess`. Each phase is isolated for memory safety. Sets `MLFLOW_TRACKING_URI`. | Entry point for everything |
+| `samos.py` | **Granular CLI.** Imports `run_phase` from `main.py`. Defines `PHASE_SCRIPTS` dict (Phase 0–25) and `GROUP_MAPPING`. Supports `--phase`, `--phases`, `--group`, `--all` flags. | `main.py` → all `src/` modules |
+| `samos_master.py` | **Forge Master.** Runs `download_swarm.py` then `pinaka_forge_v2.py` with unbuffered real-time logging to `samos_master.log`. | `download_swarm.py` → `pinaka_forge_v2.py` |
+| `download_swarm.py` | Downloads teacher models (Phi-3, Qwen1.5-4B, StableLM) from Hugging Face Hub before the forge starts. | Feeds model weights into `pinaka_forge_v2.py` |
+
+---
+
+### 🔵 PILLAR 1: DataOps — `src/data_ops/` (Phases 1–6)
+
+**Goal:** Turn raw, messy, potentially poisoned data into a clean, validated, privacy-compliant feature store.
+
+**Data Flow:**
+```
+Raw files / APIs
+    → ingest.py         (Bronze lake: data/bronze_data.csv)
+    → lake_health.py    (Checks completeness, duplicates, freshness)
+    → data_summarizer.py (Generates a summary card artifact)
+    → multi_modal.py    (Converts PDF/Docx/Excel → CSV via UniversalConverter)
+    → digital_twin.py   (Simulates edge-case scenarios using synthetic data)
+    → gan_divergence.py (Validates synthetic data quality via JS Divergence)
+    → validate.py       (Range checks → writes clean.csv + dlq.csv)
+    → anomaly_inversion.py (Detects and inverts statistical anomalies)
+    → semantic_guard.py (Checks for unit-shift corruption, e.g. $ → cents)
+    → schema_evolver.py (Detects schema drift, adds new columns safely)
+    → self_healing.py   (Auto-imputes missing values using median/mode)
+    → data_purge.py     (GDPR: Right-to-be-Forgotten enforcement)
+    → sovereignty.py    (GDPR/CCPA: Rejects cross-region data violations)
+    → multi_tenant.py   (Isolates data per tenant/org)
+    → zk_data_proof.py  (Zero-Knowledge proof of data integrity without exposing it)
+    → mask_pii.py       (Presidio-based email/phone masking)
+    → privacy.py        (Adds Laplace noise for Differential Privacy)
+    → process.py        (Scaling, encoding → writes data/features.csv)
+    → genetic_features.py (Evolves optimal features via genetic algorithm)
+    → kafka_backbone.py  (Apache Kafka stream ingestion)
+    → spark_compute.py   (Apache Spark for large-scale transformation)
+    → clickhouse_olap.py (ClickHouse OLAP sync)
+```
+
+**Key Connection:** `ingest.py` imports `UniversalConverter` from `multi_modal.py` directly (not via subprocess) — this is the only cross-module import within DataOps.
+
+**Output:** `data/features.csv` — the clean feature store consumed by MLOps.
+
+---
+
+### 🔴 PILLAR 2: MLOps — `src/ml_ops/` (Phases 7–11 + 21)
+
+**Goal:** Take the feature store and produce a trained champion model. The forge pipeline trains an actual 1B LLM.
+
+**The Two Tracks:**
+
+**Track A — Structured Data (AutoML Tournament):**
+```
+ant_colony.py / rfe_optimizer.py   (Bio-inspired feature selection)
+    → automl.py           (Optuna HPO tournament across RF, XGB, MLP)
+    → nas.py              (Neural Architecture Search via genetic mutation)
+    → quantum_ml.py       (Quantum-inspired weighting simulation)
+    → debate.py           (Multiple models debate → best answer wins)
+    → ensemble.py         (Voting ensemble of top models)
+    → expert_router.py    (Routes input to the most-relevant sub-expert)
+    → curriculum.py       (Easy → hard sample ordering during training)
+    → train.py            (Champions the best architecture: run_samos_forge())
+    → transfer_logic.py   (Cross-domain weight transfer)
+    → swa_merger.py       (Stochastic Weight Averaging for smoother convergence)
+    → fisher_merging.py   (Fisher Information Matrix-based weight merging)
+    → federated.py        (Simulates federated aggregation across nodes)
+    → distill.py          (Teacher-Student KD compression)
+    → one_shot_distill.py (One-shot compression without retraining)
+    → multi_teacher.py    (Committee of 3 teachers distill into 1 student)
+```
+
+**Track B — LLM Forge (Real Training):**
+```
+samos_master.py
+    → download_swarm.py       (Downloads Phi-3, Qwen1.5-4B, StableLM)
+    → pinaka_forge_v2.py      (MAIN ENGINE: Real PyTorch training loop)
+        ├── Loads Student: Qwen2.5-1.5B
+        ├── Spawns Intel OpenVINO workers (NPU + iGPU)
+        ├── Imports ThermalWatchdog from src/sre/thermal_watchdog.py
+        ├── DataLoader → tokenizes wikitext-2-raw-v1
+        ├── Distillation loss (student forward + backward via accelerate)
+        ├── Checkpoints every 1000 steps → models/samos_1b_step_N/
+        └── Saves final → models/samos_1b_final/
+```
+
+**Key Cross-Pillar Dependency:** Both `train.py` AND `pinaka_forge_v2.py` import `ThermalWatchdog` from `src/sre/thermal_watchdog.py`. This is the most important cross-pillar connection in the codebase.
+
+**Supporting Modules:**
+- `memory.py` — Episodic + semantic memory system with Redis integration
+- `knowledge_graph.py` — Builds knowledge graphs for context
+- `genealogy.py` — Tracks data lineage via MLflow
+- `ledger.py` — Immutable governance ledger (hash-chained entries)
+- `watermark.py` — IP watermarking via steganographic bit-flipping
+- `ray_scaler.py` — Ray distributed training
+- `triton_adapter.py` — NVIDIA Triton configuration
+- `bentoml_server.py` — BentoML packaging
+
+---
+
+### 🟡 PILLAR 3: ModelSecOps — `src/model_sec/` (Phases 12–16)
+
+**Goal:** The model is guilty until proven innocent. Every model must pass adversarial, bias, and compliance checks before deployment.
+
+```
+evaluate.py          (Phase 12: K-fold eval, loads from MLflow or local pickle)
+    → bias_audit.py      (Phase 13: Slice model on age/income cohorts, 15% disparity gate)
+    → live_bias_fix.py   (Inference-time debiasing via threshold adjustment)
+    → regret_minimizer.py (Ethical regret minimization via online learning)
+    → intersectional_bias.py (Multi-dimensional fairness: age × gender × region)
+    → proxy_bias.py      (Detects hidden proxy variables e.g. zip code → race)
+    → fairlearn_audit.py (Fairlearn framework integration)
+    → adversarial.py     (ART-based FGSM + PGD attack resilience testing)
+    → chaos_test.py      (Random layer removal / weight noise injection)
+    → poisoning_guard.py (Detects training data poisoning via influence functions)
+    → garak_scan.py      (LLM vulnerability scanner for prompt injection, jailbreak)
+    → counterfactuals.py (DiCE-based counterfactual explanations)
+    → compliance_filing.py (Auto-generates regulatory filings: EU AI Act, SOC2)
+    → model_card.py      (Generates standardized model cards)
+    → omni_governance.py (Phase 25: Final governance gate — aggregates all audit reports)
+    → zkp_guard.py       (Zero-Knowledge Proof for privacy-preserving inference)
+    → enclave.py         (Confidential Computing simulation)
+    → monotonicity.py    (Verifies prediction monotonicity constraints)
+```
+
+**Key Connection:** `bias_audit.py` is called by `main.py` after `evaluate.py`. Its output (pass/fail) feeds `omni_governance.py` which is the final phase-25 absolute gate.
+
+---
+
+### 🟢 PILLAR 4: DevSecOps — `src/devsecops/` (Phases 17–21)
+
+**Goal:** Make the codebase and supply chain untainted. Self-heal, red-team, and harden before deployment.
+
+```
+security.py          (SAST scan + SBOM generation — walks src/ for eval/exec/pickle)
+advanced_security.py (JWT validation, HTTPS enforcement, rate limiting simulation)
+zero_trust.py        (mTLS, service mesh, zero-trust policy enforcement)
+vault_manager.py     (HashiCorp Vault: rotates secrets, never hardcodes keys)
+agent_audit.py       (Audits autonomous agent actions for compliance)
+trivy_scan.py        (Container vulnerability scanning via Trivy CLI)
+dependency_patcher.py(pip-audit + auto-patching of vulnerable dependencies)
+self_healing_code.py (AST-based code repair: removes unused vars, fixes syntax)
+style_repair.py      (Auto-runs Ruff formatter to fix style violations)
+red_team.py          (Automated penetration testing simulation)
+pqc_sim.py           (Post-Quantum Cryptography: Kyber/Dilithium simulation)
+prompt_sec.py        (Prompt injection defense via Rebuff-style detection)
+optimize.py          (TurboQuant: INT8/FP16 quantization + ONNX export)
+pruning.py           (Extreme structured/unstructured model pruning)
+social_trust.py      (Zero-Knowledge social proof attestation)
+```
+
+---
+
+### 🟣 PILLAR 5: SRE — `src/sre/` (Phases 22–25)
+
+**Goal:** The model is live. Now protect it, scale it, explain it, and keep it green.
+
+**Serving Stack:**
+```
+serve.py             (FastAPI server: GET / → samos_dashboard.html, POST /predict)
+    ↑ Imported and run by uvicorn
+```
+
+**Traffic & Reliability:**
+```
+mab_gateway.py       (Thompson Sampling MAB: stable vs. candidate traffic split)
+cascading.py         (Model cascade: route easy queries to tiny model, hard to large)
+autoscaler.py        (CPU/RAM-based HPA simulation)
+failover.py          (High-availability failover logic)
+rollback.py          (Automated version rollback on accuracy drop)
+```
+
+**Monitoring & Safety:**
+```
+thermal_watchdog.py  (nvidia-smi polling → cooling pause at 85°C) ← IMPORTED BY TRAINING
+concept_drift.py     (PSI-based distribution shift detection)
+proactive_drift.py   (Forecasts drift before it becomes critical)
+incident_response.py (Autonomous SRE bot: detects → mitigates → post-mortems)
+alert_formatter.py   (Formats telemetry alerts for webhook delivery)
+notif.py             (Webhook notifications to Slack/PagerDuty)
+opentelemetry_trace.py (OpenTelemetry distributed tracing)
+jaeger_tracer.py     (Jaeger span export)
+```
+
+**Operations & Explainability:**
+```
+power_optimizer.py   (Green-AI: CPU/RAM governor, Carbon-intensity scheduling)
+resource_auction.py  (Economic resource allocation via auction theory)
+planetary_latency.py (Multi-region CDN latency simulation)
+llm_explainer.py     (LLM-generated natural language prediction narratives)
+threshold_tuner.py   (Strategic P/R threshold optimization)
+meta_optimizer.py    (Pipeline efficiency audit)
+ct_loop.py           (Continuous training trigger on drift detection)
+```
+
+**Self-Documentation:**
+```
+live_docs.py         (Auto-generates markdown docs from module docstrings)
+wiki_gen.py          (Generates GitHub Wiki content)
+walkthrough_gen.py   (Generates video script walkthroughs)
+diagram_generator.py (Generates Mermaid/ASCII architecture diagrams)
+visualizer.py        (Terminal dashboard visualizer)
+meta_critic.py       (Phase 25: Audits every previous phase output for completeness)
+sunset_manager.py    (Model lifecycle: deprecates old versions after N days)
+multi_lang_cards.py  (Generates model cards in multiple languages)
+nlp_orchestrator.py  (NLP-based pipeline control in plain English)
+nlp_deploy.py        (Human-aligned deployment via natural language instructions)
+stress_test_v2.py    (Locust-based inference load testing)
+chaos_monkey_v2.py   (Terminates random services to test resilience)
+chaos_mesh.py        (Chaos Mesh Kubernetes chaos injection)
+```
+
+---
+
+### 🌐 PILLAR 6: Integrations — `src/integrations/`
+
+```
+airflow_sync.py      (Syncs SAMOS phases as Airflow DAG tasks)
+prometheus_metrics.py(Exports SAMOS metrics to Prometheus via prometheus_client)
+tool_integrator.py   (Phase 0: Connects 75 enterprise tools in one sync call)
+```
+
+---
+
+### 🏗️ Infrastructure Layer
+
+| File | Role |
+|---|---|
+| `Dockerfile` | Builds SAMOS into a container; copies src + requirements |
+| `docker-compose.yml` | Local stack: SAMOS + NiFi + MLflow + Redis + Prometheus + Grafana |
+| `docker-compose.enterprise.yml` | Full enterprise stack with Kafka, Spark, etc. |
+| `k8s-deployment.yaml` | Kubernetes Deployment + Service for production |
+| `configs/deployment.yaml` | ArgoCD GitOps deployment config |
+| `configs/main.tf` | Terraform IaC for cloud provisioning |
+| `configs/prometheus.yml` | Prometheus scrape config targeting SAMOS metrics |
+| `sonar-project.properties` | SonarQube project config for code quality scanning |
+| `zap.yaml` | OWASP ZAP DAST config for API security scanning |
+
+### 📋 CI/CD
+
+| File | Role |
+|---|---|
+| `.github/workflows/gauntlet.yml.disabled` | 32-tier CI: Ruff → Bandit → MyPy → Pytest → Gitleaks → SonarQube → Docker Build → SBOM |
+| `setup.ps1` / `setup.sh` | One-command environment setup scripts |
+| `.gitleaks.toml` | Gitleaks secret scanning rules |
+| `pyproject.toml` | Ruff + MyPy configuration |
+
+### 📊 Dashboards
+
+| File | Role |
+|---|---|
+| `samos_dashboard.html` | Served by `serve.py` at `/` — real-time command center |
+| `dashboard.html` | Older standalone dashboard |
+
+---
+
+## Part 4: The Complete Data Flow (End-to-End)
+
+```mermaid
+graph TD
+    A["Raw Data / APIs / Files"] --> B["Phase 1: ingest.py → Bronze Lake"]
+    B --> C["Phase 2: validate.py + semantic_guard.py"]
+    C --> D["Phase 3: mask_pii + privacy + sovereignty"]
+    D --> E["Phase 4-5: process.py → features.csv"]
+    E --> F["Phase 6-8: genealogy + active_learning + RLHF"]
+    F --> G["Phase 9-10: train.py + automl.py + nas.py"]
+    G --> H["Phase 11: knowledge_graph.py"]
+    H --> I["Phase 12-13: evaluate.py + bias_audit.py"]
+    I --> J["Phase 14: adversarial.py + chaos testing"]
+    J --> K["Phase 15-16: watermark + compliance + ledger"]
+    K --> L["Phase 17-21: serve + harden + red-team + optimize"]
+    L --> M["Phase 22-25: autoscale + MAB + drift + incident response"]
+    M --> N["serve.py: FastAPI Production Server"]
+    N -->|"Drift Detected"| G
+```
+
+---
+
+## Part 5: What's Missing / Critical Gaps
+
+### 🔴 Critical Gaps (Would break in production)
+
+| # | What's Missing | Impact |
+|---|---|---|
+| 1 | **No real distillation loss** in `pinaka_forge_v2.py` | The forge only uses `outputs.loss` (CE loss) — the KL-divergence loss from teacher logits is **never computed**. Teacher models are listed in config but **never loaded or called**. The whole "distillation" is actually just vanilla language model training. |
+| 2 | **`train.py`'s forge loop has no actual ML training** | `execute_forge_loop()` in `train.py` runs a `for step in range(...)` loop that just prints progress and checkpoints JSON. No `model.forward()`, no `loss.backward()`, no optimizer step. It's a **simulation**, not training. |
+| 3 | **CI/CD is permanently disabled** | Both workflow files end in `.disabled` — the entire gauntlet (Ruff, Bandit, Pytest, SonarQube, Docker) **never runs on push**. The CI is dead. |
+| 4 | **Only 2 tests exist** (`tests/test_pipeline.py`) | 2 tests for a 190+ module system. ModelSec, MLOps, SRE, and DevSecOps have **zero test coverage**. |
+| 5 | **`evaluate.py` loads a `churn_model.pkl`** | The model evaluator is hardcoded to a tabular churn model, but the forge produces an LLM. There's a **fundamental mismatch** — the LLM forge and the evaluation pipeline are disconnected. |
+| 6 | **`download_swarm.py` lacks error handling** | If any teacher model fails to download (network error, auth issue), `samos_master.py` will crash with no recovery path. |
+| 7 | **Hardcoded NiFi password in `docker-compose.yml`** | `SINGLE_USER_CREDENTIALS_PASSWORD=samos_secure_password_123` — a secret in plaintext in the compose file. This will be flagged by Gitleaks if CI were enabled. |
+
+---
+
+### 🟡 Architectural Gaps (Missing features described but not implemented)
+
+| # | What's Claimed | What Actually Exists |
+|---|---|---|
+| 8 | **RLHF** (`src/ml_ops/rlhf.py`) | Stub — prints "RLHF simulated." No PPO, no reward model, no human feedback loop. |
+| 9 | **Federated Learning** (`federated.py`) | Averages random weights — no actual FL protocol (FedAvg, FedProx), no client nodes. |
+| 10 | **Quantum ML** (`quantum_ml.py`) | Simulates quantum weighting with random numbers — no Qiskit/PennyLane integration. |
+| 11 | **Zero-Knowledge Proofs** (`zk_data_proof.py`, `zkp_guard.py`) | SHA-256 hash commitments — not actual ZKP (no zk-SNARKs, no circuit compilation). |
+| 12 | **Incident Response** (`incident_response.py`) | Hardcoded `accuracy = 0.40` — no real metric subscription from Prometheus. |
+| 13 | **MAB Gateway** not wired to `serve.py` | `mab_gateway.py` is a standalone class; `/predict` in `serve.py` doesn't call it. All traffic goes to the same simulated response. |
+| 14 | **Knowledge Graph** (`knowledge_graph.py`) | Builds a basic NetworkX graph — not integrated into any training or inference path. |
+| 15 | **`/health` endpoint missing** from `serve.py` | README documents `GET /health` but `serve.py` only has `/`, `/predict`, `/logo.png`. |
+| 16 | **No model versioning handoff** | Models are saved to `models/samos_1b_final/` but MLflow, DVC, and the model registry are never pointed at this path. The MLflow ledger tracks runs but doesn't register the forge output. |
+| 17 | **`conftest.py` missing** | No pytest fixtures, no shared test utilities. Tests use hardcoded paths. |
+| 18 | **No `__init__.py` files** in `src/` pillars | Modules import each other via `sys.path` hacks (`sys.path.append('src')`). Should be proper packages. |
+
+---
+
+### 🔵 Production-Readiness Gaps
+
+| # | Gap | Notes |
+|---|---|---|
+| 19 | **No authentication on FastAPI** | `/predict` is open — no API key, no JWT. `advanced_security.py` exists but isn't mounted as middleware on `serve.py`. |
+| 20 | **No async inference** | `serve.py`'s `/predict` is a sync function running in async context — will block the event loop under load. |
+| 21 | **No rate limiting** | No request throttling on the API. |
+| 22 | **No Grafana dashboards defined** | Grafana container is in docker-compose but no `provisioning/` dashboards are included. |
+| 23 | **`artifacts/` directory not gitignored properly** | `thermal_logs.log` and large artifacts could pollute the repo. |
+| 24 | **DVC is listed but not configured** | `.dvc/` exists but no `dvc.yaml` pipeline and no remote storage configured. |
+| 25 | **Logging is inconsistent** | Some modules use `print()`, some use `logging`. No unified logging config. `samos_master.log` exists but only for the forge, not the full pipeline. |
+
+---
+
+## Summary Table
+
+| Pillar | Files | Real Functionality | Simulation/Stub |
+|---|---|---|---|
+| DataOps | 23 | ingest, validate, mask_pii, process, multi_modal | digital_twin, zk_data_proof, sovereignty (partial) |
+| MLOps | 35 | pinaka_forge_v2 (real training), nas, automl | rlhf, federated, quantum_ml, train.py loop |
+| ModelSecOps | 18 | bias_audit, adversarial, evaluate (partial) | zkp_guard, enclave, incident_response |
+| DevSecOps | 15 | security (SAST), dependency_patcher, vault_manager | pqc_sim, red_team (simulated) |
+| SRE | 36 | thermal_watchdog, mab_gateway, power_optimizer | incident_response, cascading (wiring missing) |
+| Integrations | 3 | prometheus_metrics | airflow_sync, tool_integrator (simulation) |

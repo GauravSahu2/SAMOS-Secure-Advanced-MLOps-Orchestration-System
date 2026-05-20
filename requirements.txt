@@ -1,29 +1,88 @@
-# 🛡️ SAMOS 4B: High-Assurance Tooling Suite
-# Ported from the high-assurance-api project
+# 🛡️ SAMOS: Python Package Dependencies
+# These are all pip-installable. Run: pip install -r requirements.txt
+# For CLI tool installation (trivy, gitleaks, etc.), see TOOLS.md
 
-# Core AI & Web
+# ── Core AI & Serving ─────────────────────────────────────────────────────────
 fastapi==0.115.0
 uvicorn==0.30.0
 torch
-openvino
 numpy
 psutil
 pydantic
-pyseto # For PASETO v4 Auth
+pyseto                    # PASETO v4 Auth tokens
+transformers
+datasets
+accelerate
+peft
 
-# Quality & Mutation Testing
+# ── Orchestration & MLOps ──────────────────────────────────────────────────────
+mlflow                    # Experiment tracking
+optuna                    # Hyperparameter tuning
+dvc                       # Data version control
+great-expectations        # Data quality
+confluent-kafka           # Kafka client
+pyspark                   # Apache Spark
+dbt-core                  # SQL transformations
+duckdb                    # Fast OLAP queries
+clickhouse-connect        # ClickHouse client
+openlineage-python        # Data lineage tracking
+
+# ── MLOps Evolution ───────────────────────────────────────────────────────────
+feast                     # Feature store
+ray[default]              # Distributed computing
+bentoml                   # Model serving
+evidently                 # ML monitoring
+onnx                      # Model interoperability
+tritonclient[all]         # Triton inference client
+
+# ── ModelSecOps & Ethics ──────────────────────────────────────────────────────
+fairlearn                 # Fairness assessment
+alibi                     # Model explanations
+shap                      # Feature importance / SHAP values
+presidio-analyzer         # PII detection
+presidio-anonymizer       # PII masking
+textattack                # NLP adversarial attacks
+
+# ── SRE & Observability ───────────────────────────────────────────────────────
+prometheus-client         # Prometheus metrics exposition
+opentelemetry-api         # Distributed tracing API
+opentelemetry-sdk         # Distributed tracing SDK
+locust                    # Performance / load testing
+
+# ── DevSecOps & Security ──────────────────────────────────────────────────────
+hvac                      # HashiCorp Vault client
+checkov                   # Infrastructure-as-Code static analysis
+semgrep                   # Static analysis (also available as CLI)
+pip-audit                 # Dependency vulnerability scanning
+detect-secrets            # Secret detection pre-commit hook
+cyclonedx-bom             # SBOM generation
+cyclonedx-python-lib      # SBOM tracking library
+
+# ── Quality & Testing ─────────────────────────────────────────────────────────
 pytest==9.0.3
 pytest-cov==7.1.0
-mutmut==3.5.0
-hypothesis==6.112.0 # Property-based fuzzing
+pytest-asyncio
+hypothesis==6.112.0       # Property-based / fuzz testing
+mutmut==3.5.0             # Mutation testing
+schemathesis==4.18.0      # Contract / API fuzz testing
 
-# Static Analysis & Security
-bandit==1.9.4
-ruff==0.15.12
-mypy==1.20.2
-detect-secrets==1.5.0
-pip-audit==2.10.0
+# ── Static Analysis ───────────────────────────────────────────────────────────
+bandit==1.9.4             # Python SAST
+ruff==0.15.12             # Linter + formatter
+mypy==1.20.2              # Type checker
 
-# Compliance & DAST
-cyclonedx-bom==7.3.0 # SBOM Generation
-schemathesis==4.18.0 # Contract Testing
+# ── Monitoring & Scalability ──────────────────────────────────────────────────
+redis                     # Distributed caching / MAB state persistence
+requests                  # HTTP client
+aiohttp                   # Async networking
+
+# ── Multi-Modal & Document Processing ────────────────────────────────────────
+openpyxl                  # Excel processing
+PyPDF2                    # PDF text extraction
+python-docx               # Word document processing
+beautifulsoup4            # HTML parsing
+markdown                  # Markdown parsing
+
+# ── Hugging Face Integration ─────────────────────────────────────────────────
+huggingface-hub           # Model/dataset downloads
+openvino                  # Intel OpenVINO inference

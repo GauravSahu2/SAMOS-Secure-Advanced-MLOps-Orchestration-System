@@ -1,7 +1,7 @@
 import os
 import re
 
-def generate_technical_reference():
+def generate_technical_reference() -> None:
     """Phase 25: Meta-Documentation - Automated Reference Generator."""
     print("📚 Phase 25: Generating Technical Reference Guide...")
     

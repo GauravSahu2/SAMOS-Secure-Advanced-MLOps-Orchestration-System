@@ -40,14 +40,34 @@ pip install -r requirements.txt
 
 ### Step 3: Run the Factory (Validation)
 
-To ensure everything is working correctly on your hardware, run the **Quick Test** mode. This executes all 25+ phases with a reduced workload.
+To ensure everything is working correctly on your hardware, you can run the full factory or trigger specific phases.
+
+#### Option A: Full 25-Phase Factory
 
 ```powershell
-# Windows (PowerShell)
-$env:FORGE_QUICK_TEST="1"; python main.py
+# Windows
+samos --all
 
 # Linux/macOS
-FORGE_QUICK_TEST=1 python main.py
+./samos --all
+```
+
+#### Option B: Granular Phase Control
+
+Trigger only the phases you need (e.g., DataOps domain followed by specific MLOps phases):
+
+```bash
+# Trigger the entire DataOps group
+samos --group dataops
+
+# Trigger multiple phases (e.g., 1, 2, 4 and 9)
+samos --phases 1,2,4,9
+
+# Trigger a range of phases (e.g., 3 to 10)
+samos --phases 3-10
+
+# Combine groups (e.g., DataOps and DevSecOps)
+samos --groups dataops,devsecops
 ```
 
 ### Step 4: Start the Production Server
@@ -62,7 +82,36 @@ The API will be available at <http://127.0.0.1:8000/docs>.
 
 ---
 
-## 🏗️ 2. Deploying as a Pipeline
+## 🚀 3. SAMOS 1B Distillation Forge (Heterogeneous Swarm)
+
+The SAMOS 1B Forge is a specialized high-performance training pipeline designed to saturate local silicon (NVIDIA + Intel) while maintaining system stability.
+
+### Key Features
+
+- **Heterogeneous Orchestration**: Automatically leverages NVIDIA CUDA, Intel iGPU, and Intel NPU simultaneously.
+- **80% Compute Saturation**: Targets 80% utilization across all devices to maximize throughput without overheating.
+- **8GB RAM Guard**: Hard-coded safety reservation that pauses the forge if system RAM exceeds `Total - 8GB`.
+- **VRAM Optimization**: Uses Gradient Checkpointing and Gradient Accumulation to fit 1B+ parameter models on 8GB VRAM cards.
+
+### Launching the Forge
+
+```bash
+# Launch the automated master forge
+python samos_master.py
+```
+
+### Hardware Monitoring
+
+The forge provides real-time telemetry:
+
+- **GPU0**: Primary student training (NVIDIA).
+- **Intel Ops**: Synthetic teacher inference throughput (NPU/iGPU).
+- **RAM**: Total system usage vs. safety budget.
+- **ETA**: Real-time time-to-completion forecasting based on step throughput.
+
+---
+
+## 🏗️ 4. Deploying as a Pipeline
 
 SAMOS is a modular factory. You can deploy specific domains or the full orchestrator.
 
@@ -137,12 +186,12 @@ View the results in the **Actions** tab of your GitHub repository.
 
 | Hardware | Status | Behavior |
 | :--- | :--- | :--- |
-| **NVIDIA GPU** | Supported | Uses CUDA (Torch) for Phase 9 Training. |
-| **Intel NPU/Arc** | Supported | Uses OpenVINO for Phase 9 Training. |
+| **NVIDIA GPU** | Supported | Uses CUDA (Torch) for training. Supports Gradient Checkpointing. |
+| **Intel NPU/Arc** | Supported | Uses OpenVINO for Teacher Inference offloading. |
 | **CPU Only** | Supported | Graceful fallback; system runs simulation-heavy logic. |
-| **Low RAM** | Supported | Uses streaming ingestion (Phase 1) to manage memory. |
+| **Low RAM** | Protected | **8GB RAM Guard** ensures system stability by pausing the forge. |
 
 ---
 
 > [!IMPORTANT]
-> **Silicon Safety**: On high-end NVIDIA hardware, Phase 28 (Thermal Watchdog) is active. If temperatures exceed 85°C, the forge will pause for 10 minutes to prevent silicon degradation.
+> **Silicon Safety**: On NVIDIA hardware, Phase 28 (Thermal Watchdog) is active. If temperatures exceed 85°C, the forge will enter a dynamic polling loop until temperatures return to 75°C, ensuring minimal downtime while protecting hardware.

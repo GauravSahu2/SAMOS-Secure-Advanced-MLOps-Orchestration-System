@@ -20,9 +20,9 @@ spec:
       automountServiceAccountToken: false
       containers:
       - name: samos-engine
-        image: samos:1.0.0
+        image: samos:1.1.0
         ports:
-        - containerPort: 8000
+        - containerPort: 7860
         
         # 📈 Resource Hardening (Phase 24)
         resources:
@@ -35,13 +35,22 @@ spec:
             memory: "2Gi"
             ephemeral-storage: "512Mi"
         
-        # 💓 SRE Health Checks (Phase 25)
+        # 💳 SRE Health Checks (Phase 25) — use dedicated /health endpoint
         livenessProbe:
           httpGet:
-            path: /
-            port: 8000
+            path: /health
+            port: 7860
           initialDelaySeconds: 30
           periodSeconds: 10
+          failureThreshold: 3
+
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 7860
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          failureThreshold: 3
         
         # 🛡️ Environment Hardening
         env:
@@ -49,6 +58,10 @@ spec:
           value: "1"
         - name: PYTHONPATH
           value: "."
+        - name: PORT
+          value: "7860"
+        - name: LOG_LEVEL
+          value: "INFO"
 
 ---
 apiVersion: v1
@@ -61,5 +74,5 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8000
+      targetPort: 7860
   type: LoadBalancer

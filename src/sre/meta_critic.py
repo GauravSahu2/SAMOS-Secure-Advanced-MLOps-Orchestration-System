@@ -1,4 +1,6 @@
-def run_meta_critic_audit(pipeline_logs):
+from typing import Any
+
+def run_meta_critic_audit(pipeline_logs: dict[str, Any]) -> dict[str, str]:
     """Phase 25: Meta-SRE - The Meta-Critic Agent."""
     print("🧐 Phase 25: Starting Meta-Critic Audit of the 145-Phase Execution...")
     

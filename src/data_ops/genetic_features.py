@@ -26,7 +26,7 @@ CONNECTION ORDER:
 import numpy as np
 import pandas as pd
 
-def run_genetic_feature_synthesis(df):
+def run_genetic_feature_synthesis(df: pd.DataFrame) -> pd.DataFrame:
     """Phase 4: Feature Engineering - Genetic Feature Synthesis."""
     print("🧬 Phase 4: Starting Genetic Feature Evolution...")
     
@@ -38,7 +38,8 @@ def run_genetic_feature_synthesis(df):
     new_feature = (f1 * f2) / (df['age'] + 1)
     
     # 3. Fitness Check (Simulated Correlation)
-    signal_strength = np.random.uniform(0.7, 0.9) # High signal simulated
+    rng = np.random.default_rng(42)
+    signal_strength = rng.uniform(0.7, 0.9) # High signal simulated
     
     if signal_strength > 0.75:
         msg = (

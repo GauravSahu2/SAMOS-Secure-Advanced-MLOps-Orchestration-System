@@ -1,4 +1,4 @@
-def process_deployment_command(command):
+def process_deployment_command(command: str) -> None:
     """Phase 25: Human-Aligned Deployment - NL Command Handler."""
     print(f"🚢 NL Dispatch: Processing command '{command}'...")
     

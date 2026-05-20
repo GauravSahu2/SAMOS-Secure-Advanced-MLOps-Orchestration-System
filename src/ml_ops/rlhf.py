@@ -1,6 +1,6 @@
 import numpy as np
 
-def simulate_rlhf_reward_training():
+def simulate_rlhf_reward_training() -> None:
     """Phase 9: Model Alignment - RLHF (Reward Model Simulation)."""
     print("🤝 Phase 9: Starting RLHF Alignment Loop...")
     

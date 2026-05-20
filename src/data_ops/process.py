@@ -24,7 +24,7 @@ CONNECTION ORDER:
 import pandas as pd
 import os
 
-def process_features(input_path, feature_path):
+def process_features(input_path: str, feature_path: str) -> None:
     """Simulates Phase 4 (Processing) and Phase 5 (Feature Store)."""
     print("🚀 Phase 4 & 5: Processing & Feature Engineering...")
     

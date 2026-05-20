@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-def mask_pii(input_path, secured_path):
+def mask_pii(input_path: str, secured_path: str) -> None:
     """Simulates Phase 3: DataSecOps & PII Masking."""
     print("🚀 Phase 3: Masking PII...")
     df = pd.read_csv(input_path)

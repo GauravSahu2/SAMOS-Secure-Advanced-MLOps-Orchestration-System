@@ -1,5 +1,5 @@
 
-def generate_ai_faq():
+def generate_ai_faq() -> None:
     """Phase 25: Knowledge Management - AI-Powered FAQ Generator."""
     print("❓ Phase 25: Generating AI-Powered FAQ for the 100-Module Ecosystem...")
     

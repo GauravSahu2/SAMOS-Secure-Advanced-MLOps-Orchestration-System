@@ -15,7 +15,11 @@ COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/pytho
 COPY --from=builder /usr/local/bin /usr/local/bin
 
 COPY src/ ./src/
-COPY models/ ./models/
+# ⚠️  Model weights are NOT baked into the image (would create 10-100 GB layers).
+# Mount models at runtime:
+#   docker run -v $(pwd)/models:/app/models samos:latest
+# Or pre-download inside the container:
+#   docker run samos:latest python download_swarm.py
 COPY samos_dashboard.html .
 COPY samos_logo_ai_*.png . 
 

@@ -1,0 +1,161 @@
+# ================================================================================
+# SAMOS: Free Local Development Stack
+# All services here are 100% free and open-source.
+# For cloud deploy, use Hugging Face Spaces (free) — see SETUP_GUIDE.md
+# ================================================================================
+services:
+  # ── SAMOS API Server ──────────────────────────────────────────────────────────
+  samos-api:
+    build: .
+    container_name: samos-api
+    ports:
+      - "${PORT:-7860}:7860"   # HF Spaces compatible port
+    environment:
+      - PORT=7860
+      - PYTHONPATH=.
+      - MLFLOW_TRACKING_URI=http://mlflow-server:5000
+      # Redis: swap this URL with Upstash free URL for cloud (see env.example)
+      - REDIS_URL=${REDIS_URL:-redis://redis-cache:6379}
+    depends_on:
+      mlflow-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7860/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - samos-network
+
+  # ── MLflow: Experiment Tracking (free, SQLite backend) ────────────────────────
+  # Cloud-free alternative: https://dagshub.com (free for public repos)
+  mlflow-server:
+    image: ghcr.io/mlflow/mlflow:latest
+    container_name: samos-mlflow
+    ports:
+      - "5000:5000"
+    volumes:
+      - mlflow-data:/mlflow
+    command: >
+      mlflow server
+        --host 0.0.0.0
+        --port 5000
+        --backend-store-uri sqlite:////mlflow/mlflow.db
+        --default-artifact-root /mlflow/artifacts
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    networks:
+      - samos-network
+
+  # ── Redis: In-Memory Cache & Session Store (free) ─────────────────────────────
+  # Cloud-free alternative: https://upstash.com (10K commands/day free)
+  redis-cache:
+    image: redis:7-alpine
+    container_name: samos-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - redis-data:/data
+    networks:
+      - samos-network
+
+  # ── Prometheus: Metrics Collection (free, self-hosted) ───────────────────────
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: samos-prometheus
+    volumes:
+      - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    networks:
+      - samos-network
+
+  # ── Grafana: Visualization (free, self-hosted) ────────────────────────────────
+  # Access at http://localhost:3000 (default admin/admin — change on first login)
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: samos-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-changeme}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./configs/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./configs/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+    networks:
+      - samos-network
+
+  # ── Apache NiFi: Real-Time Data Ingestion (bytes-in-motion layer) ───────────
+  # Role: Routes raw bytes between sources (Kafka, S3, IoT) → Bronze Lake.
+  # Start: docker-compose --profile nifi up nifi
+  nifi:
+    image: apache/nifi:latest
+    container_name: samos-nifi
+    profiles: ["nifi", "enterprise"]
+    ports:
+      - "8443:8443"
+    environment:
+      - SINGLE_USER_CREDENTIALS_USERNAME=${NIFI_USER:-admin}
+      # ⚠️ Set NIFI_PASS in your .env file — never hardcode passwords here
+      - SINGLE_USER_CREDENTIALS_PASSWORD=${NIFI_PASS:?NIFI_PASS must be set in .env}
+    volumes:
+      - nifi-data:/opt/nifi/nifi-current/logs
+    networks:
+      - samos-network
+
+  # ── Apache Airflow: Pipeline Workflow Scheduling (orchestration layer) ────────
+  # Role: Schedules & monitors the 25-phase SAMOS Python pipeline as DAG tasks.
+  # Complements NiFi: NiFi ingests bytes → Airflow runs pipeline phases.
+  # Start: docker-compose --profile airflow up airflow
+  airflow:
+    image: apache/airflow:2.9.1-python3.12
+    container_name: samos-airflow
+    profiles: ["airflow", "enterprise"]
+    ports:
+      - "8080:8080"
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=sqlite:////opt/airflow/airflow.db
+      - AIRFLOW__CORE__DAGS_FOLDER=/opt/airflow/dags
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__WEBSERVER__SECRET_KEY=${AIRFLOW_SECRET_KEY:-change_me_in_production}
+      - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=False
+      - PYTHONPATH=/opt/airflow/samos
+    volumes:
+      # Mount SAMOS project so DAGs can call run_phase() directly
+      - .:/opt/airflow/samos:ro
+      - ./configs/airflow_dags:/opt/airflow/dags:ro
+      - airflow-data:/opt/airflow
+    command: >
+      bash -c "airflow db migrate &&
+               airflow users create --role Admin --username admin
+                 --firstname SAMOS --lastname Admin
+                 --email admin@samos.local
+                 --password $${AIRFLOW_ADMIN_PASSWORD:-changeme} &&
+               airflow webserver & airflow scheduler"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - samos-network
+
+volumes:
+  mlflow-data:
+  redis-data:
+  grafana-data:
+  nifi-data:
+  airflow-data:
+
+networks:
+  samos-network:
+    driver: bridge

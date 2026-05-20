@@ -1,0 +1,73 @@
+# ================================================================================
+# SAMOS CD: Hugging Face Spaces Deploy
+# TRIGGER: Only when a version tag is pushed (e.g. git tag v1.0.0 && git push --tags)
+# PURPOSE: Auto-deploy the FastAPI serving layer to Hugging Face Spaces.
+# ================================================================================
+
+name: "🚀 SAMOS: CD → Hugging Face Spaces"
+
+on:
+  push:
+    tags:
+      - "v*.*.*"   # Triggers on: v1.0.0, v1.2.3-beta, etc.
+  workflow_call:
+    secrets:
+      HF_TOKEN:
+        required: true
+      HF_SPACE_ID:
+        required: true
+
+jobs:
+  deploy-hf-spaces:
+    name: "🚀 Deploy to Hugging Face Spaces"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "📥 Checkout SAMOS"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: "🐍 Set up Python 3.12"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: "📦 Install huggingface_hub"
+        run: pip install huggingface_hub
+
+      # ── Push src/ + serve.py + dashboard to your HF Space repo ─────────────
+      - name: "🤗 Push to Hugging Face Space"
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_SPACE_ID: ${{ secrets.HF_SPACE_ID }}
+        run: |
+          git config --global user.email "ci@samos.ai"
+          git config --global user.name "SAMOS CI Bot"
+
+          # Clone the HF Space repo
+          git clone https://HF_USER:${HF_TOKEN}@huggingface.co/spaces/${HF_SPACE_ID} hf_space
+
+          # Sync only what the Space needs (not the full training code)
+          rsync -av --delete \
+            --include="src/sre/serve.py" \
+            --include="src/sre/" \
+            --exclude="src/ml_ops/pinaka_forge_v2.py" \
+            --exclude="*.log" \
+            src/ hf_space/src/
+
+          cp samos_dashboard.html hf_space/
+          cp samos_logo_ai_*.png hf_space/ 2>/dev/null || true
+          cp requirements.txt hf_space/
+
+          # Create HF Space app.py entrypoint (HF looks for app.py at root)
+          cat > hf_space/app.py << 'EOF'
+          import subprocess, sys
+          subprocess.run([sys.executable, "src/sre/serve.py"])
+          EOF
+
+          # Commit and push
+          cd hf_space
+          git add -A
+          git diff --staged --quiet || git commit -m "🚀 SAMOS Deploy: ${{ github.ref_name }} (${{ github.sha }})"
+          git push

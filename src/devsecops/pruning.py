@@ -1,7 +1,7 @@
 import pandas as pd
 import pickle  # nosec # noqa
 
-def prune_model(model_path, data_path, threshold=0.05):
+def prune_model(model_path: str, data_path: str, threshold: float = 0.05) -> None:
     """Phase 21: Extreme Model Pruning (Feature-Level)."""
     print("✂️ Phase 21: Starting Extreme Model Pruning...")
     

@@ -1,5 +1,7 @@
+from typing import Any
+import pandas as pd
 
-def route_request_cascading(user_data, student_model):
+def route_request_cascading(user_data: pd.DataFrame, student_model: Any) -> int:
     """Phase 24: Economic Efficiency - Model Cascading Router."""
     print("🌊 Phase 24: Routing Request via Cascading Logic...")
     

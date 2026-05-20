@@ -2,7 +2,7 @@ import pandas as pd
 import pickle  # nosec # noqa
 from sklearn.metrics import accuracy_score
 
-def run_intersectional_audit(model_path, data_path):
+def run_intersectional_audit(model_path: str, data_path: str) -> None:
     """Phase 13: Advanced Ethics - Intersectional Bias Analysis."""
     print("🧬 Phase 13: Starting Intersectional Bias Audit...")
     
@@ -25,7 +25,7 @@ def run_intersectional_audit(model_path, data_path):
             continue  # Skip statistically insignificant groups
         X = cohort_df.drop(['user_id', 'churn'], axis=1)
         y = cohort_df['churn']
-        acc = accuracy_score(y, model.predict(X))
+        acc = accuracy_score(y.to_numpy(), model.predict(X))
         print(f"    - {name:<22}: {acc*100:.2f}% (N={len(cohort_df)})")
 
     print("\n✅ Intersectional Audit Complete. Results logged for Ethics Board review.")

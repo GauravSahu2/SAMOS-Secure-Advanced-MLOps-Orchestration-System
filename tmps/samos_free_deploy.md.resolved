@@ -1,0 +1,248 @@
+# 🆓 SAMOS: Completely Free Deployment Guide
+> Zero cost. Zero credit card. Every service on the free tier.
+
+---
+
+## The Free Stack — At a Glance
+
+| Component | What It Does | Free Service | Limit |
+|---|---|---|---|
+| **API Server** | Serves `/predict` + dashboard | Hugging Face Spaces | Unlimited public spaces |
+| **CI/CD** | Linting, testing, scanning | GitHub Actions | Unlimited for public repos |
+| **Experiment Tracking** | MLflow runs, metrics, artifacts | DagsHub | Free for public projects |
+| **Redis Cache** | Session memory, MAB state | Upstash | 10K commands/day |
+| **Code Quality** | SonarQube analysis | SonarCloud | Free for public repos |
+| **Coverage** | Test coverage reports | Codecov | Free for public repos |
+| **Container Scan** | Trivy CVE scanning | GitHub Actions (built-in) | Free |
+| **Secret Scan** | Gitleaks | GitHub Actions | Free |
+| **Local Dev Stack** | MLflow + Redis + Prometheus | Docker (self-hosted) | Free forever |
+
+**Total monthly cost: $0.00**
+
+---
+
+## Step 1: Make Your Repo Public
+
+Everything free depends on your GitHub repo being **public**. If it's private, GitHub Actions gives you 2000 min/month — enough for ~40 CI runs.
+
+```bash
+# Check current visibility
+gh repo view --json isPrivate
+
+# Make it public (via GitHub website: Settings → Danger Zone → Make public)
+```
+
+---
+
+## Step 2: Activate CI (Takes 2 Minutes)
+
+The CI workflow (`ci.yml`) is already written. Just delete the dead stubs and push:
+
+```bash
+# From the SAMOS repo root
+git rm .github/workflows/gauntlet.yml.disabled
+git rm .github/workflows/pipeline.yml.disabled
+
+git add .github/workflows/
+git commit -m "ci: activate SAMOS validation gauntlet — free GitHub Actions"
+git push origin main
+```
+
+✅ **CI starts running immediately on that push.** No accounts needed.
+
+---
+
+## Step 3: Deploy API to Hugging Face Spaces (Free Forever)
+
+The Dockerfile is **already configured** for HF Spaces (`EXPOSE 7860`, `PORT=7860`).
+
+### 3a — Create the Space (one-time, 2 minutes)
+
+1. Go to [huggingface.co/new-space](https://huggingface.co/new-space)
+2. **Space name:** `SAMOS`
+3. **SDK:** Select **Docker**
+4. **Visibility:** Public (required for free)
+5. Click **Create Space**
+
+Your Space URL will be: `https://huggingface.co/spaces/YourName/SAMOS`
+
+### 3b — Add Secrets to GitHub
+
+Go to: **GitHub Repo → Settings → Secrets → Actions → New repository secret**
+
+| Secret Name | Value | Where to Get |
+|---|---|---|
+| `HF_TOKEN` | `hf_xxxxxxxxxxxx` | [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens) → Write access |
+| `HF_SPACE_ID` | `YourName/SAMOS` | Your HF Space URL after the `/spaces/` |
+
+### 3c — First Manual Deploy
+
+```bash
+# Install HF CLI
+pip install huggingface_hub
+
+# Login
+huggingface-cli login  # paste your HF_TOKEN
+
+# Push the Space config (Dockerfile must be at Space root)
+huggingface-cli upload YourName/SAMOS Dockerfile /Dockerfile --repo-type=space
+huggingface-cli upload YourName/SAMOS requirements.txt /requirements.txt --repo-type=space
+huggingface-cli upload YourName/SAMOS samos_dashboard.html /samos_dashboard.html --repo-type=space
+huggingface-cli upload YourName/SAMOS src/ /src/ --repo-type=space
+```
+
+### 3d — After Initial Setup: Auto-Deploy on Every Push
+
+The `cd_render.yml` workflow (renamed to HF deploy) triggers automatically whenever `serve.py`, `dashboard.html`, or `Dockerfile` changes on `main`. No manual steps needed.
+
+---
+
+## Step 4: Free MLflow Tracking with DagsHub
+
+DagsHub is a free GitHub-like platform with a built-in MLflow server for public projects.
+
+```bash
+# 1. Sign up at https://dagshub.com with your GitHub account
+# 2. Create a project called "SAMOS" (import from GitHub)
+# 3. Go to: SAMOS project → Remote → Experiments → copy the tracking URI
+
+# 4. Add to your .env:
+MLFLOW_TRACKING_URI=https://dagshub.com/YourName/SAMOS.mlflow
+MLFLOW_TRACKING_USERNAME=YourDagsHubUsername
+MLFLOW_TRACKING_PASSWORD=YourDagsHubToken  # Settings → Access Tokens
+```
+
+**Or skip DagsHub entirely** — the default `sqlite:///mlflow.db` works perfectly for local development.
+
+---
+
+## Step 5: Free Redis with Upstash
+
+For the MAB gateway, memory, and session state to work in production on HF Spaces:
+
+```bash
+# 1. Go to https://upstash.com → Sign in with GitHub
+# 2. Create Database → Region: closest to you → Free tier
+# 3. Copy the "Redis URL" (starts with rediss://)
+
+# 4. Add to GitHub Secrets:
+# REDIS_URL = rediss://default:xxxx@your-endpoint.upstash.io:6380
+
+# 5. Add to HF Space Secrets (HF Space → Settings → Secrets):
+# REDIS_URL = rediss://default:xxxx@your-endpoint.upstash.io:6380
+```
+
+---
+
+## Step 6: Free Code Quality with SonarCloud
+
+```bash
+# 1. Go to https://sonarcloud.io → Login with GitHub
+# 2. Import your SAMOS repo
+# 3. Go to: My Account → Security → Generate Token
+# 4. Copy the token
+
+# 5. Add to GitHub Secrets:
+# SONAR_TOKEN = your_token_here
+# SONAR_HOST_URL = https://sonarcloud.io
+```
+
+The `sonar-project.properties` file is already configured correctly in the repo.
+
+---
+
+## Step 7: Free Coverage Reports with Codecov
+
+```bash
+# 1. Go to https://codecov.io → Login with GitHub
+# 2. Find your SAMOS repo → Copy the upload token
+
+# 3. Add to GitHub Secrets:
+# CODECOV_TOKEN = your_token_here
+```
+
+---
+
+## Complete Free Architecture
+
+```
+You (git push) ─────────────────────────────────────────────────────────┐
+                                                                         │
+                                                            GitHub Actions (FREE)
+                                                              │
+                    ┌─────────────────────────────────────────┤
+                    │                                         │
+                 ci.yml                            cd workflow (on main)
+             (every push)                          (serve.py changes)
+                    │                                         │
+        ┌───────────┴──────────────┐                          │
+        │                          │                    HF Spaces (FREE)
+   SonarCloud (FREE)          Codecov (FREE)         ┌────────────────┐
+   code quality                coverage               │  samos-api     │
+                                                      │  FastAPI :7860 │
+                                                      │  Dashboard     │
+                                                      └───────┬────────┘
+                                                              │
+                                               ┌──────────────┴──────────────┐
+                                          DagsHub (FREE)             Upstash Redis (FREE)
+                                         MLflow tracking             MAB + Memory state
+```
+
+---
+
+## Local Development (All Free, Self-Hosted)
+
+```bash
+# Start the minimal free stack (API + MLflow + Redis)
+docker-compose up samos-api mlflow-server redis-cache
+
+# Start with monitoring too
+docker-compose up
+
+# Start with NiFi enterprise data ingestion (optional)
+docker-compose --profile enterprise up nifi
+
+# View your services
+open http://localhost:7860   # SAMOS API + Dashboard
+open http://localhost:5000   # MLflow Tracking
+open http://localhost:3000   # Grafana (admin/changeme)
+open http://localhost:9090   # Prometheus
+```
+
+---
+
+## What You DO NOT Need to Pay For
+
+| Service | Why It's Not Needed |
+|---|---|
+| **AWS / GCP / Azure** | HF Spaces runs the API for free |
+| **Render.com paid** | HF Spaces free tier doesn't spin down for public spaces |
+| **Railway.app** | Docker Compose runs everything locally |
+| **Datadog / New Relic** | Prometheus + Grafana (self-hosted, free) handles monitoring |
+| **GitHub Copilot** | Not needed for this project |
+| **SonarQube Enterprise** | SonarCloud free tier covers public repos |
+
+---
+
+## Summary: Activation Order
+
+```bash
+# 1. Make repo public on GitHub
+
+# 2. Delete dead CI stubs + push (CI auto-starts)
+git rm .github/workflows/*.disabled
+git add .github/workflows/
+git commit -m "ci: activate free CI/CD"
+git push
+
+# 3. Create HF Space (Docker SDK, public)
+# 4. Add HF_TOKEN + HF_SPACE_ID to GitHub Secrets
+# 5. Sign up for DagsHub, SonarCloud, Codecov (all free, all GitHub login)
+# 6. Add their tokens to GitHub Secrets
+
+# 7. Push to main — CI runs + HF Space auto-deploys
+git commit --allow-empty -m "🚀 First deploy"
+git push origin main
+```
+
+Done. Fully operational. Fully free.

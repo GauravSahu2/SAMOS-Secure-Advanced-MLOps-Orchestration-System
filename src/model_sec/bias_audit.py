@@ -26,7 +26,7 @@ import pandas as pd
 import pickle  # nosec # noqa
 from sklearn.metrics import accuracy_score
 
-def run_bias_audit(model_path, data_path):
+def run_bias_audit(model_path: str, data_path: str) -> bool:
     """Phase 13: Fairness & Bias Audit (Slice-Based Evaluation)."""
     print("⚖️ Phase 13: Starting Ethical Bias Audit...")
     
@@ -49,7 +49,7 @@ def run_bias_audit(model_path, data_path):
             continue
         X = cohort_df.drop(['user_id', 'churn'], axis=1)
         y = cohort_df['churn']
-        acc = accuracy_score(y, model.predict(X))
+        acc = accuracy_score(y.to_numpy(), model.predict(X))
         disparities[name] = float(acc)
         print(f"  📊 Accuracy for {name}: {acc*100:.2f}%")
         

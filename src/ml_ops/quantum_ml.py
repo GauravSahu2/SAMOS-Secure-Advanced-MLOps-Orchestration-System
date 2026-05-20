@@ -1,12 +1,12 @@
 import numpy as np
 
-def run_quantum_feature_scorer(data):
+def run_quantum_feature_scorer(data: np.ndarray) -> np.ndarray:
     """Phase 10: Model Evolution - Quantum-ML Kernel Simulation."""
     print("⚛️ Phase 10: Running Quantum Feature Scorer...")
     
     # Simulating a Quantum Kernel (using complex number space)
     # This identifies "Entangled" relationships between age, income, and churn
-    rng = np.random.default_rng()
+    rng = np.random.default_rng(42)
     q_weights = rng.uniform(0, 1, size=data.shape[1])
     q_entanglement = np.dot(data.T, data) / np.linalg.norm(data)
     
@@ -19,9 +19,9 @@ def run_quantum_feature_scorer(data):
     top_q = np.argmax(q_weights)
     print(f"  🏆 QUANTUM CHAMPION: Feature index {top_q} is the optimal entanglement point.")
     
-    return q_weights
+    return np.asarray(q_weights)
 
 if __name__ == "__main__":
-    rng = np.random.default_rng()
+    rng = np.random.default_rng(42)
     dummy_data = rng.random((100, 5))
     run_quantum_feature_scorer(dummy_data)

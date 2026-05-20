@@ -1,6 +1,8 @@
 import pandas as pd
 
-def enforce_tenant_isolation(data, request_tenant_id):
+from typing import Any
+
+def enforce_tenant_isolation(data: list[dict[str, Any]], request_tenant_id: str) -> bool:
     """Phase 3: DataSecOps - Multi-Tenant Privacy Isolation."""
     print(f"🧱 Phase 3: Enforcing Isolation for Tenant: {request_tenant_id}...")
     

@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-def validate_data(input_path, silver_path, dlq_path):
+def validate_data(input_path: str, silver_path: str, dlq_path: str) -> None:
     """Simulates Phase 2: Data Quality & Validation."""
     print("🚀 Phase 2: Validating Data...")
     df = pd.read_csv(input_path)

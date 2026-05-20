@@ -2,7 +2,7 @@ import os
 import json
 import datetime
 
-def scan_file_for_vulnerabilities(path):
+def scan_file_for_vulnerabilities(path: str) -> list[str]:
     """Checks a single file for common security anti-patterns."""
     issues = []
     try:
@@ -18,7 +18,7 @@ def scan_file_for_vulnerabilities(path):
         print(f"  ⚠️ Could not scan {path}: {e}")
     return issues
 
-def run_sast():
+def run_sast() -> None:
     """Phase 18: Running SAST (Static Analysis Security Test)."""
     print("🚀 Phase 18: Running SAST...")
     vulnerabilities = []
@@ -34,7 +34,7 @@ def run_sast():
         for v in vulnerabilities:
             print(f"❌ {v}")
 
-def run_sbom():
+def run_sbom() -> None:
     """Phase 19: Generating SBOM (Software Bill of Materials)."""
     print("\n🚀 Phase 19: Generating SBOM...")
     if not os.path.exists("requirements.txt"):
@@ -56,7 +56,7 @@ def run_sbom():
         json.dump(sbom, f, indent=4)
     print("✅ SBOM generated at artifacts/sbom.json")
 
-def run_sast_and_sbom():
+def run_sast_and_sbom() -> None:
     """Phase 18 and Phase 19 Orchestrator."""
     run_sast()
     run_sbom()
