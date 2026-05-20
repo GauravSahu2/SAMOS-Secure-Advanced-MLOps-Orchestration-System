@@ -71,6 +71,8 @@ jobs:
     name: "🧪 Tier 3 — Pytest & Coverage"
     runs-on: ubuntu-latest
     needs: lint-and-sast
+    env:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
       - name: "📥 Checkout"
         uses: actions/checkout@v4
@@ -99,7 +101,7 @@ jobs:
           MLFLOW_TRACKING_URI: "sqlite:///test_mlflow.db"
 
       - name: "📊 Upload Coverage to Codecov"
-        if: ${{ env.CODECOV_TOKEN != '' }}
+        if: env.CODECOV_TOKEN != ''
         uses: codecov/codecov-action@v4
         with:
           files: coverage.xml
@@ -114,6 +116,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     if: github.event_name == 'push'  # Only on push, not on PRs (saves quota)
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
     steps:
       - name: "📥 Checkout"
         uses: actions/checkout@v4
@@ -121,7 +126,7 @@ jobs:
           fetch-depth: 0
 
       - name: "🔭 SonarQube Scan"
-        if: ${{ env.SONAR_TOKEN != '' && env.SONAR_HOST_URL != '' }}
+        if: env.SONAR_TOKEN != '' && env.SONAR_HOST_URL != ''
         uses: SonarSource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
