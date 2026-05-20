@@ -314,7 +314,7 @@ async def health() -> JSONResponse:
 
     ram_info: dict[str, Any] = {}
     try:
-        import psutil  # type: ignore
+        import psutil
         vm = psutil.virtual_memory()
         ram_info = {
             "total_gb": round(vm.total / (1024 ** 3), 1),
