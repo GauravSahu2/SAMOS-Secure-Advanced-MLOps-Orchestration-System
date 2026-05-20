@@ -11,8 +11,11 @@ regexes = [
 paths = [
     '''\.env$''',
     '''\.env\.example$''',
+    '''env\.example$''',
     '''\.gitleaks\.toml$''',
-    '''requirements\.txt$'''
+    '''requirements\.txt$''',
+    '''sonar-project\.properties$''',
+    '''\.github/workflows/.*$'''
 ]
 
 [[rules]]

@@ -8,7 +8,7 @@ def mask_pii(input_path: str, secured_path: str) -> None:
     
     # Simple masking (emulating Presidio)
     if 'email' in df.columns:
-        df['email'] = df['email'].apply(lambda x: x.split('@')[0][0] + "***@" + x.split('@')[1])
+        df['email'] = df['email'].apply(lambda x: x.split('@')[0][0] + "***@" + x.split('@')[1] if isinstance(x, str) and '@' in x else x)
     
     os.makedirs(os.path.dirname(secured_path), exist_ok=True)
     df.to_csv(secured_path, index=False)

@@ -192,9 +192,15 @@ PHASE_SCRIPTS = {
 GROUP_MAPPING = {
     "integrations": [0],
     "dataops": list(range(0, 7)), # Now includes Phase 0
+    "data_ops": list(range(0, 7)),
     "mlops": list(range(7, 12)),
+    "ml_ops": list(range(7, 12)),
     "modelsecops": list(range(12, 17)),
+    "model_sec_ops": list(range(12, 17)),
+    "modelsec_ops": list(range(12, 17)),
     "devsecops": list(range(17, 22)),
+    "dev_sec_ops": list(range(17, 22)),
+    "devsec_ops": list(range(17, 22)),
     "sre": list(range(22, 26)),
 }
 
@@ -211,7 +217,7 @@ def main():
     parser = argparse.ArgumentParser(description="SAMOS Command Center: Trigger specific phases or groups of the pipeline.")
     
     # Phase selection
-    parser.add_argument("--phase", type=int, help="Trigger a single phase (1-25)")
+    parser.add_argument("--phase", type=str, help="Trigger a single phase (1-25) or a group name (e.g. data_ops)")
     parser.add_argument("--phases", type=str, help="Comma-separated list of phases (e.g., 1,2,4 or 3-6,15)")
     
     # Group selection
@@ -243,7 +249,16 @@ def main():
                 sys.exit(1)
     
     if args.phase is not None:
-        phases_to_run.append(args.phase)
+        val = args.phase.strip().lower()
+        if val in GROUP_MAPPING:
+            print(f"ℹ️ Info: Group '{val}' specified for --phase. Automatically converting to --group '{val}'.")
+            phases_to_run.extend(GROUP_MAPPING[val])
+        else:
+            try:
+                phases_to_run.append(int(val))
+            except ValueError:
+                print(f"❌ Error: Invalid phase value '{val}'. Must be an integer (1-25) or a valid group name.")
+                sys.exit(1)
     
     if args.phases:
         # Handle ranges like 1-5 and individual numbers
