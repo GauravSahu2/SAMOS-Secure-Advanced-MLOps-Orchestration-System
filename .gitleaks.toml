@@ -8,11 +8,13 @@ regexes = [
 ]
 
 [[rules]]
+id = "generic-secret"
 description = "Generic Secret"
 regex = '''(?i)secret|password|token|key|api_key|private_key'''
 severity = "critical"
 
 [[rules]]
+id = "paseto-key"
 description = "High-Assurance PASETO Key"
 regex = '''v4\.public\.[A-Za-z0-9_-]+'''
 severity = "critical"
