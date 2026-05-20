@@ -5,7 +5,7 @@ Integration: Garak
 Description: LLM vulnerability scanner & red-team toolkit.
 ====================================================================================================
 """
-def run_garak_redteam():
+def run_garak_redteam() -> None:
     print("🛡️ Launching Garak LLM Vulnerability Scan...")
     print("✅ Red-team assessment complete: 0 critical vulnerabilities found.")
 

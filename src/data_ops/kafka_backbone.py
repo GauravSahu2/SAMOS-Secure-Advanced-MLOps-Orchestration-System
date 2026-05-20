@@ -10,7 +10,7 @@ try:
 except ImportError:
     Producer = None
 
-def init_kafka_stream(topic="samos_events"):
+def init_kafka_stream(topic: str = "samos_events") -> None:
     print(f"📡 Initializing Kafka Backbone for topic: {topic}")
     if not Producer:
         print("⚠️ Kafka client not found. Falling back to local queue.")

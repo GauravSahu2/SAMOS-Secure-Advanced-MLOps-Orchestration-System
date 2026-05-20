@@ -14,7 +14,7 @@ from typing import Any
 
 # Optional dependencies
 try:
-    import openpyxl  # pyright: ignore[reportMissingModuleSource]
+    import openpyxl  # type: ignore
 except ImportError:
     openpyxl = None
 try:
