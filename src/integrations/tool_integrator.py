@@ -6,6 +6,8 @@ Categories: DataOps, MLOps, ModelSecOps, SRE, DevSecOps.
 ====================================================================================================
 """
 
+import os
+import sys
 
 # CATEGORY 1: DATAOPS (16 Tools)
 DATAOPS_TOOLS = [
