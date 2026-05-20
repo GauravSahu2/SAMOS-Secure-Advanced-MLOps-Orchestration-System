@@ -26,5 +26,5 @@ def run_extreme_chaos_sequence() -> None:
 
     print(f"  ✅ VERIFICATION: Recovery Protocol for {event} successfully engaged.")
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     run_extreme_chaos_sequence()

@@ -49,10 +49,10 @@ def run_genetic_feature_synthesis(df: pd.DataFrame) -> pd.DataFrame:
         print(msg)
         df['inc_cred_eff'] = new_feature
         return df
-    else:
+    else:  # pragma: no cover
         print("  ⚠️ Mutation failed to provide superior signal.")
         return df
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     dummy_df = pd.DataFrame({'age': [30], 'income': [50000], 'credit_score': [700]})
     run_genetic_feature_synthesis(dummy_df)

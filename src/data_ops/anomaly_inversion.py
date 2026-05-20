@@ -20,7 +20,7 @@ def invert_anomaly(anomaly_record: dict[str, Any], neighbor_mean_record: dict[st
     print(f"  ✅ INVERSION COMPLETE: Record corrected to {fixed_record}.")
     return fixed_record
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     anomaly = {'income': -500, 'age': 35}
     normal = {'income': 45000, 'age': 34}
     invert_anomaly(anomaly, normal)

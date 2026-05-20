@@ -48,7 +48,7 @@ def generate_data(num_records: int = 1000) -> pd.DataFrame:
 
 from src.data_ops.multi_modal import UniversalConverter  # noqa: E402
 
-def main() -> None:
+def main() -> None:  # pragma: no cover
     print("🚀 Phase 1: Sourcing Data...")
     
     # 1. Multi-Modal Fusion (Convert PDF, Docx, Code, etc. to CSV)
@@ -86,5 +86,5 @@ def main() -> None:
         else:
             print("💡 Using existing data in the Bronze lake.")
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()

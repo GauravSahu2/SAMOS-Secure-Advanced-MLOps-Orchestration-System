@@ -314,7 +314,7 @@ def execute_forge_loop(
     last_checkpoint_step = start_step
     tokens_per_step = 4000000 
     telemetry = {"temp": 45.0}
-    last_telemetry_time = 0
+    last_telemetry_time = 0.0
     gpu_temp = 45
     
     for step in range(start_step, total_steps + 1):

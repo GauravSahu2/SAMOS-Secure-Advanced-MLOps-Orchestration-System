@@ -76,7 +76,7 @@ class ThermalWatchdog:
             
         return False # No cooldown needed
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     # Standalone test mode
     watchdog = ThermalWatchdog()
     print(f"Current GPU Temp: {watchdog.get_gpu_temp()}°C")

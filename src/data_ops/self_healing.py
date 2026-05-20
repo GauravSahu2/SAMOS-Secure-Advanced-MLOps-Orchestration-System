@@ -22,5 +22,5 @@ def run_self_healing(path: str) -> None:
     heal_data(path, path)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     heal_data("data/bronze_data.csv", "data/features_healed.csv")

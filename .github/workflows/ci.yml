@@ -20,6 +20,13 @@ on:
       SONAR_HOST_URL:
         required: false
 
+permissions:
+  contents: read
+  security-events: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   # ── TIER 1: Static Analysis & Security ──────────────────────────────────────
   lint-and-sast:
@@ -86,7 +93,7 @@ jobs:
       - name: "📦 Install Test Dependencies"
         run: |
           python -m pip install --upgrade pip
-          pip install pytest==9.0.3 pytest-cov==7.1.0
+          pip install pytest==9.0.3 pytest-cov==7.1.0 hypothesis pytest-asyncio
           pip install pandas numpy scikit-learn mlflow fastapi pydantic psutil httpx
 
       - name: "🧪 Run Tests with Coverage"

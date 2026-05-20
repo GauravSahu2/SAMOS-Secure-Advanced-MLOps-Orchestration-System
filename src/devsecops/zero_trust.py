@@ -26,7 +26,7 @@ class ZeroTrustGuard:
             print(f"❌ SECURITY BREACH: Invalid Token for {phase_name}! Blocking Execution.")
             return False
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     guard = ZeroTrustGuard()
     token = guard.issue_token("Phase-2-Validation")
     guard.verify_token("Phase-2-Validation", token)

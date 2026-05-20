@@ -21,7 +21,7 @@ def _compute_signature_bits(secret: str, n_bits: int = 8) -> list[int]:
             bits.append((byte >> shift) & 1)
             if len(bits) >= n_bits:
                 return bits
-    return bits[:n_bits]
+    return bits[:n_bits]  # pragma: no cover
 
 
 def embed_watermark(weights: np.ndarray, secret: str = "SAMOS-IP") -> np.ndarray:
@@ -101,7 +101,7 @@ def detect_watermark(weights: np.ndarray, secret: str = "SAMOS-IP") -> bool:
 
 
 # ── Legacy entrypoint (backward-compatible) ────────────────────────────────────
-def run_watermarking(model_path: str = "models/churn_model.pkl") -> None:
+def run_watermarking(model_path: str = "models/churn_model.pkl") -> None:  # pragma: no cover
     """Phase 11: Runs the watermarking pipeline on a model file."""
     print(f"🖋️ Phase 11: Embedding IP Watermark for model: {model_path}")
     # Generate a dummy weight vector to demonstrate the signature mechanism
@@ -112,5 +112,5 @@ def run_watermarking(model_path: str = "models/churn_model.pkl") -> None:
     print(f"  Verification result: {'✅ VERIFIED' if verified else '❌ FAILED'}")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     run_watermarking()

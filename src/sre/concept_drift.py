@@ -23,7 +23,7 @@ def detect_concept_drift(stable_preds, actual_outcomes, window_size=100):
         print("✅ Concepts are stable. Relationship between features and target is consistent.")
         return False
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     # Simulating a spike in errors (0.1 baseline, 0.2 recent)
     preds = [0]*1000 + [1]*100
     actuals = [0]*1000 + [0]*100 # Model thinks they'll churn, but they didn't

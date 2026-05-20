@@ -214,3 +214,24 @@ class TestChaosMonkey:
         result: Any = run_extreme_chaos_sequence()
         if result is not None:
             assert isinstance(result, (dict, str, list))
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Phase 28: Thermal Watchdog
+# ─────────────────────────────────────────────────────────────────────────────
+class TestThermalWatchdog:
+    def test_thermal_watchdog_safe(self, monkeypatch: Any) -> None:
+        from src.sre.thermal_watchdog import ThermalWatchdog
+        watchdog = ThermalWatchdog(max_temp=85, recovery_temp=75)
+        # Mock get_gpu_temp to return a safe temperature
+        monkeypatch.setattr(watchdog, "get_gpu_temp", lambda: 50)
+        assert watchdog.check_safety() is False
+
+    def test_thermal_watchdog_hot(self, monkeypatch: Any) -> None:
+        from src.sre.thermal_watchdog import ThermalWatchdog
+        watchdog = ThermalWatchdog(max_temp=85, recovery_temp=75)
+        # Mock get_gpu_temp to trigger throttling and then return safe temp
+        temps = [90, 70]
+        monkeypatch.setattr(watchdog, "get_gpu_temp", lambda: temps.pop(0) if temps else 70)
+        monkeypatch.setattr("time.sleep", lambda secs: None)
+        assert watchdog.check_safety() is True
