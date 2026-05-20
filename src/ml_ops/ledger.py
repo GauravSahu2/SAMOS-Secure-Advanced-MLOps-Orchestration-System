@@ -17,7 +17,7 @@ import os
 LEDGER_FILE = "artifacts/governance_ledger.jsonl"
 
 
-from typing import Any
+from typing import Any  # noqa: E402
 
 def append_to_ledger(event: str, metadata: dict[str, Any]) -> dict[str, Any]:
     """

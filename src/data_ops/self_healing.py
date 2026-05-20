@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 
 def heal_data(input_path: str, output_path: str) -> pd.DataFrame:
     """Phase 2: Self-Healing Data Repair (Auto-Imputation)."""

@@ -7,7 +7,6 @@ Description: Automated bridge to pull orchestrated data from NiFi flowfiles.
 """
 
 import os
-import requests
 try:
     import nipyapi
 except ImportError:

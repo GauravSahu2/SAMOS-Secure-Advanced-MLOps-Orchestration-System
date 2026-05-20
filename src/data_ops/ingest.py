@@ -46,7 +46,7 @@ def generate_data(num_records: int = 1000) -> pd.DataFrame:
     
     return df
 
-from src.data_ops.multi_modal import UniversalConverter
+from src.data_ops.multi_modal import UniversalConverter  # noqa: E402
 
 def main() -> None:
     print("🚀 Phase 1: Sourcing Data...")

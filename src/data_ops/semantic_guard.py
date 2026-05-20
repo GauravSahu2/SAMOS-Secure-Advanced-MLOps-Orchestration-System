@@ -1,6 +1,5 @@
 import numpy as np
 
-from typing import Any
 
 def check_semantic_integrity(data: list[float] | list[int], column_name: str, expected_mean: float) -> bool:
     """Phase 2: DataOps - Semantic Integrity Guardrail."""

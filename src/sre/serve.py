@@ -27,7 +27,7 @@ from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
 from pydantic import BaseModel
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 from starlette.responses import Response
-from typing import Any, Callable, Awaitable, AsyncGenerator, cast, Dict
+from typing import Any, AsyncGenerator
 
 # ── Logging setup ──────────────────────────────────────────────────────────────
 logging.basicConfig(
@@ -161,7 +161,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):  # type: ignore[misc]
 
 
 # ── Global Telemetry States (Phase 24) ─────────────────────────────────────────
-from collections import deque
+from collections import deque  # noqa: E402
 _live_logs: deque[str] = deque(maxlen=20)
 _live_metrics_rps: int = 0
 _live_metrics_latencies: list[float] = []
@@ -393,7 +393,7 @@ async def predict(query: Query) -> dict[str, Any]:
     except Exception as e:
         _circuit_breaker.record_failure()
         logger.exception("Inference failed: %s", str(e))
-        raise HTTPException(status_code=500, detail="Internal inference error.")
+        raise HTTPException(status_code=500, detail="Internal inference error.") from e
 
     latency_s = time.perf_counter() - start_time
     latency_ms = latency_s * 1000

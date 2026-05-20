@@ -13,12 +13,18 @@ from datetime import datetime
 from typing import Any
 
 # Optional dependencies
-try: import openpyxl  # pyright: ignore[reportMissingModuleSource]
-except ImportError: openpyxl = None
-try: import PyPDF2
-except ImportError: PyPDF2 = None
-try: from docx import Document
-except ImportError: Document = None
+try:
+    import openpyxl  # pyright: ignore[reportMissingModuleSource]
+except ImportError:
+    openpyxl = None
+try:
+    import PyPDF2
+except ImportError:
+    PyPDF2 = None
+try:
+    from docx import Document
+except ImportError:
+    Document = None
 
 class UniversalConverter:
     def __init__(self, raw_dir: str = "data/raw", bronze_file: str = "data/bronze_data.csv") -> None:
@@ -27,7 +33,8 @@ class UniversalConverter:
         os.makedirs(self.raw_dir, exist_ok=True)
 
     def extract_text_from_pdf(self, file_path: str) -> str:
-        if not PyPDF2: return "[PyPDF2 Missing]"
+        if not PyPDF2:
+            return "[PyPDF2 Missing]"
         text = ""
         try:
             with open(file_path, "rb") as f:
@@ -41,7 +48,8 @@ class UniversalConverter:
         return text
 
     def extract_text_from_docx(self, file_path: str) -> str:
-        if not Document: return "[python-docx Missing]"
+        if not Document:
+            return "[python-docx Missing]"
         try:
             doc = Document(file_path)
             return "\n".join([para.text for para in doc.paragraphs])

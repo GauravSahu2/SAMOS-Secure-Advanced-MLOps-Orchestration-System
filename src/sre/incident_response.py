@@ -34,7 +34,7 @@ except ImportError:
 
 # ── Metric collection helpers ──────────────────────────────────────────────────
 
-from typing import Any
+from typing import Any  # noqa: E402
 
 def _metrics_from_prometheus(endpoint: str = "http://localhost:9090/metrics") -> dict[str, Any]:
     """Scrapes a Prometheus metrics endpoint and extracts relevant SAMOS KPIs."""

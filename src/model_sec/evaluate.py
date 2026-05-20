@@ -52,7 +52,7 @@ except ImportError:
 
 
 # ── LLM evaluation (forge output) ─────────────────────────────────────────────
-from typing import Any
+from typing import Any  # noqa: E402
 
 def evaluate_llm(model_path: str) -> dict[str, Any]:
     """

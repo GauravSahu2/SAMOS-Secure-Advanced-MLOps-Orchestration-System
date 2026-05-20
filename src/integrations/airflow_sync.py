@@ -11,7 +11,6 @@ FIX APPLIED (Gap #8):
 ====================================================================================================
 """
 
-import json
 import logging
 import os
 import shutil

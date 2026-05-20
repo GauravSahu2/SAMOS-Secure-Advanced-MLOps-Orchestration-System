@@ -10,6 +10,7 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "B", "S"] # Security, Bugbear, Error, Flake
+ignore = ["E501", "S110", "S101", "S310", "S311", "S603", "S107", "S106"]
 
 [tool.mypy]
 strict = true

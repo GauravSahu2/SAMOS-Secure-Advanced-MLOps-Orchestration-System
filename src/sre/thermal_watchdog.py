@@ -45,7 +45,7 @@ class ThermalWatchdog:
             cmd = ["nvidia-smi", "--query-gpu=temperature.gpu", "--format=csv,noheader,nounits"]
             output = subprocess.check_output(cmd).decode('utf-8').strip()  # nosec # noqa
             return int(output)
-        except Exception as e:
+        except Exception:
             logging.exception("Failed to query GPU temperature")
             return 0
 
