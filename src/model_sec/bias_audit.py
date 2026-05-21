@@ -23,7 +23,7 @@ CONNECTION ORDER:
 """
 
 import pandas as pd
-import pickle  # nosec # noqa
+import pickle  # nosec B403 — model loaded from controlled internal path
 from sklearn.metrics import accuracy_score
 
 def run_bias_audit(model_path: str, data_path: str) -> bool:
@@ -31,7 +31,7 @@ def run_bias_audit(model_path: str, data_path: str) -> bool:
     print("⚖️ Phase 13: Starting Ethical Bias Audit...")
     
     with open(model_path, "rb") as f:
-        model = pickle.load(f)  # nosec # noqa
+        model = pickle.load(f)  # nosec B301 — model loaded from controlled internal path
         
     df = pd.read_csv(data_path)
     

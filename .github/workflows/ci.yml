@@ -53,7 +53,7 @@ jobs:
         run: ruff check src/ --output-format=github
 
       - name: "🔒 Bandit: SAST Security Scan"
-        run: bandit -r src/ -ll -x src/ml_ops/pinaka_forge_v2.py
+        run: bandit -r src/ -l -x src/ml_ops/pinaka_forge_v2.py
 
       - name: "🔍 MyPy: Type Safety"
         run: mypy src/ --ignore-missing-imports --no-strict-optional

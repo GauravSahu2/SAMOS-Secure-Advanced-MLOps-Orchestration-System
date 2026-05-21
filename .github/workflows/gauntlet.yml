@@ -47,7 +47,7 @@ jobs:
         run: ruff check src/ --output-format=github
 
       - name: "🔒 Tier 02: Bandit SAST"
-        run: bandit -r src/ -ll -x src/ml_ops/pinaka_forge_v2.py
+        run: bandit -r src/ -l -x src/ml_ops/pinaka_forge_v2.py
 
       - name: "🔍 Tier 03: MyPy Type Safety"
         run: mypy src/ --ignore-missing-imports --no-strict-optional

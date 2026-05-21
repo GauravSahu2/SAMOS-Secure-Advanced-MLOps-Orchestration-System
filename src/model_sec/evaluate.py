@@ -17,7 +17,7 @@ Detection order:
 
 import os
 import logging
-import pickle  # nosec # noqa
+import pickle  # nosec B403 — model loaded from controlled internal path
 
 logger = logging.getLogger("samos.evaluate")
 
@@ -69,11 +69,11 @@ def evaluate_llm(model_path: str) -> dict[str, Any]:
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     try:
-        tokenizer = AutoTokenizer.from_pretrained(model_path)  # nosec B615
+        tokenizer = AutoTokenizer.from_pretrained(model_path)
         if tokenizer.pad_token is None:
             tokenizer.pad_token = tokenizer.eos_token
 
-        model = AutoModelForCausalLM.from_pretrained(  # nosec B615
+        model = AutoModelForCausalLM.from_pretrained(
             model_path, torch_dtype=torch.float32, low_cpu_mem_usage=True
         ).to(device)
         model.eval()
@@ -95,7 +95,7 @@ def evaluate_llm(model_path: str) -> dict[str, Any]:
 
 def _compute_llm_loss(model: Any, tokenizer: Any, device: str, max_batches: int = 50) -> tuple[float, int]:
     """Runs inference on wikitext-2 validation split and returns (total_loss, batch_count)."""
-    dataset = load_dataset("wikitext", "wikitext-2-raw-v1", split="validation")  # nosec B615
+    dataset = load_dataset("wikitext", "wikitext-2-raw-v1", split="validation")
     total_loss = 0.0
     total_batches = 0
 
@@ -185,7 +185,7 @@ def _load_sklearn_from_pickle() -> Any | None:
     pkl_path = "models/churn_model.pkl"
     if os.path.exists(pkl_path):
         with open(pkl_path, "rb") as f:
-            model = pickle.load(f)  # nosec # noqa
+            model = pickle.load(f)  # nosec B301 — model loaded from controlled internal path
         logger.info("  ✅ Loaded model from local storage: %s", pkl_path)
         return model
     return None

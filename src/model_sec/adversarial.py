@@ -1,5 +1,5 @@
 import numpy as np
-import pickle  # nosec # noqa
+import pickle  # nosec B403 — model loaded from controlled internal path
 import os
 
 def check_adversarial_robustness(model_path: str, data_path: str) -> None:
@@ -11,7 +11,7 @@ def check_adversarial_robustness(model_path: str, data_path: str) -> None:
         return
 
     with open(model_path, "rb") as f:
-        model = pickle.load(f)  # nosec # noqa
+        model = pickle.load(f)  # nosec B301 — model loaded from controlled internal path
         
     df = pd.read_csv(data_path)
     x_matrix = df.drop(['user_id', 'churn'], axis=1).to_numpy()
