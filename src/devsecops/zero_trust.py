@@ -3,11 +3,11 @@ import os
 
 class ZeroTrustGuard:
     """Phase 18: Zero-Trust SecOps - Inter-Phase Handshake."""
-    def __init__(self) -> None:
+    def __init__(self):
         # SECRET: Must be set via environment variable or injected by HashiCorp Vault.
         # Never hardcode secrets in source code.
-        self.secret: str = os.environ.get("SAMOS_ZT_SECRET", "CHANGE-ME-IN-PRODUCTION")  # nosec # noqa
-        self.tokens: dict[str, str] = {}
+        self.secret = os.environ.get("SAMOS_ZT_SECRET", "CHANGE-ME-IN-PRODUCTION")  # nosec # noqa
+        self.tokens = {}
 
     def issue_token(self, phase_name: str) -> str:
         """Generates a token for a completed phase."""
@@ -26,7 +26,7 @@ class ZeroTrustGuard:
             print(f"❌ SECURITY BREACH: Invalid Token for {phase_name}! Blocking Execution.")
             return False
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     guard = ZeroTrustGuard()
     token = guard.issue_token("Phase-2-Validation")
     guard.verify_token("Phase-2-Validation", token)

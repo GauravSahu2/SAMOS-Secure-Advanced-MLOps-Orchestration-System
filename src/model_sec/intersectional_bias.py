@@ -1,13 +1,12 @@
 import pandas as pd
-import pickle  # nosec # noqa
+import joblib
 from sklearn.metrics import accuracy_score
 
 def run_intersectional_audit(model_path: str, data_path: str) -> None:
     """Phase 13: Advanced Ethics - Intersectional Bias Analysis."""
     print("🧬 Phase 13: Starting Intersectional Bias Audit...")
     
-    with open(model_path, "rb") as f:
-        model = pickle.load(f)  # nosec # noqa
+    model = joblib.load(model_path)
         
     df = pd.read_csv(data_path)
     

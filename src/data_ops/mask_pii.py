@@ -15,5 +15,5 @@ def mask_pii(input_path: str, secured_path: str) -> None:
     
     print(f"✅ PII Masked. Data saved to {secured_path}")
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     mask_pii("data/silver_data.csv", "data/secured_data.csv")

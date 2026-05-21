@@ -20,6 +20,13 @@ on:
       SONAR_HOST_URL:
         required: false
 
+permissions:
+  contents: read
+  security-events: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   # ── TIER 1: Static Analysis & Security ──────────────────────────────────────
   lint-and-sast:
@@ -39,22 +46,28 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install ruff==0.15.12 bandit==1.9.4 mypy==1.20.2
-          pip install pandas numpy psutil scikit-learn fastapi pydantic
+          pip install pandas numpy psutil scikit-learn fastapi pydantic joblib
+          pip install types-requests  # MyPy stubs for requests
 
       - name: "✏️ Ruff: Style & Lint"
         run: ruff check src/ --output-format=github
 
       - name: "🔒 Bandit: SAST Security Scan"
-        run: bandit -r src/ -ll -x src/ml_ops/pinaka_forge_v2.py
+        run: bandit -r src/ -l -x src/ml_ops/pinaka_forge_v2.py
 
       - name: "🔍 MyPy: Type Safety"
         run: mypy src/ --ignore-missing-imports --no-strict-optional
-        continue-on-error: true  # Type errors are non-blocking for now
 
   # ── TIER 2: Secret Scanning ───────────────────────────────────────────────────
   secret-scan:
     name: "🔑 Tier 2 — Secret Detection (Gitleaks)"
     runs-on: ubuntu-latest
+    needs: lint-and-sast
+    permissions:
+      contents: read
+      pull-requests: write   # required for Gitleaks to post PR review comments
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: "📥 Checkout"
         uses: actions/checkout@v4
@@ -65,12 +78,13 @@ jobs:
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_ENABLE_COMMENTS: "false"  # Disable PR comments; report via summary instead
 
   # ── TIER 3: Unit Tests & Coverage ────────────────────────────────────────────
   test:
     name: "🧪 Tier 3 — Pytest & Coverage"
     runs-on: ubuntu-latest
-    needs: lint-and-sast
+    needs: secret-scan
     env:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
@@ -86,7 +100,7 @@ jobs:
       - name: "📦 Install Test Dependencies"
         run: |
           python -m pip install --upgrade pip
-          pip install pytest==9.0.3 pytest-cov==7.1.0
+          pip install pytest==9.0.3 pytest-cov==7.1.0 hypothesis pytest-asyncio
           pip install pandas numpy scikit-learn mlflow fastapi pydantic psutil httpx
 
       - name: "🧪 Run Tests with Coverage"
@@ -115,7 +129,7 @@ jobs:
     name: "🔭 Tier 4 — SonarQube Analysis"
     runs-on: ubuntu-latest
     needs: test
-    if: github.event_name == 'push'  # Only on push, not on PRs (saves quota)
+    if: success()
     env:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL || 'https://sonarcloud.io' }}
@@ -125,9 +139,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      # 🔭 Note on SonarQube & SonarCloud Automatic Analysis:
+      # If "Automatic Analysis" is enabled in your SonarCloud project settings UI,
+      # SonarCloud automatically scans every push. Running a manual CI scan alongside it
+      # will cause a server-side conflict and exit code 3.
+      # To prevent this conflict from blocking CI/CD runs, we use `continue-on-error: true`.
+      # To make this step pass fully, disable "Automatic Analysis" in the SonarCloud UI.
       - name: "🔭 SonarQube Scan"
         if: env.SONAR_TOKEN != ''
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarqube-scan-action@v4
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -137,6 +158,7 @@ jobs:
     name: "🐳 Tier 5 — Docker Build Validation"
     runs-on: ubuntu-latest
     needs: test
+    if: success()
     steps:
       - name: "📥 Checkout"
         uses: actions/checkout@v4
@@ -155,17 +177,18 @@ jobs:
           exit-code: "0"  # Non-blocking: report only
 
       - name: "📤 Upload Trivy SARIF"
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: "trivy-results.sarif"
-        if: always()
+        if: always() && hashFiles('trivy-results.sarif') != ''
+        continue-on-error: true
 
   # ── TIER 6: SBOM Generation (Audit Bundle) ───────────────────────────────────
   sbom:
     name: "📋 Tier 6 — SBOM Generation"
     runs-on: ubuntu-latest
     needs: docker-build
-    if: github.ref == 'refs/heads/main'
+    if: success() && github.ref == 'refs/heads/main'
     steps:
       - name: "📥 Checkout"
         uses: actions/checkout@v4
@@ -188,3 +211,6 @@ jobs:
           path: |
             sbom.json
             coverage.xml
+
+# Trigger build
+

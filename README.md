@@ -74,7 +74,7 @@ python main.py llm
 python samos_master.py
 
 # 6. Start the production neural core
-uvicorn src.sre.serve:app --host 0.0.0.0 --port 7860
+uvicorn src.sre.serve:app --host 0.0.0.0 --port 8000
 ```
 
 🔐 System Access
@@ -144,8 +144,8 @@ SAMOS now features a full 75-tool enterprise-grade orchestration layer, spanning
 ### Launching the Ultra-Stack
 
 ```bash
-# Start the core stack with Enterprise profiles
-docker-compose --profile nifi --profile airflow up -d
+# Start the core Enterprise clusters
+docker-compose -f docker-compose.enterprise.yml up -d
 
 # Synchronize all 75 tools via the CLI
 samos --group integrations

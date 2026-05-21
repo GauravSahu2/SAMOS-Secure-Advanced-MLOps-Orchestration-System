@@ -18,5 +18,5 @@ def apply_differential_privacy(input_path, output_path, epsilon=0.1):
     df.to_csv(output_path, index=False)
     print(f"✅ Privacy-Preserving Data saved to {output_path}")
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     apply_differential_privacy("data/silver_data.csv", "data/private_data.csv")

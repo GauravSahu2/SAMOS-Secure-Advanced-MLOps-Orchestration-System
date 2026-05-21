@@ -10,7 +10,7 @@ numpy
 psutil
 matplotlib>=3.8.0
 pydantic
-pyseto                    # PASETO v4 Auth tokens
+pyseto # For PASETO v4 Auth
 transformers
 datasets
 accelerate
@@ -72,18 +72,93 @@ bandit==1.9.4             # Python SAST
 ruff==0.15.12             # Linter + formatter
 mypy==1.14.1              # Type checker
 
-# ── Monitoring & Scalability ──────────────────────────────────────────────────
-redis                     # Distributed caching / MAB state persistence
-requests                  # HTTP client
-aiohttp                   # Async networking
+# Compliance & DAST
+cyclonedx-bom==7.3.0 # SBOM Generation
+schemathesis==4.18.0 # Contract Testing
 
-# ── Multi-Modal & Document Processing ────────────────────────────────────────
-openpyxl                  # Excel processing
-PyPDF2                    # PDF text extraction
-python-docx               # Word document processing
-beautifulsoup4            # HTML parsing
-markdown                  # Markdown parsing
+# Next-Level Orchestration & Ingestion
+nipyapi # NiFi Python API
+apache-airflow # Workflow Orchestration
+mlflow # Experiment Tracking
+optuna # Hyperparameter Tuning
+dvc # Data Version Control
+great_expectations # Data Quality
+confluent-kafka # Kafka Client
+pyspark # Apache Spark
+dbt-core # SQL Transformation
+apache-iceberg # Table Format
+apache-flink # Stream Processing
+trino # SQL Query Engine
+delta-spark # Delta Lake
+datahub-rest # Metadata Discovery
+openlineage-python # Data Lineage
+duckdb # Fast OLAP
+clickhouse-connect # ClickHouse Client
+apache-beam # Unified Processing
+apache-superset # BI & Exploration
 
-# ── Hugging Face Integration ─────────────────────────────────────────────────
-huggingface-hub           # Model/dataset downloads
-openvino                  # Intel OpenVINO inference
+# kubeflow-pipelines # ML Workflows (Incompatible with Python 3.12)
+feast # Feature Store
+ray[default] # Distributed Computing
+bentoml # Model Serving
+evidently # ML Monitoring
+argo-workflows # Pipeline Execution
+tritonclient[all] # Inference Serving
+onnx # Interoperability
+label-studio # Data Labeling
+metaflow # Human-friendly ML
+zenml # Portable Pipelines
+
+# ModelSecOps & Ethics
+garak # LLM Vulnerability Scanner
+fairlearn # Fairness Assessment
+nemo-guardrails # LLM Safety Rails
+guardrails-ai # Output Validation
+modelscan # Model Threat Scanning
+counterfit # AI Red-Teaming
+alibi # Model Explanations
+textattack # NLP Adversarial Attacks
+rebuff # Prompt Injection Defense
+shap # Explainability
+presidio-analyzer # PII Detection
+presidio-anonymizer # PII Masking
+adversarial-robustness-toolbox # ART
+
+# SRE & Observability
+prometheus-client # Metrics
+opentelemetry-api # Tracing
+opentelemetry-sdk # Tracing
+jaeger-client # Distributed Tracing
+python-logging-loki # Log Aggregation
+locust # Performance Testing (k6 alternative in Python)
+chaos-mesh-python # Chaos Engineering (via API)
+keda # Event-driven scaling (via API)
+
+# DevSecOps & Security
+trivy # Vulnerability Scanning (via CLI)
+semgrep # Static Analysis
+pyfalco # Runtime Security
+opa-python-client # Policy Engine
+cosign # Image Signing (via CLI)
+defectdojo-api # Vulnerability Management
+checkov # IaC Static Analysis
+kubescape # K8s Security
+hvac # HashiCorp Vault Client
+sonar-tools # SonarQube Integration
+cyclonedx-python-lib # SBOM tracking
+pip-audit # Dependency Security
+detect-secrets # Secret Detection
+gitleaks # Secret Detection (via CLI)
+
+# Monitoring & Scalability
+redis # Distributed Caching
+requests # API Interaction
+vllm # High-throughput Inference
+aiohttp # Async Networking
+
+# Multi-Modal & Document Processing
+openpyxl # Excel Processing
+PyPDF2 # PDF Text Extraction
+python-docx # Word Document Processing
+beautifulsoup4 # HTML Parsing
+markdown # Markdown Parsing

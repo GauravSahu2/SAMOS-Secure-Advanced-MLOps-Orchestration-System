@@ -21,11 +21,10 @@ def route_request_cascading(user_data: pd.DataFrame, student_model: Any) -> int:
         return 1 # Teacher result
 
 if __name__ == "__main__":
-    import pickle  # nosec # noqa
+    import joblib
     import pandas as pd
     # Simulating the models
-    with open("models/churn_model.pkl", "rb") as f:
-        student = pickle.load(f)  # nosec # noqa
+    student = joblib.load("models/churn_model.pkl")
     user_dict = {
         'age': [35], 'income': [50000], 'credit_score': [600],
         'income_per_age': [1428], 'high_credit': [0]

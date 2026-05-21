@@ -64,6 +64,7 @@ jobs:
               ("src/ml_ops/memory.py",              "src/ml_ops/memory.py"),
               ("samos_dashboard.html",              "samos_dashboard.html"),
               ("requirements.txt",                  "requirements.txt"),
+              ("requirements-prod.txt",             "requirements-prod.txt"),
           ]
 
           # Upload logo if it exists

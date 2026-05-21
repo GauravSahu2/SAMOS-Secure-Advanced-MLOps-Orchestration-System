@@ -103,7 +103,6 @@ python samos_master.py
 ### Hardware Monitoring
 
 The forge provides real-time telemetry:
-
 - **GPU0**: Primary student training (NVIDIA).
 - **Intel Ops**: Synthetic teacher inference throughput (NPU/iGPU).
 - **RAM**: Total system usage vs. safety budget.

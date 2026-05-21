@@ -23,5 +23,5 @@ def validate_data(input_path: str, silver_path: str, dlq_path: str) -> None:
     print(f"📂 Silver Data: {silver_path}")
     print(f"📂 Dead Letter Queue: {dlq_path}")
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     validate_data("data/bronze_data.csv", "data/silver_data.csv", "data/dlq_data.csv")

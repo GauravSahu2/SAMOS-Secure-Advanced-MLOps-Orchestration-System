@@ -75,10 +75,13 @@ _mab = MABGateway()
 
 
 # ── Startup validation (Gap #9) ───────────────────────────────────────────────
+# Known-insecure sentinel values — used by _validate_env() to DETECT if the operator
+# forgot to change the defaults. These are not credentials being used; they are the
+# "bad values" we check env vars AGAINST. nosec B105: intentional detection sentinels.
 _INSECURE_DEFAULTS = {
-    "AIRFLOW_SECRET_KEY": "change_me_in_production",
-    "AIRFLOW__CORE__FERNET_KEY": "change_me_in_production",
-    "NIFI_PASS": "change_this_strong_password_123!",
+    "AIRFLOW_SECRET_KEY":          "change_me_in_production",       # nosec B105
+    "AIRFLOW__CORE__FERNET_KEY":   "change_me_in_production",       # nosec B105
+    "NIFI_PASS":                   "change_this_strong_password_123!",  # nosec B105
 }
 
 

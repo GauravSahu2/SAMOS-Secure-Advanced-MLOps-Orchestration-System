@@ -23,16 +23,14 @@ CONNECTION ORDER:
 """
 
 import pandas as pd
-import pickle  # nosec # noqa
+import joblib
 from sklearn.metrics import accuracy_score
 
 def run_bias_audit(model_path: str, data_path: str) -> bool:
     """Phase 13: Fairness & Bias Audit (Slice-Based Evaluation)."""
     print("⚖️ Phase 13: Starting Ethical Bias Audit...")
     
-    with open(model_path, "rb") as f:
-        model = pickle.load(f)  # nosec # noqa
-        
+    model = joblib.load(model_path)
     df = pd.read_csv(data_path)
     
     # Define Cohorts

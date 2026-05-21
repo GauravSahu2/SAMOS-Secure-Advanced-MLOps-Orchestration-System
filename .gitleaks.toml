@@ -1,31 +1,43 @@
-# 🛡️ Pinaka 4B: .gitleaks.toml
+# ================================================================================
+# SAMOS: .gitleaks.toml
 # Secret Scanning Configuration (High-Assurance)
+# NOTE: Gitleaks' built-in ruleset covers all common secret patterns
+#       (API keys, tokens, private keys, etc.). Only add custom rules
+#       for SAMOS-specific secret formats that aren't covered by defaults.
+# ================================================================================
 
 [allowlist]
-description = "Allowlist for non-sensitive public hashes"
+description = "Allowlist for known-safe placeholders and non-sensitive public values"
+
 regexes = [
-    'ef9386625abc8feb45ba298ab6e02c05d02418bd38e5e7437f4904b6ce82c7f2', # Model Integrity Hash
-    '(?i)\$\{\{\s*secrets\.[a-za-z0-9_]+\s*\}\}', # GitHub Actions Secrets
-    '(?i)your_sonarcloud_token|hf_YOUR_TOKEN_HERE|change_this_strong_password_123|change_me_on_first_login|your_sonar_token|change_me_to_a_random_32char_string|your_codecov_token' # Placeholders
-]
-paths = [
-    '''\.env$''',
-    '''\.env\.example$''',
-    '''env\.example$''',
-    '''\.gitleaks\.toml$''',
-    '''requirements\.txt$''',
-    '''sonar-project\.properties$''',
-    '''\.github/workflows/.*$'''
+    # Model integrity hash — public content-addressed SHA256
+    'ef9386625abc8feb45ba298ab6e02c05d02418bd38e5e7437f4904b6ce82c7f2',
+
+    # GitHub Actions secrets interpolation syntax — not a real secret
+    '(?i)\$\{\{\s*secrets\.[a-zA-Z0-9_]+\s*\}\}',
+
+    # Explicit placeholder values that are safe-by-design
+    '(?i)(hf_YOUR_TOKEN_HERE|your_sonarcloud_token|your_codecov_token|your_sonar_token)',
+    '(?i)(change_me_to_a_random_32char_string|change_me_on_first_login)',
+    '(?i)(change_this_strong_password_123|YOUR_UPSTASH_PASSWORD|YOUR_DAGSHUB_TOKEN)',
+    '(?i)(YOUR_USERNAME|YourHFUsername)',
 ]
 
-[[rules]]
-id = "generic-secret"
-description = "Generic Secret"
-regex = '''(?i)secret|password|token|key|api_key|private_key'''
-severity = "critical"
+# ── Path-level exclusions ─────────────────────────────────────────────────────
+# These files are either example templates or internal config — never real creds.
+paths = [
+    '''(^|/)\.env\.example$''',
+    '''(^|/)env\.example$''',
+    '''(^|/)\.gitleaks\.toml$''',
+    '''(^|/)sonar-project\.properties$''',
+]
+
+# ── SAMOS-specific custom rules ───────────────────────────────────────────────
+# Built-in Gitleaks rules cover: AWS keys, GCP, HuggingFace tokens, GitHub PATs,
+# generic high-entropy strings, etc. Only add rules for formats NOT in the default set.
 
 [[rules]]
 id = "paseto-key"
-description = "High-Assurance PASETO Key"
-regex = '''v4\.public\.[A-Za-z0-9_-]+'''
+description = "SAMOS High-Assurance PASETO v4 Public Key"
+regex = '''v4\.public\.[A-Za-z0-9_-]{86}'''
 severity = "critical"

@@ -11,7 +11,7 @@ def run_extreme_chaos_sequence() -> None:
         "SIMULATE_CLOUD_OUTAGE"
     ]
     
-    event = random.choice(scenarios)  # nosec # noqa
+    event = random.choice(scenarios)  # nosec B311 — non-cryptographic simulation use
     print(f"  🔥 CHAOS EVENT TRIGGERED: {event}")
     
     if event == "DELETE_FEATURE_STORE":
@@ -26,5 +26,5 @@ def run_extreme_chaos_sequence() -> None:
 
     print(f"  ✅ VERIFICATION: Recovery Protocol for {event} successfully engaged.")
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     run_extreme_chaos_sequence()

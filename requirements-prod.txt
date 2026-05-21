@@ -1,0 +1,23 @@
+# 🐳 SAMOS: Production Container Dependencies
+# This file is optimized for the lightweight, secure FastAPI model serving container.
+# It excludes heavy development, testing, and offline pipeline dependencies.
+
+# ── Core Serving ──────────────────────────────────────────────────────────────
+fastapi==0.115.0
+uvicorn==0.30.0
+pydantic
+pyseto
+prometheus-client
+psutil
+httpx
+
+# ── Machine Learning & Security ───────────────────────────────────────────────
+numpy
+pandas
+scikit-learn
+joblib
+torch
+transformers
+datasets
+accelerate
+peft

@@ -5,7 +5,7 @@ Integration: Triton Inference Server
 Description: High-performance multi-framework model serving.
 ====================================================================================================
 """
-def setup_triton() -> None:
+def setup_triton():
     print("🔱 Configuring NVIDIA Triton Inference Server...")
     print("✅ Multi-framework model repository synchronized.")
 

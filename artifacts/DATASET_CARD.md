@@ -1,5 +1,5 @@
 # 📊 Dataset Summary Card
 
-- **Volume**: 979 rows
-- **Balance**: {0: 0.8110316649642493, 1: 0.18896833503575078}
+- **Volume**: 993 rows
+- **Balance**: {0: 0.81067472306143, 1: 0.18932527693857}
 - **Key Signals**: income, age, credit_score

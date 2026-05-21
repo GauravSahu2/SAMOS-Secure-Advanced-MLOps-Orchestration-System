@@ -5,7 +5,7 @@ Integration: OpenTelemetry
 Description: Unified traces, metrics & logs for planetary observability.
 ====================================================================================================
 """
-def init_tracing() -> None:
+def init_tracing():
     print("🌐 Initializing OpenTelemetry Global Tracing...")
     print("✅ Distributed context propagation active.")
 

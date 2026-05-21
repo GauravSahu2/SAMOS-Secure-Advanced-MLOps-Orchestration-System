@@ -5,7 +5,7 @@ Integration: Ray
 Description: Distributed computing for large-scale training swarms.
 ====================================================================================================
 """
-def init_ray_cluster() -> None:
+def init_ray_cluster():
     print("🛸 Initializing Ray Distributed Cluster...")
     print("✅ 100% compute saturation achieved across heterogeneous swarm.")
 
