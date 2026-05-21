@@ -7,7 +7,6 @@ Description: Exports factory telemetry (throughput, latency, drift) to Prometheu
 """
 
 import time
-import random
 try:
     from prometheus_client import start_http_server, Gauge, Counter
 except ImportError:
@@ -23,12 +22,12 @@ def start_metrics_server(port=9091):
     if not start_http_server:
         print("⚠️ prometheus_client not installed. Metrics export disabled.")
         return
-    
+
     print(f"📊 Starting Prometheus Metrics Server on port {port}...")
     start_http_server(port)
-    
-    # Simulate some initial metrics
-    MODEL_DRIFT_SCORE.set(random.uniform(0.01, 0.05))
+
+    # Seed an initial gauge value — the exact value is irrelevant for observability.
+    MODEL_DRIFT_SCORE.set(0.01)
     print("✅ Metrics server is live. Scrape target: http://localhost:9091/metrics")
 
 if __name__ == "__main__":

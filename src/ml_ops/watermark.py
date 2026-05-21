@@ -24,7 +24,18 @@ def _compute_signature_bits(secret: str, n_bits: int = 8) -> list[int]:
     return bits[:n_bits]  # pragma: no cover
 
 
-def embed_watermark(weights: np.ndarray, secret: str = "SAMOS-IP") -> np.ndarray:
+def _get_watermark_secret(override: str | None = None) -> str:
+    """Returns the watermark secret from caller override or SAMOS_WATERMARK_SECRET env var."""
+    secret = override or os.environ.get("SAMOS_WATERMARK_SECRET", "")
+    if not secret:
+        raise RuntimeError(
+            "Watermark secret is not set. "
+            "Configure SAMOS_WATERMARK_SECRET in your environment before running."
+        )
+    return secret
+
+
+def embed_watermark(weights: np.ndarray, secret: str | None = None) -> np.ndarray:
     """
     Embeds an IP watermark into a numpy weight array via LSB steganography.
 
@@ -40,7 +51,8 @@ def embed_watermark(weights: np.ndarray, secret: str = "SAMOS-IP") -> np.ndarray
         Modified numpy array with watermark embedded.
     """
     flat = weights.flatten().astype(np.float64)
-    sig_bits = _compute_signature_bits(secret, n_bits=min(8, len(flat)))
+    _secret = _get_watermark_secret(secret)
+    sig_bits = _compute_signature_bits(_secret, n_bits=min(8, len(flat)))
 
     for i, bit in enumerate(sig_bits):
         raw_int = flat[i].view(np.int64)
@@ -59,8 +71,9 @@ def embed_watermark(weights: np.ndarray, secret: str = "SAMOS-IP") -> np.ndarray
     # Persist signature metadata
     os.makedirs("models", exist_ok=True)
     sig_path = "models/watermark_sig.json"
+    _secret = _get_watermark_secret(secret)
     signature = {
-        "secret_hash": hashlib.sha256(secret.encode()).hexdigest(),
+        "secret_hash": hashlib.sha256(_secret.encode()).hexdigest(),
         "n_bits": len(sig_bits),
         "sig_bits": sig_bits,
         "owner": "SAMOS-Enterprise-MLOps",
@@ -72,7 +85,7 @@ def embed_watermark(weights: np.ndarray, secret: str = "SAMOS-IP") -> np.ndarray
     return watermarked
 
 
-def detect_watermark(weights: np.ndarray, secret: str = "SAMOS-IP") -> bool:
+def detect_watermark(weights: np.ndarray, secret: str | None = None) -> bool:
     """
     Detects whether a watermark for `secret` is present in `weights`.
 
@@ -87,7 +100,8 @@ def detect_watermark(weights: np.ndarray, secret: str = "SAMOS-IP") -> bool:
         True if the watermark matches, False otherwise.
     """
     flat = weights.flatten().astype(np.float64)
-    expected_bits = _compute_signature_bits(secret, n_bits=min(8, len(flat)))
+    _secret = _get_watermark_secret(secret)
+    expected_bits = _compute_signature_bits(_secret, n_bits=min(8, len(flat)))
 
     for i, expected_bit in enumerate(expected_bits):
         raw_int = flat[i].view(np.int64)
@@ -104,11 +118,12 @@ def detect_watermark(weights: np.ndarray, secret: str = "SAMOS-IP") -> bool:
 def run_watermarking(model_path: str = "models/churn_model.pkl") -> None:  # pragma: no cover
     """Phase 11: Runs the watermarking pipeline on a model file."""
     print(f"🖋️ Phase 11: Embedding IP Watermark for model: {model_path}")
-    # Generate a dummy weight vector to demonstrate the signature mechanism
+    # Generate a dummy weight vector to demonstrate the signature mechanism.
+    # Secret is loaded from SAMOS_WATERMARK_SECRET env var.
     rng = np.random.default_rng(42)
     demo_weights = rng.random(64)
-    watermarked = embed_watermark(demo_weights, secret="SAMOS-IP")
-    verified = detect_watermark(watermarked, secret="SAMOS-IP")
+    watermarked = embed_watermark(demo_weights)  # secret resolved from env
+    verified = detect_watermark(watermarked)      # secret resolved from env
     print(f"  Verification result: {'✅ VERIFIED' if verified else '❌ FAILED'}")
 
 

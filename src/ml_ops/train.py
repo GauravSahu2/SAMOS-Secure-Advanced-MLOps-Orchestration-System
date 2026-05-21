@@ -17,10 +17,13 @@ import os
 import gc
 import json
 import time
+import logging
 import psutil
 import numpy as np
 import multiprocessing as mp
 from src.sre.thermal_watchdog import ThermalWatchdog
+
+logger = logging.getLogger("samos.train")
 
 # ── RAM Guard ─────────────────────────────────────────────────────────────────
 _TOTAL_RAM_GB = psutil.virtual_memory().total / (1024 ** 3)
@@ -39,8 +42,8 @@ def check_ram_guard():
         try:
             import torch
             torch.cuda.empty_cache()
-        except Exception:
-            pass
+        except Exception as exc:  # CUDA may not be available in all environments
+            logger.debug("CUDA cache clear skipped: %s", exc)
         time.sleep(5)
         return True
     return False
@@ -58,8 +61,8 @@ def get_hardware_telemetry():
             temps = psutil.sensors_temperatures()
             if 'coretemp' in temps:
                 telemetry["temp"] = temps['coretemp'][0].current
-    except Exception:
-        pass
+    except Exception as exc:  # psutil sensor API varies by OS; non-critical
+        logger.debug("Hardware temperature read skipped: %s", exc)
     return telemetry
 
 def nvidia_worker(counter, index, target_load=1.00):
