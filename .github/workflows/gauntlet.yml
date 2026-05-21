@@ -41,6 +41,7 @@ jobs:
           pip install ruff bandit mypy pytest pytest-cov hypothesis pytest-asyncio
           pip install pandas numpy scikit-learn fastapi pydantic psutil mlflow httpx
           pip install prometheus-client
+          pip install types-requests  # MyPy stubs for requests
 
       - name: "🛡️ Tier 01: Ruff Lint"
         run: ruff check src/ --output-format=github
@@ -50,7 +51,6 @@ jobs:
 
       - name: "🔍 Tier 03: MyPy Type Safety"
         run: mypy src/ --ignore-missing-imports --no-strict-optional
-        continue-on-error: true
 
       - name: "🔑 Tier 04: Gitleaks Secret Scan"
         uses: gitleaks/gitleaks-action@v2
