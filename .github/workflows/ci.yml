@@ -139,6 +139,12 @@ jobs:
         with:
           fetch-depth: 0
 
+      # 🔭 Note on SonarQube & SonarCloud Automatic Analysis:
+      # If "Automatic Analysis" is enabled in your SonarCloud project settings UI,
+      # SonarCloud automatically scans every push. Running a manual CI scan alongside it
+      # will cause a server-side conflict and exit code 3.
+      # To prevent this conflict from blocking CI/CD runs, we use `continue-on-error: true`.
+      # To make this step pass fully, disable "Automatic Analysis" in the SonarCloud UI.
       - name: "🔭 SonarQube Scan"
         if: env.SONAR_TOKEN != ''
         uses: SonarSource/sonarqube-scan-action@v4

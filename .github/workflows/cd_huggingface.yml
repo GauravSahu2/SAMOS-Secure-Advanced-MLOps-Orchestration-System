@@ -59,6 +59,7 @@ jobs:
           cp samos_dashboard.html hf_space/
           cp samos_logo_ai_*.png hf_space/ 2>/dev/null || true
           cp requirements.txt hf_space/
+          cp requirements-prod.txt hf_space/
 
           # Create HF Space app.py entrypoint (HF looks for app.py at root)
           cat > hf_space/app.py << 'EOF'
