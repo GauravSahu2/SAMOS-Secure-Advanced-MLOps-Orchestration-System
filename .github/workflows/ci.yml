@@ -129,7 +129,7 @@ jobs:
     name: "🔭 Tier 4 — SonarQube Analysis"
     runs-on: ubuntu-latest
     needs: test
-    if: success() && github.event_name == 'push'  # Only on push, not on PRs (saves quota)
+    if: success()
     env:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL || 'https://sonarcloud.io' }}
@@ -173,7 +173,7 @@ jobs:
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: "trivy-results.sarif"
-        if: always()
+        if: always() && hashFiles('trivy-results.sarif') != ''
         continue-on-error: true
 
   # ── TIER 6: SBOM Generation (Audit Bundle) ───────────────────────────────────
