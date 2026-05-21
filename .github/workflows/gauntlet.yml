@@ -56,6 +56,7 @@ jobs:
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_ENABLE_COMMENTS: "false"
 
       - name: "🧪 Tier 05: Full Test Suite with Coverage"
         run: pytest tests/ --ignore=tests/test_pipeline.py -v --cov=src --cov-report=xml --tb=short

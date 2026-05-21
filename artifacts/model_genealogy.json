@@ -1,0 +1,16 @@
+[
+    {
+        "version": "V2.1.0-STAGING",
+        "parent": "V2.0.0-PROD",
+        "timestamp": "2026-05-20T18:27:26.167015",
+        "change_trigger": "Retrained due to Income Drift (Proactive Forecast)",
+        "lineage": "Data Version V4 -> AutoML Champion -> Distilled Student"
+    },
+    {
+        "version": "V2.1.0-STAGING",
+        "parent": "V2.0.0-PROD",
+        "timestamp": "2026-05-20T18:30:16.849999",
+        "change_trigger": "Retrained due to Income Drift (Proactive Forecast)",
+        "lineage": "Data Version V4 -> AutoML Champion -> Distilled Student"
+    }
+]
