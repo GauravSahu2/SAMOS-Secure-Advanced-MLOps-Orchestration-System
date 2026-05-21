@@ -1,12 +1,11 @@
 import pandas as pd
-import pickle  # nosec B403 — model loaded from controlled internal path
+import joblib
 
 def prune_model(model_path: str, data_path: str, threshold: float = 0.05) -> None:
     """Phase 21: Extreme Model Pruning (Feature-Level)."""
     print("✂️ Phase 21: Starting Extreme Model Pruning...")
     
-    with open(model_path, "rb") as f:
-        model = pickle.load(f)  # nosec B301 — model loaded from controlled internal path
+    model = joblib.load(model_path)
         
     df = pd.read_csv(data_path)
     X = df.drop(['user_id', 'churn'], axis=1)

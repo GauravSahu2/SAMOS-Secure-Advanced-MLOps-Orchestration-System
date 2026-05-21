@@ -1,12 +1,11 @@
 import pandas as pd
-import pickle  # nosec B403 — model loaded from controlled internal path
+import joblib
 
 def generate_counterfactual(model_path: str, user_data: pd.DataFrame) -> None:
     """Phase 13: Actionable XAI - Counterfactual Explanations."""
     print("🔍 Phase 13: Generating Counterfactual Explanation...")
     
-    with open(model_path, "rb") as f:
-        model = pickle.load(f)  # nosec B301 — model loaded from controlled internal path
+    model = joblib.load(model_path)
         
     original_pred = model.predict(user_data)[0]
     print(f"  Current Prediction: {'CHURN' if original_pred == 1 else 'STAY'}")

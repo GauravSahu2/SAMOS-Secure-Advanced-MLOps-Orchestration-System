@@ -17,7 +17,7 @@ Detection order:
 
 import os
 import logging
-import pickle  # nosec B403 — model loaded from controlled internal path
+import joblib
 
 logger = logging.getLogger("samos.evaluate")
 
@@ -184,8 +184,7 @@ def _load_sklearn_from_pickle() -> Any | None:
     """Loads a sklearn model from the local pickle fallback."""
     pkl_path = "models/churn_model.pkl"
     if os.path.exists(pkl_path):
-        with open(pkl_path, "rb") as f:
-            model = pickle.load(f)  # nosec B301 — model loaded from controlled internal path
+        model = joblib.load(pkl_path)
         logger.info("  ✅ Loaded model from local storage: %s", pkl_path)
         return model
     return None

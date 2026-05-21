@@ -1,13 +1,12 @@
 import pandas as pd
 import numpy as np
-import pickle  # nosec B403 — model loaded from controlled internal path
+import joblib
 
 def identify_uncertain_samples(model_path: str, data_path: str, threshold: float = 0.1) -> None:
     """Phase 11: Active Learning - Uncertainty Sampling."""
     print("🔍 Phase 11: Starting Active Learning Uncertainty Check...")
     
-    with open(model_path, "rb") as f:
-        model = pickle.load(f)  # nosec B301 — model loaded from controlled internal path
+    model = joblib.load(model_path)
         
     df = pd.read_csv(data_path)
     X = df.drop(['user_id', 'churn'], axis=1)

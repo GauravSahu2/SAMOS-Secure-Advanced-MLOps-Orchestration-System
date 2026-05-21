@@ -1,12 +1,11 @@
 import pandas as pd
-import pickle  # nosec B403 — model loaded from controlled internal path
+import joblib
 
 def check_monotonicity(model_path: str, feature_name: str = "credit_score", direction: str = "negative") -> bool:
     """Phase 13: Business Logic Guardrail - Monotonicity Test."""
     print(f"📉 Phase 13: Checking Monotonicity for '{feature_name}' ({direction})...")
     
-    with open(model_path, "rb") as f:
-        model = pickle.load(f)  # nosec B301 — model loaded from controlled internal path
+    model = joblib.load(model_path)
         
     # Create a synthetic sample
     sample_dict = {
