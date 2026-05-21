@@ -97,8 +97,7 @@ clickhouse-connect # ClickHouse Client
 apache-beam # Unified Processing
 apache-superset # BI & Exploration
 
-# MLOps Evolution
-kubeflow-pipelines # ML Workflows
+# kubeflow-pipelines # ML Workflows (Incompatible with Python 3.12)
 feast # Feature Store
 ray[default] # Distributed Computing
 bentoml # Model Serving
