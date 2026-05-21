@@ -7,7 +7,6 @@ Description: Synchronizes SAMOS phases with Airflow DAGs for enterprise scheduli
 """
 
 import os
-import json
 
 def generate_airflow_dag_stub():
     """Generates a Python DAG stub for Airflow to trigger SAMOS."""

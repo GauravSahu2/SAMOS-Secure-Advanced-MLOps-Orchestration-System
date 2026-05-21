@@ -5,9 +5,8 @@ Integration: Apache Kafka
 Description: Distributed event streaming backbone for real-time SAMOS data flows.
 ====================================================================================================
 """
-import os
 try:
-    from confluent_kafka import Producer, Consumer
+    from confluent_kafka import Producer
 except ImportError:
     Producer = None
 

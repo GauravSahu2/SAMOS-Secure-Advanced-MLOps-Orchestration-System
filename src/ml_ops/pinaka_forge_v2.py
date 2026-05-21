@@ -20,8 +20,6 @@ ORCHESTRATION LOGIC:
 ====================================================================================================
 """
 
-import os
-import sys
 import time
 import json
 import subprocess  # nosec
@@ -30,7 +28,6 @@ import numpy as np
 import psutil
 
 import torch
-import torch.nn.functional as F
 from transformers import AutoModelForCausalLM, AutoTokenizer, get_scheduler
 from torch.optim import AdamW
 from datasets import load_dataset
@@ -357,7 +354,7 @@ def train_pinaka():
     eff_batch = BATCH_SIZE * GRAD_ACCUM_STEPS
     print(f"  🚀 FORGE COMMENCING: {MAX_STEPS:,} steps | micro-batch={BATCH_SIZE} x accum={GRAD_ACCUM_STEPS} = effective {eff_batch}")
     print(f"  🔒 RAM Guard: Will pause if usage exceeds {RAM_BUDGET_GB:.1f} GB")
-    print(f"  🧠 Gradient Checkpointing: ENABLED (saves ~50% VRAM)")
+    print("  🧠 Gradient Checkpointing: ENABLED (saves ~50% VRAM)")
 
     student.train()
     start_time = time.time()
