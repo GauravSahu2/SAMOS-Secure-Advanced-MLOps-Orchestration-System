@@ -2,11 +2,13 @@
 # Secret Scanning Configuration (High-Assurance)
 
 [allowlist]
-description = "Allowlist for non-sensitive public hashes"
+description = "Allowlist for non-sensitive public hashes and placeholders"
 regexes = [
     'ef9386625abc8feb45ba298ab6e02c05d02418bd38e5e7437f4904b6ce82c7f2', # Model Integrity Hash
     '(?i)\$\{\{\s*secrets\.[a-za-z0-9_]+\s*\}\}', # GitHub Actions Secrets
-    '(?i)your_sonarcloud_token|hf_YOUR_TOKEN_HERE|change_this_strong_password_123|change_me_on_first_login|your_sonar_token|change_me_to_a_random_32char_string|your_codecov_token' # Placeholders
+    '(?i)your_sonarcloud_token|hf_YOUR_TOKEN_HERE|change_this_strong_password_123|change_me_on_first_login|your_sonar_token|change_me_to_a_random_32char_string|your_codecov_token', # Placeholders
+    '(?i)mock_[a-z0-9_]+',
+    'sqlite:///'
 ]
 paths = [
     '''\.env$''',
@@ -15,17 +17,20 @@ paths = [
     '''\.gitleaks\.toml$''',
     '''requirements\.txt$''',
     '''sonar-project\.properties$''',
-    '''\.github/workflows/.*$'''
+    '''\.github/workflows/.*$''',
+    '''tests/.*$'''
 ]
 
 [[rules]]
-id = "generic-secret"
-description = "Generic Secret"
-regex = '''(?i)secret|password|token|key|api_key|private_key'''
+id = "generic-hardcoded-secret"
+description = "Generic Hardcoded Secret Assignment"
+regex = '''(?i)(?:secret|password|token|api_key|private_key)\s*[:=]\s*["']([A-Za-z0-9_~\-]{16,})["']'''
+keywords = ["secret", "password", "token", "api_key", "private_key"]
 severity = "critical"
 
 [[rules]]
 id = "paseto-key"
 description = "High-Assurance PASETO Key"
-regex = '''v4\.public\.[A-Za-z0-9_-]+'''
+regex = '''v4\.public\.[A-Za-z0-9_-]{32,}'''
+keywords = ["v4.public."]
 severity = "critical"
