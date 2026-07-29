@@ -255,7 +255,7 @@ def calculate_contributions(has_nvidia, intel_devices, shared_counters, device_m
             c_idx += 1
     return " | ".join(contributions)
 
-def process_telemetry(watchdog):
+def process_telemetry(watchdog: "ThermalWatchdog") -> tuple:  # type: ignore[type-arg]
     watchdog.check_safety()
     telemetry = get_hardware_telemetry()
     return telemetry, watchdog.get_gpu_temp()
@@ -315,7 +315,7 @@ def execute_forge_loop(
     tokens_per_step = 4000000 
     telemetry = {"temp": 45.0}
     last_telemetry_time = 0
-    gpu_temp: float = 45.0
+    gpu_temp: int = 45
     
     for step in range(start_step, total_steps + 1):
         current_loop_time = time.time()
