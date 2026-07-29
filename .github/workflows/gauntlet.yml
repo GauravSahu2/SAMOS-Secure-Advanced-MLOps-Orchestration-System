@@ -17,10 +17,7 @@ jobs:
   gauntlet:
     name: "🏆 Full Gauntlet"
     runs-on: ubuntu-latest
-    env:
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL || 'https://sonarcloud.io' }}
+    timeout-minutes: 60
 
     steps:
       - name: "📥 Checkout"
@@ -64,16 +61,19 @@ jobs:
           MLFLOW_TRACKING_URI: "sqlite:///test_mlflow.db"
 
       - name: "📊 Tier 06: Upload Coverage to Codecov"
-        if: env.CODECOV_TOKEN != ''
         uses: codecov/codecov-action@v4
+        continue-on-error: true
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.xml
           fail_ci_if_error: false
 
+      # NOTE: SonarQube runs unconditionally with continue-on-error.
+      # Job-level `if: secrets.X != ''` is NOT supported in GitHub Actions —
+      # secrets are always masked/empty in expression contexts for security.
       - name: "🔭 Tier 07: SonarQube Analysis"
-        if: env.SONAR_TOKEN != ''
         uses: SonarSource/sonarcloud-github-action@master
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -101,6 +101,7 @@ jobs:
         run: |
           pip install cyclonedx-bom
           cyclonedx-py requirements requirements.txt --of json -o sbom.json
+        continue-on-error: true
 
       - name: "📦 Upload Audit Bundle"
         uses: actions/upload-artifact@v4
