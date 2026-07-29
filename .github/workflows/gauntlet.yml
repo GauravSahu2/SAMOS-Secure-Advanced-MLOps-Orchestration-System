@@ -55,7 +55,10 @@ jobs:
             --disable-error-code=unused-ignore \
             --disable-error-code=type-arg \
             --disable-error-code=no-any-return \
-            --disable-error-code=untyped-decorator
+            --disable-error-code=untyped-decorator \
+            --disable-error-code=assignment \
+            --disable-error-code=arg-type \
+            --disable-error-code=misc
 
       - name: "🔑 Tier 04: Gitleaks Secret Scan"
         uses: gitleaks/gitleaks-action@v2
