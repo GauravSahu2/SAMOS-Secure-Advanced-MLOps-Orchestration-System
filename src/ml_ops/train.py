@@ -315,7 +315,7 @@ def execute_forge_loop(
     tokens_per_step = 4000000 
     telemetry = {"temp": 45.0}
     last_telemetry_time = 0
-    gpu_temp = 45
+    gpu_temp: float = 45.0
     
     for step in range(start_step, total_steps + 1):
         current_loop_time = time.time()

@@ -129,5 +129,5 @@ if __name__ == "__main__":
     # Simulate 5 requests
     for _i in range(5):
         r = gateway.get_route()
-        gateway.update_stats(r, was_correct=gateway.rng.choice([True, False]))
+        gateway.update_stats(r, was_correct=bool(gateway.rng.choice([True, False])))
     print(f"Final stats: {gateway.stats}")

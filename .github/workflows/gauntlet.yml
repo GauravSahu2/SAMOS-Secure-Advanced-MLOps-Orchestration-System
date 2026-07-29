@@ -45,8 +45,17 @@ jobs:
         run: bandit -r src/ -ll -x src/ml_ops/pinaka_forge_v2.py
 
       - name: "🔍 Tier 03: MyPy Type Safety"
-        run: mypy src/ --ignore-missing-imports --no-strict-optional
-        continue-on-error: true
+        run: |
+          mypy src/ \
+            --ignore-missing-imports \
+            --no-strict-optional \
+            --disable-error-code=no-untyped-def \
+            --disable-error-code=no-untyped-call \
+            --disable-error-code=import-untyped \
+            --disable-error-code=unused-ignore \
+            --disable-error-code=type-arg \
+            --disable-error-code=no-any-return \
+            --disable-error-code=untyped-decorator
 
       - name: "🔑 Tier 04: Gitleaks Secret Scan"
         uses: gitleaks/gitleaks-action@v2
